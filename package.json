@@ -6,13 +6,20 @@
   "scripts": {
     "start": "webpack-dev-server"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jillsophie/pixi-js-tutorial.git"
+  },
+  "keywords": [
+    "Pixi.js"
+  ],
   "author": "Jill Guyonnet",
   "license": "ISC",
   "dependencies": {
-    "babel-core": "^6.24.1",
     "pixi.js": "^4.5.1"
   },
   "devDependencies": {
+    "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
     "babel-preset-es2015": "^6.24.1",
     "path": "^0.12.7"
