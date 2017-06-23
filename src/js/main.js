@@ -7,7 +7,8 @@ let Container = PIXI.Container,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
     Sprite = PIXI.Sprite,
-    TilingSprite = PIXI.extras.TilingSprite;
+    TilingSprite = PIXI.extras.TilingSprite,
+    AnimatedSprite = PIXI.extras.AnimatedSprite;
 
 //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
 // This creates a new canvas html tag
@@ -22,7 +23,7 @@ let stage = new Container();
 // Load the texture atlas and call setup function after loading
 loader.add('images/pixie-perilousness.json').load(setup);
 
-let id;
+let id, pixie;
 
 function setup() {
   // Create alias pointing to the texture atlas's texture objects
@@ -32,14 +33,11 @@ function setup() {
   let sky = new TilingSprite(id["clouds.png"], renderer.view.width, renderer.view.height);
   stage.addChild(sky);
 
-  //Create the pixie sprite
-  let pixie = new Sprite(id["0.png"]);
-  stage.addChild(pixie);
-
   buildBlocks(id);
 
-  // Render the stage
-  renderer.render(stage);
+  createPixie(id);
+
+  gameLoop();
 }
 
 function buildBlocks(id) {
@@ -70,4 +68,28 @@ function buildBlocks(id) {
       }
     }
   }
+}
+
+function createPixie(id) {
+  let pixieFrames = [id["0.png"], id["1.png"], id["2.png"]];
+  pixie = new AnimatedSprite(pixieFrames);
+  pixie.animationSpeed = 0.4;
+  stage.addChild(pixie);
+
+  pixie.x = 232;
+  pixie.y = 256;
+}
+
+function gameLoop() {
+  // Loop this function 60 times per second
+  requestAnimationFrame(gameLoop);
+
+  play();
+
+  // Render the stage
+  renderer.render(stage);
+}
+
+function play() {
+  pixie.play();
 }
