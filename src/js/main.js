@@ -5,7 +5,8 @@ let Container = PIXI.Container,
     autoDetectRenderer = PIXI.autoDetectRenderer,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
-    Sprite = PIXI.Sprite;
+    Sprite = PIXI.Sprite,
+    TilingSprite = PIXI.extras.TilingSprite;
 
 //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
 // This creates a new canvas html tag
@@ -23,9 +24,13 @@ loader.add('images/pixie-perilousness.json').load(setup);
 function setup() {
   // Create alias pointing to the texture atlas's texture objects
   let id = resources['images/pixie-perilousness.json'].textures;
-  //Create a sprite from the texture
+
+  // Create sky background using a TilingSprite
+  let sky = new TilingSprite(id["clouds.png"], renderer.view.width, renderer.view.height);
+  stage.addChild(sky);
+
+  //Create the pixie sprite
   let pixie = new Sprite(id["0.png"]);
-  // Add sprite to the stage
   stage.addChild(pixie);
 
   // Render the stage
