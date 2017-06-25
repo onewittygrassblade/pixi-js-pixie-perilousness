@@ -81,6 +81,8 @@ function createPixie(id) {
 
   pixie.x = 232;
   pixie.y = 256;
+
+  pixie.vy = 0;
 }
 
 function initializeKeys() {
@@ -105,4 +107,8 @@ function gameLoop() {
 
 function play() {
   pixie.play();
+
+  pixie.vy += 0.01;
+
+  pixie.y += pixie.vy;
 }
