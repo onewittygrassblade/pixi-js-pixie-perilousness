@@ -33,23 +33,29 @@ let stage = new Container();
 // Load the texture atlas and call setup function after loading
 loader.add('images/pixie-perilousness.json').load(setup);
 
-let id, pixie;
+let id, sky, pixie, state;
 
 function setup() {
+  buildScene();
+
+  initializeKeys();
+
+  state = play;
+
+  gameLoop();
+}
+
+function buildScene() {
   // Create alias pointing to the texture atlas's texture objects
   id = resources['images/pixie-perilousness.json'].textures;
 
   // Create sky background using a TilingSprite
-  let sky = new TilingSprite(id["clouds.png"], renderer.view.width, renderer.view.height);
+  sky = new TilingSprite(id["clouds.png"], renderer.view.width, renderer.view.height);
   stage.addChild(sky);
 
   buildBlocks(id);
 
   createPixie(id);
-
-  initializeKeys();
-
-  gameLoop();
 }
 
 function buildBlocks(id) {
@@ -109,13 +115,14 @@ function gameLoop() {
   // Loop this function 60 times per second
   requestAnimationFrame(gameLoop);
 
-  play();
+  state();
 
   // Render the stage
   renderer.render(stage);
 }
 
 function play() {
+  sky.tilePosition.x += 1;
 
   pixie.vy += gravity;
   pixie.y += pixie.vy;
