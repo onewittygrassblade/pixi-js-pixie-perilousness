@@ -1,6 +1,7 @@
 import Pixi from 'pixi.js';
 import randomInt from './helpers/randomInt.js';
 import keyController from './keyController.js';
+import contain from './helpers/contain.js';
 
 // Aliases
 const Container = PIXI.Container,
@@ -116,6 +117,20 @@ function play() {
   pixie.play();
 
   pixie.vy += gravity;
-
   pixie.y += pixie.vy;
+
+  let pixieVsStage = contain(
+    pixie,
+    {
+      x: 0,
+      y: 0,
+      width: renderer.view.width,
+      height: renderer.view.height
+    }
+  );
+  if (pixieVsStage) {
+    if (pixieVsStage.has("bottom") || pixieVsStage.has("top")) {
+      pixie.vy = 0;
+    }
+  }
 }
