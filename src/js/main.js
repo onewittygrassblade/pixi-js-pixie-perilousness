@@ -3,17 +3,24 @@ import randomInt from './helpers/randomInt.js';
 import keyController from './keyController.js';
 
 // Aliases
-let Container = PIXI.Container,
-    autoDetectRenderer = PIXI.autoDetectRenderer,
-    loader = PIXI.loader,
-    resources = PIXI.loader.resources,
-    Sprite = PIXI.Sprite,
-    TilingSprite = PIXI.extras.TilingSprite,
-    AnimatedSprite = PIXI.extras.AnimatedSprite;
+const Container = PIXI.Container,
+      autoDetectRenderer = PIXI.autoDetectRenderer,
+      loader = PIXI.loader,
+      resources = PIXI.loader.resources,
+      Sprite = PIXI.Sprite,
+      TilingSprite = PIXI.extras.TilingSprite,
+      AnimatedSprite = PIXI.extras.AnimatedSprite;
+
+// Game constants
+const rendererWidth = 910,
+      rendererHeight = 512,
+      playerStartX = 232,
+      playerStartY = 256,
+      gravity = 0.01;
 
 //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
 // This creates a new canvas html tag
-let renderer = autoDetectRenderer(910, 512);
+let renderer = autoDetectRenderer(rendererWidth, rendererHeight);
 
 // Add canvas to HTML
 document.getElementById('root').appendChild(renderer.view);
@@ -79,8 +86,8 @@ function createPixie(id) {
   pixie.animationSpeed = 0.4;
   stage.addChild(pixie);
 
-  pixie.x = 232;
-  pixie.y = 256;
+  pixie.x = playerStartX;
+  pixie.y = playerStartY;
 
   pixie.vy = 0;
 }
@@ -108,7 +115,7 @@ function gameLoop() {
 function play() {
   pixie.play();
 
-  pixie.vy += 0.01;
+  pixie.vy += gravity;
 
   pixie.y += pixie.vy;
 }
