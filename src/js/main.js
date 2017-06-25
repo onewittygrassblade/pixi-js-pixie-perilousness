@@ -17,8 +17,9 @@ const rendererWidth = 910,
       rendererHeight = 512,
       playerStartX = 232,
       playerStartY = 256,
-      gravity = 0.03,
-      wingPower = -0.5;
+      gravity = 0.05,
+      wingPower = -2.5,
+      numberOfPillars = 15;
 
 //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
 // This creates a new canvas html tag
@@ -33,7 +34,7 @@ let stage = new Container();
 // Load the texture atlas and call setup function after loading
 loader.add('images/pixie-perilousness.json').load(setup);
 
-let id, sky, pixie, state;
+let id, sky, blocks, finish, pixie, state;
 
 function setup() {
   buildScene();
@@ -53,16 +54,17 @@ function buildScene() {
   sky = new TilingSprite(id["clouds.png"], renderer.view.width, renderer.view.height);
   stage.addChild(sky);
 
-  buildBlocks(id);
+  // Create a container for the blocks and finish line
+  blocks = new Container();
+  stage.addChild(blocks);
+
+  createBlocks(id, blocks);
+  createFinish(id, blocks);
 
   createPixie(id);
 }
 
-function buildBlocks(id) {
-  let blocks = new Container();
-  stage.addChild(blocks);
-
-  let numberOfPillars = 15;
+function createBlocks(id, blocks) {
   let pillarHeight = 8;
   let gapSize = 4;
   let gapReductionFrequency = 5;
@@ -88,6 +90,13 @@ function buildBlocks(id) {
   }
 }
 
+function createFinish(id, blocks) {
+  finish = new Sprite(id["finish.png"]);
+  blocks.addChild(finish);
+  finish.x = ((numberOfPillars - 1) * 384) + 896;
+  finish.y = 192;
+}
+
 function createPixie(id) {
   let pixieFrames = [id["0.png"], id["1.png"], id["2.png"]];
   pixie = new AnimatedSprite(pixieFrames);
@@ -103,6 +112,9 @@ function createPixie(id) {
 function initializeKeys() {
   let spacePressCallback = () => {
     pixie.vy += wingPower;
+    if (pixie.vy < wingPower) {
+      pixie.vy = wingPower;
+    }
     pixie.play();
   };
   let spaceReleaseCallback = () => {
@@ -122,7 +134,13 @@ function gameLoop() {
 }
 
 function play() {
-  sky.tilePosition.x += 1;
+  // Scroll sky background at a rate of 60 pixels per second
+  sky.tilePosition.x -= 1;
+
+  // Move blocks and finish at a rate of 120 pixels per second
+  if (finish.getGlobalPosition().x > 256) {
+    blocks.x -= 2;
+  }
 
   pixie.vy += gravity;
   pixie.y += pixie.vy;
