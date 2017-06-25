@@ -36,14 +36,26 @@ let stage = new Container();
 // Load the texture atlas and call setup function after loading
 loader.add('images/pixie-perilousness.json').load(setup);
 
-let id, sky, blocks, finish, pixie, state;
+let menuText, id, sky, blocks, finish, pixie, state;
 
 function setup() {
   buildScene();
 
+  menuText = new PIXI.Text(
+    'Hit Enter\nto start',
+    {
+      fontSize: 60,
+      fill : 0xe6007e,
+      align : 'center'
+    }
+  );
+  menuText.x = rendererWidth / 2 - menuText.width / 2;
+  menuText.y = rendererHeight / 2 - menuText.height / 2;
+  stage.addChild(menuText);
+
   initializeKeys();
 
-  state = play;
+  state = menu;
 
   let pixieVsBlock = blocks.children.some(block => {
     return hitTestRectangle(pixie, block);
@@ -126,7 +138,16 @@ function initializeKeys() {
   let spaceReleaseCallback = () => {
     pixie.stop();
   };
-  let space = new keyController(32, spacePressCallback, spaceReleaseCallback);
+
+  let enterPressCallback = undefined;
+
+  let enterReleaseCallback = () => {
+    menuText.visible = false;
+    state = play;
+  }
+
+  let spaceController = new keyController(32, spacePressCallback, spaceReleaseCallback);
+  let enterController = new keyController(13, enterPressCallback, enterReleaseCallback);
 }
 
 function gameLoop() {
@@ -137,6 +158,9 @@ function gameLoop() {
 
   // Render the stage
   renderer.render(stage);
+}
+
+function menu() {
 }
 
 function play() {
@@ -184,4 +208,6 @@ function reset() {
   pixie.visible = true;
   pixie.y = 256;
   blocks.x = 0;
+  menuText.visible = true;
+  state = menu;
 }
