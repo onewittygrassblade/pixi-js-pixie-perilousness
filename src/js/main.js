@@ -17,7 +17,8 @@ const rendererWidth = 910,
       rendererHeight = 512,
       playerStartX = 232,
       playerStartY = 256,
-      gravity = 0.01;
+      gravity = 0.03,
+      wingPower = -0.5;
 
 //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
 // This creates a new canvas html tag
@@ -95,12 +96,9 @@ function createPixie(id) {
 
 function initializeKeys() {
   let spacePressCallback = () => {
-    console.log('SPACE KEY PRESSED');
+    pixie.vy += wingPower;
   };
-  let spaceReleaseCallback = () => {
-    console.log('SPACE KEY RELEASED');
-  };
-  let space = new keyController(32, spacePressCallback, spaceReleaseCallback);
+  let space = new keyController(32, spacePressCallback);
 }
 
 function gameLoop() {
