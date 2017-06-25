@@ -9,14 +9,14 @@ export default class keyController {
   }
 
   downHandler(e) {
-    if (e.keyCode === this.code) {
+    if (e.keyCode === this.code && this.press) {
       this.press();
     }
     e.preventDefault();
   }
 
   upHandler(e) {
-    if (e.keyCode === this.code) {
+    if (e.keyCode === this.code && this.release) {
       this.release();
     }
     e.preventDefault();

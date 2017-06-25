@@ -97,8 +97,12 @@ function createPixie(id) {
 function initializeKeys() {
   let spacePressCallback = () => {
     pixie.vy += wingPower;
+    pixie.play();
   };
-  let space = new keyController(32, spacePressCallback);
+  let spaceReleaseCallback = () => {
+    pixie.stop();
+  };
+  let space = new keyController(32, spacePressCallback, spaceReleaseCallback);
 }
 
 function gameLoop() {
@@ -112,7 +116,6 @@ function gameLoop() {
 }
 
 function play() {
-  pixie.play();
 
   pixie.vy += gravity;
   pixie.y += pixie.vy;
