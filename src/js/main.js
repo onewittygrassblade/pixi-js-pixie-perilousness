@@ -2,6 +2,8 @@ import Pixi from 'pixi.js';
 import randomInt from './helpers/randomInt.js';
 import keyController from './keyController.js';
 import contain from './helpers/contain.js';
+import hitTestRectangle from './helpers/hitTestRectangle.js';
+import wait from './helpers/wait.js';
 
 // Aliases
 const Container = PIXI.Container,
@@ -42,6 +44,10 @@ function setup() {
   initializeKeys();
 
   state = play;
+
+  let pixieVsBlock = blocks.children.some(block => {
+    return hitTestRectangle(pixie, block);
+  });
 
   gameLoop();
 }
@@ -145,6 +151,7 @@ function play() {
   pixie.vy += gravity;
   pixie.y += pixie.vy;
 
+  // Keep pixie within canvas
   let pixieVsStage = contain(
     pixie,
     {
@@ -154,9 +161,27 @@ function play() {
       height: renderer.view.height
     }
   );
+
   if (pixieVsStage) {
     if (pixieVsStage.has("bottom") || pixieVsStage.has("top")) {
       pixie.vy = 0;
     }
   }
+
+  // Check for collision between pixie and blocks
+  let pixieVsBlock = blocks.children.some(block => {
+    return hitTestRectangle(pixie, block, true);
+  });
+
+  if (pixieVsBlock) {
+    pixie.visible = false;
+
+    wait(1000).then(() => reset());
+  }
+}
+
+function reset() {
+  pixie.visible = true;
+  pixie.y = 256;
+  blocks.x = 0;
 }
