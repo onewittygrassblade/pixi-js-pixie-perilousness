@@ -1,5 +1,6 @@
 import Pixi from 'pixi.js';
 import randomInt from './helpers/randomInt.js';
+import keyController from './keyController.js';
 
 // Aliases
 let Container = PIXI.Container,
@@ -36,6 +37,8 @@ function setup() {
   buildBlocks(id);
 
   createPixie(id);
+
+  initializeKeys();
 
   gameLoop();
 }
@@ -78,6 +81,16 @@ function createPixie(id) {
 
   pixie.x = 232;
   pixie.y = 256;
+}
+
+function initializeKeys() {
+  let spacePressCallback = () => {
+    console.log('SPACE KEY PRESSED');
+  };
+  let spaceReleaseCallback = () => {
+    console.log('SPACE KEY RELEASED');
+  };
+  let space = new keyController(32, spacePressCallback, spaceReleaseCallback);
 }
 
 function gameLoop() {
