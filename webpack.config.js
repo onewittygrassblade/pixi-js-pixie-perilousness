@@ -1,15 +1,15 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/js/main.js',
+  entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'public'),
     filename: 'bundle.js',
     publicPath: '/'
   },
   devServer: {
     inline: true,
-    contentBase: './dist'
+    contentBase: './public'
   },
   module: {
     loaders: [
