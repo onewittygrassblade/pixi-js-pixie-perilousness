@@ -5,20 +5,18 @@ import {
   resources,
   Sprite,
   TilingSprite,
-  AnimatedSprite,
   Text
 } from './const/aliases.js';
 
 import {
   rendererWidth,
   rendererHeight,
-  playerStartX,
-  playerStartY,
   gravity,
   wingPower,
   numberOfPillars
 } from './const/gameConstants.js';
 
+import Pixie from './Pixie.js';
 import randomInt from './helpers/randomInt.js';
 import keyController from './keyController.js';
 import contain from './helpers/contain.js';
@@ -120,14 +118,8 @@ export default class App {
 
   createPixie() {
     let pixieFrames = [this.id["0.png"], this.id["1.png"], this.id["2.png"]];
-    this.pixie = new AnimatedSprite(pixieFrames);
-    this.pixie.animationSpeed = 0.4;
+    this.pixie = new Pixie(pixieFrames);
     this.stage.addChild(this.pixie);
-
-    this.pixie.x = playerStartX;
-    this.pixie.y = playerStartY;
-
-    this.pixie.vy = 0;
   }
 
   initializeKeys() {
