@@ -7,7 +7,7 @@ import wait from './helpers/wait.js';
 
 import { loader, resources, Container, Sprite, TilingSprite, Text } from './const/aliases.js';
 
-import { gravity, wingPower, numberOfPillars } from './const/gameConstants.js';
+import { numberOfPillars, backgroundScrollingSpeed, foregroundScrollingSpeed } from './const/gameConstants.js';
 
 export default class World {
   constructor(renderer) {
@@ -98,13 +98,11 @@ export default class World {
 
   initializeKeys() {
     let spacePressCallback = () => {
-      this.pixie.vy += wingPower;
-      if (this.pixie.vy < wingPower) {
-        this.pixie.vy = wingPower;
-      }
+      this.pixie.flapWings();
       this.pixie.play();
     };
     let spaceReleaseCallback = () => {
+      this.pixie.stopFlapping();
       this.pixie.stop();
     };
 
@@ -123,21 +121,21 @@ export default class World {
     this.renderer.render(this.stage);
   }
 
-  menu() {
+  menu(deltaTime) {
 
   }
 
-  play() {
+  play(deltaTime) {
     // Scroll sky background
-    this.sky.tilePosition.x -= 1;
+    this.sky.tilePosition.x -= backgroundScrollingSpeed * deltaTime;
 
     // Move blocks and finish at a rate of 120 pixels per second
     if (this.finish.getGlobalPosition().x > 256) {
-      this.blocks.x -= 2;
+      this.blocks.x -= foregroundScrollingSpeed * deltaTime;
     }
 
-    this.pixie.vy += gravity;
-    this.pixie.y += this.pixie.vy;
+    this.pixie.vy += this.pixie.ay * deltaTime;
+    this.pixie.y += this.pixie.vy * deltaTime;
 
     // Keep pixie within canvas
     let pixieVsStage = contain(

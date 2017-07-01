@@ -2,7 +2,10 @@ import World from './World.js'
 
 import { autoDetectRenderer } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { timePerFrame, rendererWidth, rendererHeight } from './const/gameConstants.js';
+
+let lastFrameTimestamp = 0;
+let timeSinceLastUpdate = 0;
 
 export default class App {
   constructor() {
@@ -17,10 +20,20 @@ export default class App {
   }
 
   run() {
-    requestAnimationFrame(this.run.bind(this));
+    requestAnimationFrame(this.gameLoop.bind(this));
+  }
 
-    this.world.state();
+  gameLoop(timestamp) {
+    timeSinceLastUpdate += timestamp - lastFrameTimestamp;
+    lastFrameTimestamp = timestamp;
+
+    while (timeSinceLastUpdate > timePerFrame) {
+      timeSinceLastUpdate -= timePerFrame;
+      this.world.state(timePerFrame);
+    }
 
     this.world.draw();
+
+    requestAnimationFrame(this.gameLoop.bind(this));
   }
 }
