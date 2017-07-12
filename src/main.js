@@ -1,4 +1,5 @@
 import App from './App.js';
 
-let app = new App();
-app.run();
+App.loadImages().then(() => {
+  new App().setup();
+});

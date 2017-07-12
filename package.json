@@ -16,7 +16,9 @@
   "author": "Jill Guyonnet",
   "license": "ISC",
   "dependencies": {
-    "pixi.js": "^4.5.3"
+    "pixi.js": "^4.5.3",
+    "webpack": "^3.2.0",
+    "webpack-dev-server": "^2.5.1"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

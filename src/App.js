@@ -1,22 +1,37 @@
-import World from './World.js'
+import StateStack from './StateStack.js';
+import TitleState from './TitleState.js';
 
-import { autoDetectRenderer } from './const/aliases.js';
+import {  autoDetectRenderer, loader, resources, Container } from './const/aliases.js';
 
-import { timePerFrame, rendererWidth, rendererHeight } from './const/gameConstants.js';
+import {  timePerFrame, rendererWidth, rendererHeight } from './const/gameConstants.js';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
 
 export default class App {
   constructor() {
-    //Create renderer by autodetecting whether to use WebGL or Canvas Drawing API to render graphics
-    // This creates a new canvas html tag
     this.renderer = autoDetectRenderer(rendererWidth, rendererHeight);
-    // Add canvas to HTML
     document.getElementById('root').appendChild(this.renderer.view);
 
-    this.world = new World(this.renderer);
-    // this.stateStack = new StateStack;
+    this.stage = new Container();
+
+    this.stateStack = new StateStack();
+  }
+
+  static loadImages() {
+    return new Promise((resolve, reject) => {
+      loader
+      .add('images/pixie-perilousness.json')
+      .on('error', reject)
+      .load(resolve);
+    });
+  }
+
+  setup() {
+    this.textures = resources['images/pixie-perilousness.json'].textures;
+    this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
+
+    this.run();
   }
 
   run() {
@@ -29,10 +44,10 @@ export default class App {
 
     while (timeSinceLastUpdate > timePerFrame) {
       timeSinceLastUpdate -= timePerFrame;
-      this.world.state(timePerFrame);
+      this.stateStack.update(timePerFrame);
     }
 
-    this.world.draw();
+    this.renderer.render(this.stage);
 
     requestAnimationFrame(this.gameLoop.bind(this));
   }

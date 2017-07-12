@@ -1,10 +1,13 @@
 export const timePerFrame = 1000 / 60;
 export const rendererWidth = 910;
 export const rendererHeight = 512;
+export const backgroundScrollingSpeed = 0.04;
+export const foregroundScrollingSpeed = 0.08;
 export const playerStartX = 232;
 export const playerStartY = 256;
 export const gravity = 0.0003;
 export const wingPower = -0.001;
 export const numberOfPillars = 15;
-export const backgroundScrollingSpeed = 0.04;
-export const foregroundScrollingSpeed = 0.08;
+export const pillarHeight = 8;
+export const maxGapSize = 4;
+export const gapReductionFrequency = 5;
