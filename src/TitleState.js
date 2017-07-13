@@ -1,7 +1,7 @@
 import GameState from './GameState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { Text } from './const/aliases.js';
+import { Sprite, TilingSprite } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -11,38 +11,39 @@ export default class TitleState {
     this.stateStack = stateStack;
     this.textures = textures;
 
-    this.createText();
+    this.buildScene();
 
     this.addKeyControllers();
   }
 
-  createText() {
-    this.text = new Text(
-      'Hit Enter\nto start',
-      {
-        fontSize: 60,
-        fill : 0xe6007e,
-        align : 'center'
-      }
-    );
+  buildScene() {
+    let sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
+    this.stage.addChild(sky);
 
-    this.text.x = rendererWidth / 2 - this.text.width / 2;
-    this.text.y = rendererHeight / 2 - this.text.height / 2;
+    let title = new Sprite(this.textures["title.png"]);
+    title.x = rendererWidth / 2 - title.width / 2;
+    title.y = rendererHeight / 2 - title.height / 2 - 100;
+    this.stage.addChild(title);
 
-    this.stage.addChild(this.text);
+    let hint = new Sprite(this.textures["press_space_to_start.png"]);
+    hint.x = rendererWidth / 2 - hint.width / 2;
+    hint.y = title.y + 200;
+    this.stage.addChild(hint);
   }
 
   addKeyControllers() {
     let startGame = () => {
       this.startGameController.remove();
 
-      this.stage.removeChild(this.text);
+      while (this.stage.children[0]) {
+        this.stage.removeChild(this.stage.children[0]);
+      }
 
       this.stateStack.pop();
       this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));
     }
 
-    this.startGameController = new KeyBinder(13, null, startGame);
+    this.startGameController = new KeyBinder(32, null, startGame);
   }
 
   update(dt) {

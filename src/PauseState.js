@@ -1,44 +1,45 @@
 import KeyBinder from './KeyBinder.js';
 
-import { Text } from './const/aliases.js';
+import { Sprite, TilingSprite } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
 export default class PauseState {
-  constructor(stage, stateStack, textures, world) {
+  constructor(stage, stateStack, textures, parent) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
-    this.gameWorld = world;
+    this.parent = parent;
 
-    this.gameWorld.removeKeyControllers();
+    this.parent.world.removeKeyControllers();
 
-    this.createText();
+    this.buildScene();
 
     this.addKeyControllers();
   }
 
-  createText() {
-    this.text = new Text(
-      'Game paused',
-      {
-        fontSize: 60,
-        fill : 0xe6007e,
-        align : 'center'
-      }
-    );
+  buildScene() {
+    this.title = new Sprite(this.textures["game_paused.png"]);
+    this.title.x = rendererWidth / 2 - this.title.width / 2;
+    this.title.y = rendererHeight / 2 - this.title.height / 2 - 100;
+    this.stage.addChild(this.title);
 
-    this.text.x = rendererWidth / 2 - this.text.width / 2;
-    this.text.y = rendererHeight / 2 - this.text.height / 2;
-
-    this.stage.addChild(this.text);
+    this.hint = new Sprite(this.textures["esc_to_continue.png"]);
+    this.hint.x = rendererWidth / 2 - this.hint.width / 2;
+    this.hint.y = this.title.y + 200;
+    this.stage.addChild(this.hint);
   }
 
   addKeyControllers() {
     let leavePauseState = () => {
       this.leavePauseStateController.remove();
-      this.gameWorld.addKeyControllers();
-      this.stage.removeChild(this.text);
+
+      this.parent.addKeyControllers();
+      this.parent.world.addKeyControllers();
+
+      this.stage.removeChild(this.title);
+      this.stage.removeChild(this.hint);
+
       this.stateStack.pop();
     }
 

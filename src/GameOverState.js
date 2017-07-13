@@ -1,7 +1,7 @@
-import TitleState from './TitleState.js';
+import GameState from './GameState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { Text, TextStyle } from './const/aliases.js';
+import { Sprite, TilingSprite } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -11,43 +11,48 @@ export default class GameOverState {
     this.stateStack = stateStack;
     this.textures = textures;
 
-    this.createText(success);
+    this.buildScene(success);
 
     this.addKeyControllers();
   }
 
-  createText(success) {
-    let style = new TextStyle({
-      fontSize: 60,
-      fontWeight: 'bold',
-      fill : 0xe6007e,
-      align : 'center'
-    });
+  buildScene(success) {
+    let sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
+    this.stage.addChild(sky);
+
+    let message = new Sprite();
 
     if (success) {
-      this.text = new Text('Success!', style);
+      message.texture = this.textures["yay.png"];
     }
     else {
-      this.text = new Text('Failure!', style);
+      message.texture = this.textures["whoops.png"];
     }
 
-    this.text.x = rendererWidth / 2 - this.text.width / 2;
-    this.text.y = rendererHeight / 2 - this.text.height / 2;
+    message.x = rendererWidth / 2 - message.width / 2;
+    message.y = rendererHeight / 2 - message.height / 2 - 100;
 
-    this.stage.addChild(this.text);
+    this.stage.addChild(message);
+
+    let hint = new Sprite(this.textures["space_to_restart.png"]);
+    hint.x = rendererWidth / 2 - hint.width / 2;
+    hint.y = message.y + 200;
+    this.stage.addChild(hint);
   }
 
   addKeyControllers() {
-    let continueToTitle = () => {
-      this.continueToTitleController.remove();
+    let restartGame = () => {
+      this.restartGameController.remove();
 
-      this.stage.removeChild(this.text);
+      while (this.stage.children[0]) {
+        this.stage.removeChild(this.stage.children[0]);
+      }
 
       this.stateStack.pop();
-      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
+      this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));
     }
 
-    this.continueToTitleController = new KeyBinder(13, null, continueToTitle);
+    this.restartGameController = new KeyBinder(32, null, restartGame);
   }
 
   update(dt) {

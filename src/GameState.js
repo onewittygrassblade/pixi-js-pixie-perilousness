@@ -17,7 +17,7 @@ export default class GameState {
   addKeyControllers() {
     let pauseGame = () => {
       this.pauseGameController.remove();
-      this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures, this.world));
+      this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures, this));
     }
 
     this.pauseGameController = new KeyBinder(27, null, pauseGame);
