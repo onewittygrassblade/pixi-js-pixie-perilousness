@@ -21,6 +21,7 @@ export default class World {
     this.textures = textures;
 
     this.hasAlivePlayer = true;
+    this.hasReachedEnd = false;
 
     this.buildScene();
 
@@ -31,9 +32,6 @@ export default class World {
     this.sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
     this.stage.addChild(this.sky);
 
-    this.blocks = new Container();
-    this.stage.addChild(this.blocks);
-
     this.createBlocks();
 
     this.createFinish();
@@ -42,6 +40,9 @@ export default class World {
   }
 
   createBlocks() {
+    this.blocks = new Container();
+    this.stage.addChild(this.blocks);
+
     let gapSize = maxGapSize;
 
     for (let i = 0; i < numberOfPillars; i++) {
@@ -67,7 +68,7 @@ export default class World {
 
   createFinish() {
     this.finish = new Sprite(this.textures["finish.png"]);
-    this.blocks.addChild(this.finish);
+    this.stage.addChild(this.finish);
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
     this.finish.y = 192;
   }
@@ -102,6 +103,7 @@ export default class World {
     // Move blocks and finish at a rate of 120 pixels per second
     if (this.finish.getGlobalPosition().x > 256) {
       this.blocks.x -= foregroundScrollingSpeed * dt;
+      this.finish.x -= foregroundScrollingSpeed * dt;
     }
 
     this.pixie.vy += this.pixie.ay * dt;
@@ -129,13 +131,23 @@ export default class World {
       return hitTestRectangle(this.pixie, block, true);
     });
 
+    // Check for collision between pixie and finish
+    let pixieVsFinish = hitTestRectangle(this.pixie, this.finish, true);
+
     if (pixieVsBlock) {
-      this.stage.removeChild(this.sky);
-      this.stage.removeChild(this.blocks);
-      this.stage.removeChild(this.finish);
-      this.stage.removeChild(this.pixie);
+      while (this.stage.children[0]) {
+        this.stage.removeChild(this.stage.children[0]);
+      }
 
       this.hasAlivePlayer = false;
+    }
+
+    if (pixieVsFinish) {
+      while (this.stage.children[0]) {
+        this.stage.removeChild(this.stage.children[0]);
+      }
+
+      this.hasReachedEnd = true;
     }
 
     return true;

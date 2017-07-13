@@ -1,5 +1,5 @@
 import World from './World.js';
-import TitleState from './TitleState.js';
+import GameOverState from './GameOverState.js';
 import PauseState from './PauseState.js';
 import KeyBinder from './KeyBinder.js';
 
@@ -29,7 +29,13 @@ export default class GameState {
     if (!this.world.hasAlivePlayer) {
       this.pauseGameController.remove();
       this.stateStack.pop();
-      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
+      this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
+    }
+
+    if (this.world.hasReachedEnd) {
+      this.pauseGameController.remove();
+      this.stateStack.pop();
+      this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
     }
 
     return true;
