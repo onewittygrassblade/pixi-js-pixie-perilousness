@@ -10,8 +10,6 @@ import {  rendererWidth,
           rendererHeight,
           backgroundScrollingSpeed,
           foregroundScrollingSpeed,
-          playerStartY,
-          gravity,
           numberOfPillars,
           pillarHeight,
           maxGapSize,
@@ -26,7 +24,7 @@ export default class World {
 
     this.buildScene();
 
-    this.initializeKeys();
+    this.addKeyControllers();
   }
 
   buildScene() {
@@ -80,17 +78,21 @@ export default class World {
     this.stage.addChild(this.pixie);
   }
 
-  initializeKeys() {
-    let spacePressCallback = () => {
+  addKeyControllers() {
+    let pixieFlapWings = () => {
       this.pixie.flapWings();
       this.pixie.play();
     };
-    let spaceReleaseCallback = () => {
+    let pixieStopFlapping = () => {
       this.pixie.stopFlapping();
       this.pixie.stop();
     };
 
-    this.spaceController = new KeyBinder(32, spacePressCallback, spaceReleaseCallback);
+    this.pixieController = new KeyBinder(32, pixieFlapWings, pixieStopFlapping);
+  }
+
+  removeKeyControllers() {
+    this.pixieController.remove();
   }
 
   update(dt) {
@@ -128,8 +130,6 @@ export default class World {
     });
 
     if (pixieVsBlock) {
-      this.spaceController.remove();
-
       this.stage.removeChild(this.sky);
       this.stage.removeChild(this.blocks);
       this.stage.removeChild(this.finish);

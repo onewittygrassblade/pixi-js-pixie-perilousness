@@ -1,15 +1,17 @@
-import GameState from './GameState.js';
 import KeyBinder from './KeyBinder.js';
 
 import { Text } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
-export default class TitleState {
-  constructor(stage, stateStack, textures) {
+export default class PauseState {
+  constructor(stage, stateStack, textures, world) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
+    this.gameWorld = world;
+
+    this.gameWorld.removeKeyControllers();
 
     this.createText();
 
@@ -18,7 +20,7 @@ export default class TitleState {
 
   createText() {
     this.text = new Text(
-      'Hit Enter\nto start',
+      'Game paused',
       {
         fontSize: 60,
         fill : 0xe6007e,
@@ -33,16 +35,14 @@ export default class TitleState {
   }
 
   addKeyControllers() {
-    let startGame = () => {
-      this.startGameController.remove();
-
+    let leavePauseState = () => {
+      this.leavePauseStateController.remove();
+      this.gameWorld.addKeyControllers();
       this.stage.removeChild(this.text);
-
       this.stateStack.pop();
-      this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));
     }
 
-    this.startGameController = new KeyBinder(13, null, startGame);
+    this.leavePauseStateController = new KeyBinder(27, null, leavePauseState);
   }
 
   update(dt) {

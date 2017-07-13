@@ -12,8 +12,8 @@ export default class StateStack {
   }
 
   update(dt) {
-    for (let state of this.stack) {
-      if (!state.update(dt)) {
+    for (let i = this.stack.length - 1; i >= 0; i--) {
+      if (!this.stack[i].update(dt)) {
         break;
       }
     }
