@@ -1,6 +1,6 @@
 import World from './World.js';
-import GameOverState from './GameOverState.js';
 import PauseState from './PauseState.js';
+import GameOverState from './GameOverState.js';
 import KeyBinder from './KeyBinder.js';
 
 export default class GameState {
@@ -23,6 +23,10 @@ export default class GameState {
     this.pauseGameController = new KeyBinder(27, null, pauseGame);
   }
 
+  removeKeyControllers() {
+    this.pauseGameController.remove();
+  }
+
   update(dt) {
     this.world.update(dt);
 
@@ -38,6 +42,6 @@ export default class GameState {
       this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
     }
 
-    return true;
+    return false;
   }
 }

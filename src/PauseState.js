@@ -1,6 +1,6 @@
 import KeyBinder from './KeyBinder.js';
 
-import { Sprite, TilingSprite } from './const/aliases.js';
+import { Sprite } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 

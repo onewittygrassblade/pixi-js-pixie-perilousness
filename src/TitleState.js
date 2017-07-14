@@ -1,4 +1,5 @@
 import GameState from './GameState.js';
+import HintState from './HintState.js';
 import KeyBinder from './KeyBinder.js';
 
 import { Sprite, TilingSprite } from './const/aliases.js';
@@ -40,7 +41,9 @@ export default class TitleState {
       }
 
       this.stateStack.pop();
-      this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));
+      let gameState = new GameState(this.stage, this.stateStack, this.textures);
+      this.stateStack.push(gameState);
+      this.stateStack.push(new HintState(this.stage, this.stateStack, this.textures, gameState));
     }
 
     this.startGameController = new KeyBinder(32, null, startGame);
