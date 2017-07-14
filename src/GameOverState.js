@@ -17,16 +17,16 @@ export default class GameOverState {
   }
 
   buildScene(success) {
-    let sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
+    let sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
     this.stage.addChild(sky);
 
     let message = new Sprite();
 
     if (success) {
-      message.texture = this.textures["yay.png"];
+      message.texture = this.textures['yay.png'];
     }
     else {
-      message.texture = this.textures["whoops.png"];
+      message.texture = this.textures['whoops.png'];
     }
 
     message.x = rendererWidth / 2 - message.width / 2;
@@ -34,7 +34,7 @@ export default class GameOverState {
 
     this.stage.addChild(message);
 
-    let hint = new Sprite(this.textures["space_to_restart.png"]);
+    let hint = new Sprite(this.textures['space_to_restart.png']);
     hint.x = rendererWidth / 2 - hint.width / 2;
     hint.y = message.y + 200;
     this.stage.addChild(hint);

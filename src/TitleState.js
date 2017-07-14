@@ -18,15 +18,15 @@ export default class TitleState {
   }
 
   buildScene() {
-    let sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
+    let sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
     this.stage.addChild(sky);
 
-    let title = new Sprite(this.textures["title.png"]);
+    let title = new Sprite(this.textures['title.png']);
     title.x = rendererWidth / 2 - title.width / 2;
     title.y = rendererHeight / 2 - title.height / 2 - 100;
     this.stage.addChild(title);
 
-    let hint = new Sprite(this.textures["press_space_to_start.png"]);
+    let hint = new Sprite(this.textures['press_space_to_start.png']);
     hint.x = rendererWidth / 2 - hint.width / 2;
     hint.y = title.y + 200;
     this.stage.addChild(hint);

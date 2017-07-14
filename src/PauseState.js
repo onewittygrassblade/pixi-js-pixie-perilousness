@@ -19,12 +19,12 @@ export default class PauseState {
   }
 
   buildScene() {
-    this.title = new Sprite(this.textures["game_paused.png"]);
+    this.title = new Sprite(this.textures['game_paused.png']);
     this.title.x = rendererWidth / 2 - this.title.width / 2;
     this.title.y = rendererHeight / 2 - this.title.height / 2 - 100;
     this.stage.addChild(this.title);
 
-    this.hint = new Sprite(this.textures["esc_to_continue.png"]);
+    this.hint = new Sprite(this.textures['esc_to_continue.png']);
     this.hint.x = rendererWidth / 2 - this.hint.width / 2;
     this.hint.y = this.title.y + 200;
     this.stage.addChild(this.hint);

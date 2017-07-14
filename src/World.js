@@ -4,7 +4,11 @@ import randomInt from './helpers/randomInt.js';
 import contain from './helpers/contain.js';
 import hitTestRectangle from './helpers/hitTestRectangle.js';
 
-import { Container, Sprite, TilingSprite } from './const/aliases.js';
+import {  Container,
+          Sprite,
+          TilingSprite,
+          Text,
+          TextStyle } from './const/aliases.js';
 
 import {  rendererWidth,
           rendererHeight,
@@ -20,6 +24,8 @@ export default class World {
     this.stage = stage;
     this.textures = textures;
 
+    this.gemsCollected = 0;
+
     this.hasAlivePlayer = true;
     this.hasReachedEnd = false;
 
@@ -29,10 +35,14 @@ export default class World {
   }
 
   buildScene() {
-    this.sky = new TilingSprite(this.textures["clouds.png"], rendererWidth, rendererHeight);
+    this.sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
     this.stage.addChild(this.sky);
 
     this.createBlocks();
+
+    this.createGems();
+
+    this.createScoreDisplay();
 
     this.createFinish();
 
@@ -57,7 +67,7 @@ export default class World {
       for (let j = 0; j < pillarHeight; j++) {
         // Create a block if it's not within the gap
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
-          let block = new Sprite(this.textures["greenBlock.png"]);
+          let block = new Sprite(this.textures['greenBlock.png']);
           this.blocks.addChild(block);
           block.x = (i * 384) + 512;
           block.y = j * 64;
@@ -66,15 +76,44 @@ export default class World {
     }
   }
 
+  createGems() {
+    this.gems = new Container();
+    this.stage.addChild(this.gems);
+
+    for (let i = 0; i < numberOfPillars; i++) {
+      let gem = new Sprite(this.textures[`gem-${randomInt(1, 9)}-small.png`]);
+      this.gems.addChild(gem);
+      gem.x = (i * 384) + 736 - gem.width / 2;
+      gem.y = randomInt(50, rendererHeight - 50);
+    }
+  }
+
+  createScoreDisplay() {
+    let textStyle = {
+      fontSize: 24,
+      fontWeight: 'bold',
+      fill: 0xe6007e,
+      stroke: 0xf4d942,
+      strokeThickness: 4
+    };
+
+    this.scoreDisplay = new Text('Gems: ' + this.gemsCollected, textStyle);
+
+    this.scoreDisplay.x = 20;
+    this.scoreDisplay.y = 20;
+
+    this.stage.addChild(this.scoreDisplay);
+  }
+
   createFinish() {
-    this.finish = new Sprite(this.textures["finish.png"]);
+    this.finish = new Sprite(this.textures['finish.png']);
     this.stage.addChild(this.finish);
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
     this.finish.y = 192;
   }
 
   createPixie() {
-    let pixieFrames = [this.textures["0.png"], this.textures["1.png"], this.textures["2.png"]];
+    let pixieFrames = [this.textures['0.png'], this.textures['1.png'], this.textures['2.png']];
     this.pixie = new Pixie(pixieFrames);
     this.stage.addChild(this.pixie);
   }
@@ -100,9 +139,10 @@ export default class World {
     // Scroll sky background
     this.sky.tilePosition.x -= backgroundScrollingSpeed * dt;
 
-    // Move blocks and finish at a rate of 120 pixels per second
+    // Scroll scene
     if (this.finish.getGlobalPosition().x > 256) {
       this.blocks.x -= foregroundScrollingSpeed * dt;
+      this.gems.x -= foregroundScrollingSpeed * dt;
       this.finish.x -= foregroundScrollingSpeed * dt;
     }
 
@@ -121,20 +161,30 @@ export default class World {
     );
 
     if (pixieVsStage) {
-      if (pixieVsStage.has("bottom") || pixieVsStage.has("top")) {
+      if (pixieVsStage.has('bottom') || pixieVsStage.has('top')) {
         this.pixie.vy = 0;
       }
     }
 
-    // Check for collision between pixie and blocks
-    let pixieVsBlock = this.blocks.children.some(block => {
+    this.checkCollisions();
+  }
+
+  checkCollisions() {
+    let pixieVsBlocks = this.blocks.children.some(block => {
       return hitTestRectangle(this.pixie, block, true);
     });
 
-    // Check for collision between pixie and finish
     let pixieVsFinish = hitTestRectangle(this.pixie, this.finish, true);
 
-    if (pixieVsBlock) {
+    for (let gem of this.gems.children) {
+      if (hitTestRectangle(this.pixie, gem, true)) {
+        this.gems.removeChild(gem);
+        this.gemsCollected++;
+        this.scoreDisplay.text = 'Gems: ' + this.gemsCollected;
+      }
+    }
+
+    if (pixieVsBlocks) {
       while (this.stage.children[0]) {
         this.stage.removeChild(this.stage.children[0]);
       }
@@ -149,7 +199,5 @@ export default class World {
 
       this.hasReachedEnd = true;
     }
-
-    return true;
   }
 }

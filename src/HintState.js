@@ -20,12 +20,12 @@ export default class HintState {
   }
 
   buildScene() {
-    this.hintTop = new Sprite(this.textures["press_space_to_make.png"]);
+    this.hintTop = new Sprite(this.textures['press_space_to_make.png']);
     this.hintTop.x = rendererWidth / 2 - this.hintTop.width / 2;
     this.hintTop.y = rendererHeight / 2 - this.hintTop.height / 2 - 100;
     this.stage.addChild(this.hintTop);
 
-    this.hintBottom = new Sprite(this.textures["pixie_flap_her_wings.png"]);
+    this.hintBottom = new Sprite(this.textures['pixie_flap_her_wings.png']);
     this.hintBottom.x = rendererWidth / 2 - this.hintBottom.width / 2;
     this.hintBottom.y = this.hintTop.y + 100;
     this.stage.addChild(this.hintBottom);
