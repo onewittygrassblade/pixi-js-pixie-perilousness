@@ -81,7 +81,7 @@ export default class World {
     this.stage.addChild(this.gems);
 
     for (let i = 0; i < numberOfPillars; i++) {
-      let gem = new Sprite(this.textures[`gem-${randomInt(1, 9)}-small.png`]);
+      let gem = new Sprite(this.textures[`gem-${randomInt(1, 9)}.png`]);
       this.gems.addChild(gem);
       gem.x = (i * 384) + 736 - gem.width / 2;
       gem.y = randomInt(50, rendererHeight - 50);
@@ -113,7 +113,7 @@ export default class World {
   }
 
   createPixie() {
-    let pixieFrames = [this.textures['0.png'], this.textures['1.png'], this.textures['2.png']];
+    let pixieFrames = [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']];
     this.pixie = new Pixie(pixieFrames);
     this.stage.addChild(this.pixie);
   }
