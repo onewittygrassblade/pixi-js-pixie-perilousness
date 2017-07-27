@@ -2,6 +2,7 @@ import Pixi from 'pixi.js';
 
 export const autoDetectRenderer = PIXI.autoDetectRenderer;
 export const Container = PIXI.Container;
+export const ParticleContainer = PIXI.particles.ParticleContainer;
 export const loader = PIXI.loader;
 export const resources = PIXI.loader.resources;
 export const Sprite = PIXI.Sprite;

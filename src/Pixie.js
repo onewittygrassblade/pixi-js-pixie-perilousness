@@ -1,25 +1,21 @@
-import { AnimatedSprite } from './const/aliases.js';
+import Entity from './Entity.js';
 
-import { playerStartX, playerStartY, gravity, wingPower } from './const/gameConstants.js';
+import { worldGravity, wingPower } from './const/gameConstants.js';
 
-export default class Pixie extends AnimatedSprite {
-  constructor(frames) {
-    super(frames);
+export default class Pixie extends Entity {
+  constructor(textureFrames, x, y) {
+    super(textureFrames, x, y, 0, 0, 0, worldGravity);
 
     this.animationSpeed = 0.4;
-
-    this.x = playerStartX;
-    this.y = playerStartY;
-
-    this.vy = 0;
-    this.ay = gravity;
   }
 
   flapWings() {
-    this.ay = gravity + wingPower;
+    this.ay = worldGravity + wingPower;
+    this.play();
   }
 
   stopFlapping() {
-    this.ay = gravity;
+    this.ay = worldGravity;
+    this.gotoAndStop(0);
   }
 }

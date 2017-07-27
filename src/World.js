@@ -1,6 +1,7 @@
 import Pixie from './Pixie.js';
+import Emitter from './Emitter.js';
 import KeyBinder from './KeyBinder.js';
-import randomInt from './helpers/randomInt.js';
+import { randomInt } from './helpers/RandomNumbers.js';
 import contain from './helpers/contain.js';
 import hitTestRectangle from './helpers/hitTestRectangle.js';
 
@@ -14,6 +15,9 @@ import {  rendererWidth,
           rendererHeight,
           backgroundScrollingSpeed,
           foregroundScrollingSpeed,
+          playerStartX,
+          playerStartY,
+          worldGravity,
           numberOfPillars,
           pillarHeight,
           maxGapSize,
@@ -27,7 +31,8 @@ export default class World {
     this.gemsCollected = 0;
 
     this.hasAlivePlayer = true;
-    this.hasReachedEnd = false;
+    this.pixieHasReachedEnd = false;
+    this.gameOver = false;
 
     this.buildScene();
 
@@ -39,13 +44,9 @@ export default class World {
     this.stage.addChild(this.sky);
 
     this.createBlocks();
-
     this.createGems();
-
     this.createScoreDisplay();
-
     this.createFinish();
-
     this.createPixie();
   }
 
@@ -89,13 +90,13 @@ export default class World {
   }
 
   createScoreDisplay() {
-    let textStyle = {
+    let textStyle = new TextStyle({
       fontSize: 24,
       fontWeight: 'bold',
       fill: 0xe6007e,
       stroke: 0xf4d942,
       strokeThickness: 4
-    };
+    });
 
     this.scoreDisplay = new Text('Gems: ' + this.gemsCollected, textStyle);
 
@@ -113,19 +114,49 @@ export default class World {
   }
 
   createPixie() {
-    let pixieFrames = [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']];
-    this.pixie = new Pixie(pixieFrames);
+    this.pixie = new Pixie(
+      [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
+      playerStartX,
+      playerStartY
+    );
+
+    this.emitter = new Emitter(
+      this.pixie,
+      8,
+      this.pixie.height / 2,
+      [this.textures["pink.png"], this.textures["yellow.png"], this.textures["green.png"], this.textures["violet.png"]],
+      18,             // minSize
+      24,             // maxSize
+      0,              // minInitialSpeed
+      0.1,            // maxInitialSpeed
+      worldGravity,   // minGravity
+      worldGravity,   // maxGravity
+      0.00157,        // minRotationVelocity
+      0.00628,        // maxRotationVelocity
+      0.0001,         // minShrinkVelocity
+      0.0005,          // maxShrinkVelocity
+      500,            // minLifetime
+      2000,           // maxLifetime
+      2.4,            // minDirectionAngle
+      3.6,            // maxDirectionAngle
+      true,           // randomSpacing
+      false,          // emitting
+      10,             // emissionRate
+      3               // numberOfParticlesPerEmit
+    );
+
+    this.stage.addChild(this.emitter.particleSystem.container);
     this.stage.addChild(this.pixie);
   }
 
   addKeyControllers() {
     let pixieFlapWings = () => {
       this.pixie.flapWings();
-      this.pixie.play();
+      this.emitter.emit();
     };
     let pixieStopFlapping = () => {
       this.pixie.stopFlapping();
-      this.pixie.stop();
+      this.emitter.stop();
     };
 
     this.pixieController = new KeyBinder(32, pixieFlapWings, pixieStopFlapping);
@@ -146,8 +177,11 @@ export default class World {
       this.finish.x -= foregroundScrollingSpeed * dt;
     }
 
-    this.pixie.vy += this.pixie.ay * dt;
-    this.pixie.y += this.pixie.vy * dt;
+    // Update pixie's velocity and position
+    this.pixie.updatePosition(dt);
+
+    // Update emitter
+    this.emitter.update(dt);
 
     // Keep pixie within canvas
     let pixieVsStage = contain(
@@ -166,7 +200,9 @@ export default class World {
       }
     }
 
-    this.checkCollisions();
+    if (!this.gameOver) {
+      this.checkCollisions();
+    }
   }
 
   checkCollisions() {
@@ -185,19 +221,24 @@ export default class World {
     }
 
     if (pixieVsBlocks) {
-      while (this.stage.children[0]) {
-        this.stage.removeChild(this.stage.children[0]);
-      }
+      this.stage.removeChild(this.pixie);
 
-      this.hasAlivePlayer = false;
+      this.emitter.stop();
+      this.emitter.minInitialSpeed = 0.1;
+      this.emitter.maxInitialSpeed = 0.3;
+      this.emitter.minDirectionAngle = 0;
+      this.emitter.maxDirectionAngle = 6.28;
+      this.emitter.burst(40);
+
+      setTimeout(() => {
+        this.hasAlivePlayer = false;
+      }, 1000);
+
+      this.gameOver = true;
     }
 
     if (pixieVsFinish) {
-      while (this.stage.children[0]) {
-        this.stage.removeChild(this.stage.children[0]);
-      }
-
-      this.hasReachedEnd = true;
+      this.pixieHasReachedEnd = true;
     }
   }
 }
