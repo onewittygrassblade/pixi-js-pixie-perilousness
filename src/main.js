@@ -1,5 +1,7 @@
 import App from './App.js';
 
-App.loadImages().then(() => {
-  new App().setup();
-});
+App.loadImages()
+  .then(App.loadFonts)
+  .then(() => {
+    new App().setup();
+  });

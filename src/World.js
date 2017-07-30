@@ -8,8 +8,7 @@ import hitTestRectangle from './helpers/hitTestRectangle.js';
 import {  Container,
           Sprite,
           TilingSprite,
-          Text,
-          TextStyle } from './const/aliases.js';
+          BitmapText } from './const/aliases.js';
 
 import {  rendererWidth,
           rendererHeight,
@@ -17,7 +16,6 @@ import {  rendererWidth,
           foregroundScrollingSpeed,
           playerStartX,
           playerStartY,
-          worldGravity,
           numberOfPillars,
           pillarHeight,
           maxGapSize,
@@ -90,15 +88,10 @@ export default class World {
   }
 
   createScoreDisplay() {
-    let textStyle = new TextStyle({
-      fontSize: 24,
-      fontWeight: 'bold',
-      fill: 0xe6007e,
-      stroke: 0xf4d942,
-      strokeThickness: 4
-    });
-
-    this.scoreDisplay = new Text('Gems: ' + this.gemsCollected, textStyle);
+    this.scoreDisplay = new BitmapText(
+      'Gems ' + this.gemsCollected,
+      {font: '36px pixie-font'}
+    );
 
     this.scoreDisplay.x = 20;
     this.scoreDisplay.y = 20;
@@ -107,10 +100,15 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new Sprite(this.textures['finish.png']);
-    this.stage.addChild(this.finish);
+    this.finish = new BitmapText(
+      'Finish!',
+      {font: '96px pixie-font'}
+    );
+
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
     this.finish.y = 192;
+
+    this.stage.addChild(this.finish);
   }
 
   createPixie() {
@@ -129,8 +127,8 @@ export default class World {
       24,             // maxSize
       0,              // minInitialSpeed
       0.1,            // maxInitialSpeed
-      worldGravity,   // minGravity
-      worldGravity,   // maxGravity
+      0.0001,         // minGravity
+      0.0003,         // maxGravity
       0.00157,        // minRotationVelocity
       0.00628,        // maxRotationVelocity
       0.0001,         // minShrinkVelocity
@@ -171,7 +169,7 @@ export default class World {
     this.sky.tilePosition.x -= backgroundScrollingSpeed * dt;
 
     // Scroll scene
-    if (this.finish.getGlobalPosition().x > 256) {
+    if (this.finish.getGlobalPosition().x > 220) {
       this.blocks.x -= foregroundScrollingSpeed * dt;
       this.gems.x -= foregroundScrollingSpeed * dt;
       this.finish.x -= foregroundScrollingSpeed * dt;
@@ -216,7 +214,7 @@ export default class World {
       if (hitTestRectangle(this.pixie, gem, true)) {
         this.gems.removeChild(gem);
         this.gemsCollected++;
-        this.scoreDisplay.text = 'Gems: ' + this.gemsCollected;
+        this.scoreDisplay.text = 'Gems ' + this.gemsCollected;
       }
     }
 

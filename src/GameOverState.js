@@ -1,7 +1,7 @@
 import GameState from './GameState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { Sprite, TilingSprite } from './const/aliases.js';
+import { TilingSprite, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -20,33 +20,26 @@ export default class GameOverState {
     let sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
     this.stage.addChild(sky);
 
-    let message = new Sprite();
+    let message = new BitmapText(
+      'Whoops!',
+      {font: '96px pixie-font'}
+    );
 
     if (success) {
-      message.texture = this.textures['yay.png'];
-    }
-    else {
-      message.texture = this.textures['whoops.png'];
+      message.text = 'Yay!';
     }
 
     message.x = rendererWidth / 2 - message.width / 2;
-    message.y = rendererHeight / 2 - message.height / 2 - 100;
+    message.y = rendererHeight / 2 - message.height / 2;
 
     this.stage.addChild(message);
-
-    let hint = new Sprite(this.textures['space_to_restart.png']);
-    hint.x = rendererWidth / 2 - hint.width / 2;
-    hint.y = message.y + 200;
-    this.stage.addChild(hint);
   }
 
   addKeyControllers() {
     let restartGame = () => {
       this.restartGameController.remove();
 
-      while (this.stage.children[0]) {
-        this.stage.removeChild(this.stage.children[0]);
-      }
+      this.stage.removeChildren();
 
       this.stateStack.pop();
       this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));

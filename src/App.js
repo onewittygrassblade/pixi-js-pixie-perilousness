@@ -27,6 +27,15 @@ export default class App {
     });
   }
 
+  static loadFonts() {
+    return new Promise((resolve, reject) => {
+      loader
+      .add('fonts/pixie-font.fnt')
+      .on('error', reject)
+      .load(resolve);
+    });
+  }
+
   setup() {
     this.textures = resources['images/pixie-perilousness.json'].textures;
     this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));

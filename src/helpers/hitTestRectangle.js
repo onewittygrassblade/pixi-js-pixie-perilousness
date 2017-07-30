@@ -1,13 +1,14 @@
 // Return true if there is an overlap between two rectangles
 export default function hitTestRectangle(r1, r2, global = false) {
-  r1.halfWidth = r1.width / 2;
-  r1.halfHeight = r1.height / 2;
-  r1.anchorOffsetX = r1.anchor.x * r1.width;
-  r1.anchorOffsetY = r1.anchor.y * r1.height;
-  r2.halfWidth = r2.width / 2;
-  r2.halfHeight = r2.height / 2;
-  r2.anchorOffsetX = r2.anchor.x * r2.width;
-  r2.anchorOffsetY = r2.anchor.y * r2.height;
+  if (!r1.halfWidth) r1.halfWidth = r1.width / 2;
+  if (!r1.halfHeight) r1.halfHeight = r1.height / 2;
+  if (!r1.anchorOffsetX) r1.anchorOffsetX = r1.anchor.x * r1.width;
+  if (!r1.anchorOffsetY) r1.anchorOffsetY = r1.anchor.y * r1.height;
+
+  if (!r2.halfWidth) r2.halfWidth = r2.width / 2;
+  if (!r2.halfHeight) r2.halfHeight = r2.height / 2;
+  if (!r2.anchorOffsetX) r2.anchorOffsetX = r2.anchor.x * r2.width;
+  if (!r2.anchorOffsetY) r2.anchorOffsetY = r2.anchor.y * r2.height;
 
   if (global) {
     r1.centerX = r1.getGlobalPosition().x + r1.halfWidth - r1.anchorOffsetX;

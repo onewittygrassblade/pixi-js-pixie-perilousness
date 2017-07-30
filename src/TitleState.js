@@ -2,7 +2,7 @@ import GameState from './GameState.js';
 import HintState from './HintState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { Sprite, TilingSprite } from './const/aliases.js';
+import { TilingSprite, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -21,14 +21,20 @@ export default class TitleState {
     let sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
     this.stage.addChild(sky);
 
-    let title = new Sprite(this.textures['title.png']);
+    let title = new BitmapText(
+      'Pixie Perilousness!',
+      {font: '72px pixie-font'}
+    );
     title.x = rendererWidth / 2 - title.width / 2;
-    title.y = rendererHeight / 2 - title.height / 2 - 100;
+    title.y = rendererHeight / 2 - title.height / 2 - 40;
     this.stage.addChild(title);
 
-    let hint = new Sprite(this.textures['press_space_to_start.png']);
+    let hint = new BitmapText(
+      'Press space to start',
+      {font: '48px pixie-font'}
+    );
     hint.x = rendererWidth / 2 - hint.width / 2;
-    hint.y = title.y + 200;
+    hint.y = title.y + 100;
     this.stage.addChild(hint);
   }
 
@@ -36,9 +42,7 @@ export default class TitleState {
     let startGame = () => {
       this.startGameController.remove();
 
-      while (this.stage.children[0]) {
-        this.stage.removeChild(this.stage.children[0]);
-      }
+      this.stage.removeChildren();
 
       this.stateStack.pop();
       let gameState = new GameState(this.stage, this.stateStack, this.textures);

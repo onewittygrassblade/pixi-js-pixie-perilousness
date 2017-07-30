@@ -1,6 +1,6 @@
 import KeyBinder from './KeyBinder.js';
 
-import { Sprite } from './const/aliases.js';
+import { BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -13,21 +13,27 @@ export default class PauseState {
 
     this.parent.world.removeKeyControllers();
 
-    this.buildScene();
+    this.createText();
 
     this.addKeyControllers();
   }
 
-  buildScene() {
-    this.title = new Sprite(this.textures['game_paused.png']);
-    this.title.x = rendererWidth / 2 - this.title.width / 2;
-    this.title.y = rendererHeight / 2 - this.title.height / 2 - 100;
-    this.stage.addChild(this.title);
+  createText() {
+    let message = new BitmapText(
+      'Game paused',
+      {font: '72px pixie-font'}
+    );
+    message.x = rendererWidth / 2 - message.width / 2;
+    message.y = rendererHeight / 2 - message.height / 2 - 40;
+    this.stage.addChild(message);
 
-    this.hint = new Sprite(this.textures['esc_to_continue.png']);
-    this.hint.x = rendererWidth / 2 - this.hint.width / 2;
-    this.hint.y = this.title.y + 200;
-    this.stage.addChild(this.hint);
+    let hint = new BitmapText(
+      'Press ESC to resume',
+      {font: '48px pixie-font'}
+    );
+    hint.x = rendererWidth / 2 - hint.width / 2;
+    hint.y = message.y + 100;
+    this.stage.addChild(hint);
   }
 
   addKeyControllers() {
@@ -37,8 +43,7 @@ export default class PauseState {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChild(this.title);
-      this.stage.removeChild(this.hint);
+      this.stage.removeChildren(this.stage.children.length - 2, this.stage.children.length);
 
       this.stateStack.pop();
     }

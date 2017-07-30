@@ -1,6 +1,6 @@
 import KeyBinder from './KeyBinder.js';
 
-import { Sprite } from './const/aliases.js';
+import { BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -14,21 +14,22 @@ export default class HintState {
     this.parent.removeKeyControllers();
     this.parent.world.removeKeyControllers();
 
-    this.buildScene();
+    this.createText();
 
     this.addKeyControllers();
   }
 
-  buildScene() {
-    this.hintTop = new Sprite(this.textures['press_space_to_make.png']);
-    this.hintTop.x = rendererWidth / 2 - this.hintTop.width / 2;
-    this.hintTop.y = rendererHeight / 2 - this.hintTop.height / 2 - 100;
-    this.stage.addChild(this.hintTop);
+  createText() {
+    let text = new BitmapText(
+      'Press space to make Pixie flap her wings!',
+      {font: '64px pixie-font', align: 'center'}
+    );
 
-    this.hintBottom = new Sprite(this.textures['pixie_flap_her_wings.png']);
-    this.hintBottom.x = rendererWidth / 2 - this.hintBottom.width / 2;
-    this.hintBottom.y = this.hintTop.y + 100;
-    this.stage.addChild(this.hintBottom);
+    text.maxWidth = 480;
+    text.x = rendererWidth / 2 - text.width / 2;
+    text.y = rendererHeight / 2 - text.height / 2;
+
+    this.stage.addChild(text);
   }
 
   addKeyControllers() {
@@ -38,8 +39,7 @@ export default class HintState {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChild(this.hintTop);
-      this.stage.removeChild(this.hintBottom);
+      this.stage.removeChildAt(this.stage.children.length - 1);
 
       this.stateStack.pop();
     }

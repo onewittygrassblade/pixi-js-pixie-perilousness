@@ -22,7 +22,13 @@ export default class Entity extends AnimatedSprite {
     this.ax = ax;
     this.ay = ay;
 
+    this.halfWidth = this.width / 2;
+    this.halfHeight = this.height / 2;
+
     this.anchor.set(0.5, 0.5);
+    this.anchorOffsetX = this.anchor.x * this.width;
+    this.anchorOffsetY = this.anchor.y * this.height;
+
     this.rotation = rotation;
     this.rotationVelocity = rotationVelocity;
     this.rotationAcceleration = rotationAcceleration;

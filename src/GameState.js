@@ -31,25 +31,19 @@ export default class GameState {
     this.world.update(dt);
 
     if (!this.world.hasAlivePlayer) {
-      this.clearStage();
+      this.stage.removeChildren();
       this.pauseGameController.remove();
       this.stateStack.pop();
       this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
     }
 
     if (this.world.pixieHasReachedEnd) {
-      this.clearStage();
+      this.stage.removeChildren();
       this.pauseGameController.remove();
       this.stateStack.pop();
       this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
     }
 
     return false;
-  }
-
-  clearStage() {
-    while (this.stage.children[0]) {
-      this.stage.removeChild(this.stage.children[0]);
-    }
   }
 }
