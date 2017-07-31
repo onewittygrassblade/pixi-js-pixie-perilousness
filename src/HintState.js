@@ -5,31 +5,35 @@ import { BitmapText } from './const/aliases.js';
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
 export default class HintState {
-  constructor(stage, stateStack, textures, parent) {
+  constructor(stage, stateStack, parent, level, message) {
     this.stage = stage;
     this.stateStack = stateStack;
-    this.textures = textures;
     this.parent = parent;
 
     this.parent.removeKeyControllers();
     this.parent.world.removeKeyControllers();
 
-    this.createText();
+    this.createText(level, message);
 
     this.addKeyControllers();
   }
 
-  createText() {
-    let text = new BitmapText(
-      'Press space to make Pixie flap her wings!',
-      {font: '64px pixie-font', align: 'center'}
+  createText(level, message) {
+    let levelText = new BitmapText(
+      'Level ' + level,
+      {font: '64px pixie-font'}
     );
+    levelText.x = rendererWidth / 2 - levelText.width / 2;
+    levelText.y = rendererHeight / 2 - levelText.height / 2 - 40;
+    this.stage.addChild(levelText);
 
-    text.maxWidth = 480;
-    text.x = rendererWidth / 2 - text.width / 2;
-    text.y = rendererHeight / 2 - text.height / 2;
-
-    this.stage.addChild(text);
+    let messageText = new BitmapText(
+      message,
+      {font: '48px pixie-font'}
+    );
+    messageText.x = rendererWidth / 2 - messageText.width / 2;
+    messageText.y = levelText.y + 100;
+    this.stage.addChild(messageText);
   }
 
   addKeyControllers() {
@@ -39,7 +43,7 @@ export default class HintState {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChildAt(this.stage.children.length - 1);
+      this.stage.removeChildren(this.stage.children.length - 2, this.stage.children.length);
 
       this.stateStack.pop();
     }

@@ -1,7 +1,10 @@
 import World from './World.js';
+import HintState from './HintState.js';
 import PauseState from './PauseState.js';
 import GameOverState from './GameOverState.js';
 import KeyBinder from './KeyBinder.js';
+
+import { levelsData } from './const/gameConstants.js';
 
 export default class GameState {
   constructor(stage, stateStack, textures) {
@@ -9,7 +12,8 @@ export default class GameState {
     this.stateStack = stateStack;
     this.textures = textures;
 
-    this.world = new World(stage, textures);
+    this.world = new World(stage, textures, levelsData[0].worldData);
+    this.currentLevel = 0;
 
     this.addKeyControllers();
   }
@@ -31,17 +35,26 @@ export default class GameState {
     this.world.update(dt);
 
     if (!this.world.hasAlivePlayer) {
-      this.stage.removeChildren();
+      this.stage.removeChildren(1, this.stage.children.length);
       this.pauseGameController.remove();
       this.stateStack.pop();
       this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
     }
 
     if (this.world.pixieHasReachedEnd) {
-      this.stage.removeChildren();
-      this.pauseGameController.remove();
-      this.stateStack.pop();
-      this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
+      this.currentLevel++;
+
+      if (this.currentLevel < levelsData.length) {
+        this.world.levelData = levelsData[this.currentLevel].worldData;
+        this.world.resetScene();
+        this.world.pixieHasReachedEnd = false;
+        this.stateStack.push(new HintState(this.stage, this.stateStack, this, this.currentLevel+1, levelsData[this.currentLevel].hintData));
+      } else {
+        this.stage.removeChildren(1, this.stage.children.length);
+        this.pauseGameController.remove();
+        this.stateStack.pop();
+        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
+      }
     }
 
     return false;

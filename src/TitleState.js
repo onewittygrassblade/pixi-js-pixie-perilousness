@@ -4,7 +4,7 @@ import KeyBinder from './KeyBinder.js';
 
 import { TilingSprite, BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight, levelsData } from './const/gameConstants.js';
 
 export default class TitleState {
   constructor(stage, stateStack, textures) {
@@ -42,12 +42,12 @@ export default class TitleState {
     let startGame = () => {
       this.startGameController.remove();
 
-      this.stage.removeChildren();
+      this.stage.removeChildren(1, this.stage.children.length);
 
       this.stateStack.pop();
       let gameState = new GameState(this.stage, this.stateStack, this.textures);
       this.stateStack.push(gameState);
-      this.stateStack.push(new HintState(this.stage, this.stateStack, this.textures, gameState));
+      this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 1, levelsData[0].hintData));
     }
 
     this.startGameController = new KeyBinder(32, null, startGame);

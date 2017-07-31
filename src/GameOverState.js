@@ -1,9 +1,10 @@
 import GameState from './GameState.js';
+import HintState from './HintState.js';
 import KeyBinder from './KeyBinder.js';
 
 import { TilingSprite, BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight, levelsData } from './const/gameConstants.js';
 
 export default class GameOverState {
   constructor(stage, stateStack, textures, success) {
@@ -17,9 +18,6 @@ export default class GameOverState {
   }
 
   buildScene(success) {
-    let sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
-    this.stage.addChild(sky);
-
     let message = new BitmapText(
       'Whoops!',
       {font: '96px pixie-font'}
@@ -39,10 +37,12 @@ export default class GameOverState {
     let restartGame = () => {
       this.restartGameController.remove();
 
-      this.stage.removeChildren();
+      this.stage.removeChildren(1, this.stage.children.length);
 
       this.stateStack.pop();
-      this.stateStack.push(new GameState(this.stage, this.stateStack, this.textures));
+      let gameState = new GameState(this.stage, this.stateStack, this.textures);
+      this.stateStack.push(gameState);
+      this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 1, levelsData[0].hintData));
     }
 
     this.restartGameController = new KeyBinder(32, null, restartGame);

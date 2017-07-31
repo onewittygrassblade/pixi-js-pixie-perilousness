@@ -22,9 +22,10 @@ import {  rendererWidth,
           gapReductionFrequency } from './const/gameConstants.js';
 
 export default class World {
-  constructor(stage, textures) {
+  constructor(stage, textures, levelData) {
     this.stage = stage;
     this.textures = textures;
+    this.levelData = levelData;
 
     this.gemsCollected = 0;
 
@@ -38,11 +39,14 @@ export default class World {
   }
 
   buildScene() {
-    this.sky = new TilingSprite(this.textures['clouds.png'], rendererWidth, rendererHeight);
-    this.stage.addChild(this.sky);
+    this.sky = this.stage.getChildAt(0);
 
     this.createBlocks();
+
+    this.gems = new Container();
+    this.stage.addChild(this.gems);
     this.createGems();
+
     this.createScoreDisplay();
     this.createFinish();
     this.createPixie();
@@ -76,9 +80,6 @@ export default class World {
   }
 
   createGems() {
-    this.gems = new Container();
-    this.stage.addChild(this.gems);
-
     for (let i = 0; i < numberOfPillars; i++) {
       let gem = new Sprite(this.textures[`gem-${randomInt(1, 9)}.png`]);
       this.gems.addChild(gem);
@@ -115,7 +116,8 @@ export default class World {
     this.pixie = new Pixie(
       [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
       playerStartX,
-      playerStartY
+      playerStartY,
+      this.levelData.gravity
     );
 
     this.emitter = new Emitter(
@@ -129,10 +131,10 @@ export default class World {
       0.1,            // maxInitialSpeed
       0.0001,         // minGravity
       0.0003,         // maxGravity
-      0.00157,        // minRotationVelocity
+      -0.00628,       // minRotationVelocity
       0.00628,        // maxRotationVelocity
       0.0001,         // minShrinkVelocity
-      0.0005,          // maxShrinkVelocity
+      0.0005,         // maxShrinkVelocity
       500,            // minLifetime
       2000,           // maxLifetime
       2.4,            // minDirectionAngle
@@ -147,13 +149,28 @@ export default class World {
     this.stage.addChild(this.pixie);
   }
 
+  resetScene() {
+    this.blocks.x = 0;
+
+    this.gems.removeChildren();
+    this.gems.x = 0;
+    this.createGems();
+
+    this.finish.x = ((numberOfPillars - 1) * 384) + 896;
+
+    this.pixie.vy = 0;
+    this.pixie.y = playerStartY;
+  }
+
   addKeyControllers() {
     let pixieFlapWings = () => {
-      this.pixie.flapWings();
+      this.pixie.play();
+      this.pixie.ay = this.levelData.gravity + this.pixie.wingPower;
       this.emitter.emit();
     };
     let pixieStopFlapping = () => {
-      this.pixie.stopFlapping();
+      this.pixie.gotoAndStop(0);
+      this.pixie.ay = this.levelData.gravity;
       this.emitter.stop();
     };
 
