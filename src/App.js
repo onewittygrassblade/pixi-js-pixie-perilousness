@@ -1,7 +1,7 @@
 import StateStack from './StateStack.js';
 import TitleState from './TitleState.js';
 
-import {  autoDetectRenderer, loader, resources, Container } from './const/aliases.js';
+import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
 
 import {  timePerFrame, rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -37,8 +37,10 @@ export default class App {
   }
 
   setup() {
-    this.textures = resources['images/pixie-perilousness.json'].textures;
-    this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
+    let textures = resources['images/pixie-perilousness.json'].textures;
+    this.stage.addChild(new TilingSprite(textures['clouds.png'], rendererWidth, rendererHeight));
+
+    this.stateStack.push(new TitleState(this.stage, this.stateStack, textures));
 
     this.run();
   }
