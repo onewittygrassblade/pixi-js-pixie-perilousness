@@ -12,8 +12,9 @@ export default class GameState {
     this.stateStack = stateStack;
     this.textures = textures;
 
-    this.world = new World(stage, textures, levelsData[0].worldData);
     this.currentLevel = 0;
+    this.numberOfLives = 3;
+    this.world = new World(stage, textures, levelsData[0].worldData, 3);
 
     this.addKeyControllers();
   }
@@ -35,10 +36,22 @@ export default class GameState {
     this.world.update(dt);
 
     if (!this.world.hasAlivePlayer) {
-      this.stage.removeChildren(1, this.stage.children.length);
-      this.pauseGameController.remove();
-      this.stateStack.pop();
-      this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
+      if (this.numberOfLives > 1) {
+        this.world.resetScene();
+        this.world.resetEmitter();
+        this.world.decreaseNumberOfLives();
+        this.world.pixie.visible = true;
+        this.world.hasAlivePlayer = true;
+        this.world.gameOver = false;
+        this.stateStack.push(new HintState(this.stage, this.stateStack, this, this.currentLevel+1, levelsData[this.currentLevel].hintData));
+        this.numberOfLives--;
+      }
+      else {
+        this.stage.removeChildren(1, this.stage.children.length);
+        this.pauseGameController.remove();
+        this.stateStack.pop();
+        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
+      }
     }
 
     if (this.world.pixieHasReachedEnd) {

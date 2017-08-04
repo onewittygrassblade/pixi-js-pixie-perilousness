@@ -11,7 +11,13 @@ export default class MenuItem extends BitmapText {
     this.interactive = true;
     this.buttonMode = true;
 
-    let glowFilter = new GlowFilter(15, 2, 1, 0xff9999, 0.5);
+    let glowFilter = new GlowFilter(
+      12,       // distance
+      2,        // outerStrength
+      1,        // innerStrength
+      0xff9999, // color
+      0.5       // quality
+    );
 
     this.on('mouseover', e => {
       this.filters = [ glowFilter ];

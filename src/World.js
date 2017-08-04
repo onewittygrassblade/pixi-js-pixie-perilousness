@@ -22,7 +22,7 @@ import {  rendererWidth,
           gapReductionFrequency } from './const/gameConstants.js';
 
 export default class World {
-  constructor(stage, textures, levelData) {
+  constructor(stage, textures, levelData, numberOfLives) {
     this.stage = stage;
     this.textures = textures;
     this.levelData = levelData;
@@ -33,12 +33,6 @@ export default class World {
     this.pixieHasReachedEnd = false;
     this.gameOver = false;
 
-    this.buildScene();
-
-    this.addKeyControllers();
-  }
-
-  buildScene() {
     this.sky = this.stage.getChildAt(0);
 
     this.createBlocks();
@@ -47,9 +41,11 @@ export default class World {
     this.stage.addChild(this.gems);
     this.createGems();
 
-    this.createScoreDisplay();
+    this.createScoreAndLivesDisplay(numberOfLives);
     this.createFinish();
     this.createPixie();
+
+    this.addKeyControllers();
   }
 
   createBlocks() {
@@ -88,16 +84,27 @@ export default class World {
     }
   }
 
-  createScoreDisplay() {
+  createScoreAndLivesDisplay(numberOfLives) {
+    let infoContainer = new Container();
+    infoContainer.x = 20;
+    infoContainer.y = 20;
+    this.stage.addChild(infoContainer);
+
     this.scoreDisplay = new BitmapText(
       'Gems ' + this.gemsCollected,
       {font: '36px pixie-font'}
     );
+    infoContainer.addChild(this.scoreDisplay);
 
-    this.scoreDisplay.x = 20;
-    this.scoreDisplay.y = 20;
+    this.livesContainer = new Container();
+    this.livesContainer.y = this.scoreDisplay.height + 10;
+    infoContainer.addChild(this.livesContainer);
 
-    this.stage.addChild(this.scoreDisplay);
+    for (let i = 0; i < numberOfLives; i++) {
+      let life = new Sprite(this.textures['pixie-0.png']);
+      life.x = i * (life.width + 10);
+      this.livesContainer.addChild(life);
+    }
   }
 
   createFinish() {
@@ -160,6 +167,17 @@ export default class World {
 
     this.pixie.vy = 0;
     this.pixie.y = playerStartY;
+  }
+
+  resetEmitter() {
+    this.emitter.minInitialSpeed = 0;
+    this.emitter.maxInitialSpeed = 0.1;
+    this.emitter.minDirectionAngle = 2.4;
+    this.emitter.maxDirectionAngle = 3.6;
+  }
+
+  decreaseNumberOfLives() {
+    this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
   }
 
   addKeyControllers() {
@@ -236,7 +254,7 @@ export default class World {
     }
 
     if (pixieVsBlocks) {
-      this.stage.removeChild(this.pixie);
+      this.pixie.visible = false;
 
       this.emitter.stop();
       this.emitter.minInitialSpeed = 0.1;
