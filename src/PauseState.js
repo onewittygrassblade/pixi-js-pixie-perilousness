@@ -2,7 +2,7 @@ import KeyBinder from './KeyBinder.js';
 
 import { BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight } from './const/appConstants.js';
 
 export default class PauseState {
   constructor(stage, stateStack, textures, parent) {

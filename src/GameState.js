@@ -14,7 +14,8 @@ export default class GameState {
 
     this.currentLevel = 0;
     this.numberOfLives = 3;
-    this.world = new World(stage, textures, levelsData[0].worldData, 3);
+
+    this.world = new World(stage, textures, this);
 
     this.addKeyControllers();
   }

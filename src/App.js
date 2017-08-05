@@ -3,7 +3,7 @@ import TitleState from './TitleState.js';
 
 import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
 
-import {  timePerFrame, rendererWidth, rendererHeight } from './const/gameConstants.js';
+import {  timePerFrame, rendererWidth, rendererHeight } from './const/appConstants.js';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;

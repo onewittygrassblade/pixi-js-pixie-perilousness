@@ -5,27 +5,25 @@ import { randomInt } from './helpers/RandomNumbers.js';
 import contain from './helpers/contain.js';
 import hitTestRectangle from './helpers/hitTestRectangle.js';
 
-import {  Container,
-          Sprite,
-          TilingSprite,
-          BitmapText } from './const/aliases.js';
+import { Container, Sprite, BitmapText } from './const/aliases.js';
 
-import {  rendererWidth,
-          rendererHeight,
-          backgroundScrollingSpeed,
-          foregroundScrollingSpeed,
-          playerStartX,
-          playerStartY,
-          numberOfPillars,
-          pillarHeight,
-          maxGapSize,
-          gapReductionFrequency } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight } from './const/appConstants.js';
+
+import { backgroundScrollingSpeed,
+         foregroundScrollingSpeed,
+         playerStartX,
+         playerStartY,
+         numberOfPillars,
+         pillarHeight,
+         maxGapSize,
+         gapReductionFrequency,
+         gravity } from './const/worldData.js';
 
 export default class World {
-  constructor(stage, textures, levelData, numberOfLives) {
+  constructor(stage, textures, gameState) {
     this.stage = stage;
     this.textures = textures;
-    this.levelData = levelData;
+    this.gameState = gameState;
 
     this.hasAlivePlayer = true;
     this.pixieHasReachedEnd = false;
@@ -39,7 +37,7 @@ export default class World {
     this.stage.addChild(this.pickups);
     this.createPickups();
 
-    this.createLivesDisplay(numberOfLives);
+    this.createLivesDisplay(this.gameState.numberOfLives);
     this.createFinish();
     this.createPixie();
 
@@ -112,7 +110,7 @@ export default class World {
       [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
       playerStartX,
       playerStartY,
-      this.levelData.gravity
+      gravity
     );
 
     this.emitter = new Emitter(
@@ -171,12 +169,12 @@ export default class World {
   addKeyControllers() {
     let pixieFlapWings = () => {
       this.pixie.play();
-      this.pixie.ay = this.levelData.gravity + this.pixie.wingPower;
+      this.pixie.ay = gravity + this.pixie.wingPower;
       this.emitter.emit();
     };
     let pixieStopFlapping = () => {
       this.pixie.gotoAndStop(0);
-      this.pixie.ay = this.levelData.gravity;
+      this.pixie.ay = gravity;
       this.emitter.stop();
     };
 

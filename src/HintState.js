@@ -2,7 +2,7 @@ import KeyBinder from './KeyBinder.js';
 
 import { Container, BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight } from './const/appConstants.js';
 
 export default class HintState {
   constructor(stage, stateStack, parent, level, message) {
