@@ -1,6 +1,6 @@
 import KeyBinder from './KeyBinder.js';
 
-import { BitmapText } from './const/aliases.js';
+import { Container, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/gameConstants.js';
 
@@ -13,27 +13,32 @@ export default class HintState {
     this.parent.removeKeyControllers();
     this.parent.world.removeKeyControllers();
 
-    this.createText(level, message);
+    this.createTexts(level, message);
 
     this.addKeyControllers();
   }
 
-  createText(level, message) {
+  createTexts(level, message) {
+    let textContainer = new Container();
+    textContainer.x = rendererWidth / 2;
+
     let levelText = new BitmapText(
       'Level ' + level,
       {font: '64px pixie-font'}
     );
-    levelText.x = rendererWidth / 2 - levelText.width / 2;
-    levelText.y = rendererHeight / 2 - levelText.height / 2 - 40;
-    this.stage.addChild(levelText);
+    levelText.anchor.x = 0.5;
+    textContainer.addChild(levelText);
 
     let messageText = new BitmapText(
       message,
       {font: '48px pixie-font'}
     );
-    messageText.x = rendererWidth / 2 - messageText.width / 2;
-    messageText.y = levelText.y + 100;
-    this.stage.addChild(messageText);
+    messageText.anchor.x = 0.5;
+    messageText.y = levelText.y + levelText.height + 40;
+    textContainer.addChild(messageText);
+
+    textContainer.y = rendererHeight / 2 - textContainer.height / 2;
+    this.stage.addChild(textContainer);
   }
 
   addKeyControllers() {
@@ -43,7 +48,7 @@ export default class HintState {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChildren(this.stage.children.length - 2, this.stage.children.length);
+      this.stage.removeChildAt(this.stage.children.length - 1);
 
       this.stateStack.pop();
     }

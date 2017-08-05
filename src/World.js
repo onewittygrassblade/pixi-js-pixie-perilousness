@@ -27,8 +27,6 @@ export default class World {
     this.textures = textures;
     this.levelData = levelData;
 
-    this.gemsCollected = 0;
-
     this.hasAlivePlayer = true;
     this.pixieHasReachedEnd = false;
     this.gameOver = false;
@@ -37,11 +35,11 @@ export default class World {
 
     this.createBlocks();
 
-    this.gems = new Container();
-    this.stage.addChild(this.gems);
-    this.createGems();
+    this.pickups = new Container();
+    this.stage.addChild(this.pickups);
+    this.createPickups();
 
-    this.createScoreAndLivesDisplay(numberOfLives);
+    this.createLivesDisplay(numberOfLives);
     this.createFinish();
     this.createPixie();
 
@@ -75,30 +73,20 @@ export default class World {
     }
   }
 
-  createGems() {
+  createPickups() {
     for (let i = 0; i < numberOfPillars; i++) {
-      let gem = new Sprite(this.textures[`gem-${randomInt(1, 9)}.png`]);
-      this.gems.addChild(gem);
-      gem.x = (i * 384) + 736 - gem.width / 2;
-      gem.y = randomInt(50, rendererHeight - 50);
+      let pickup = new Sprite(this.textures['gift.png']);//(this.textures[`gift-${randomInt(1, 9)}.png`]);
+      this.pickups.addChild(pickup);
+      pickup.x = (i * 384) + 736 - pickup.width / 2;
+      pickup.y = randomInt(50, rendererHeight - 50);
     }
   }
 
-  createScoreAndLivesDisplay(numberOfLives) {
-    let infoContainer = new Container();
-    infoContainer.x = 20;
-    infoContainer.y = 20;
-    this.stage.addChild(infoContainer);
-
-    this.scoreDisplay = new BitmapText(
-      'Gems ' + this.gemsCollected,
-      {font: '36px pixie-font'}
-    );
-    infoContainer.addChild(this.scoreDisplay);
-
+  createLivesDisplay(numberOfLives) {
     this.livesContainer = new Container();
-    this.livesContainer.y = this.scoreDisplay.height + 10;
-    infoContainer.addChild(this.livesContainer);
+    this.livesContainer.x = 20;
+    this.livesContainer.y = 20;
+    this.stage.addChild(this.livesContainer);
 
     for (let i = 0; i < numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
@@ -159,9 +147,9 @@ export default class World {
   resetScene() {
     this.blocks.x = 0;
 
-    this.gems.removeChildren();
-    this.gems.x = 0;
-    this.createGems();
+    this.pickups.removeChildren();
+    this.pickups.x = 0;
+    this.createPickups();
 
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
 
@@ -206,7 +194,7 @@ export default class World {
     // Scroll scene
     if (this.finish.getGlobalPosition().x > 220) {
       this.blocks.x -= foregroundScrollingSpeed * dt;
-      this.gems.x -= foregroundScrollingSpeed * dt;
+      this.pickups.x -= foregroundScrollingSpeed * dt;
       this.finish.x -= foregroundScrollingSpeed * dt;
     }
 
@@ -245,11 +233,9 @@ export default class World {
 
     let pixieVsFinish = hitTestRectangle(this.pixie, this.finish, true);
 
-    for (let gem of this.gems.children) {
-      if (hitTestRectangle(this.pixie, gem, true)) {
-        this.gems.removeChild(gem);
-        this.gemsCollected++;
-        this.scoreDisplay.text = 'Gems ' + this.gemsCollected;
+    for (let pickup of this.pickups.children) {
+      if (hitTestRectangle(this.pixie, pickup, true)) {
+        this.pickups.removeChild(pickup);
       }
     }
 

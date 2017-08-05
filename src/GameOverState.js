@@ -1,8 +1,7 @@
-import GameState from './GameState.js';
-import HintState from './HintState.js';
+import TitleState from './TitleState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { TilingSprite, BitmapText } from './const/aliases.js';
+import { Container, TilingSprite, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight, levelsData } from './const/gameConstants.js';
 
@@ -12,25 +11,35 @@ export default class GameOverState {
     this.stateStack = stateStack;
     this.textures = textures;
 
-    this.buildScene(success);
+    this.createTexts(success);
 
     this.addKeyControllers();
   }
 
-  buildScene(success) {
-    let message = new BitmapText(
+  createTexts(success) {
+    let textContainer = new Container();
+    textContainer.x = rendererWidth / 2;
+
+    let messageText = new BitmapText(
       'Whoops!',
-      {font: '96px pixie-font'}
+      {font: '64px pixie-font'}
     );
-
     if (success) {
-      message.text = 'Yay!';
+      messageText.text = 'Yay!';
     }
+    messageText.anchor.x = 0.5;
+    textContainer.addChild(messageText);
 
-    message.x = rendererWidth / 2 - message.width / 2;
-    message.y = rendererHeight / 2 - message.height / 2;
+    let hintText = new BitmapText(
+      'Press space to continue',
+      {font: '48px pixie-font'}
+    );
+    hintText.anchor.x = 0.5;
+    hintText.y = messageText.y + messageText.height + 40;
+    textContainer.addChild(hintText);
 
-    this.stage.addChild(message);
+    textContainer.y = rendererHeight / 2 - textContainer.height / 2;
+    this.stage.addChild(textContainer);
   }
 
   addKeyControllers() {
@@ -40,9 +49,7 @@ export default class GameOverState {
       this.stage.removeChildren(1, this.stage.children.length);
 
       this.stateStack.pop();
-      let gameState = new GameState(this.stage, this.stateStack, this.textures);
-      this.stateStack.push(gameState);
-      this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 1, levelsData[0].hintData));
+      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
     }
 
     this.restartGameController = new KeyBinder(32, null, restartGame);
