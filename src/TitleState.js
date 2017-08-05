@@ -4,7 +4,8 @@ import HintState from './HintState.js';
 
 import { Container, BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight, levelsData } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { levelsData } from './const/levelsData.js';
 
 export default class TitleState {
   constructor(stage, stateStack, textures) {

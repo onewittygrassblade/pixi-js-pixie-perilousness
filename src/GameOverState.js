@@ -3,7 +3,8 @@ import KeyBinder from './KeyBinder.js';
 
 import { Container, TilingSprite, BitmapText } from './const/aliases.js';
 
-import { rendererWidth, rendererHeight, levelsData } from './const/gameConstants.js';
+import { rendererWidth, rendererHeight } from './const/gameConstants.js';
+import { levelsData } from './const/levelsData.js';
 
 export default class GameOverState {
   constructor(stage, stateStack, textures, success) {

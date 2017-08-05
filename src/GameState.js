@@ -4,7 +4,7 @@ import PauseState from './PauseState.js';
 import GameOverState from './GameOverState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { levelsData } from './const/gameConstants.js';
+import { levelsData } from './const/levelsData.js'
 
 export default class GameState {
   constructor(stage, stateStack, textures) {
