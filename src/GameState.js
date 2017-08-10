@@ -14,6 +14,7 @@ export default class GameState {
 
     this.currentLevel = 0;
     this.numberOfLives = 3;
+    this.numberOfTeddyBears = 0;
 
     this.world = new World(stage, textures, this);
 
@@ -38,6 +39,7 @@ export default class GameState {
 
     if (!this.world.hasAlivePlayer) {
       if (this.numberOfLives > 1) {
+        this.world.numberOfTeddyBears = this.numberOfTeddyBears;
         this.world.resetScene();
         this.world.resetEmitter();
         this.world.decreaseNumberOfLives();
@@ -59,8 +61,8 @@ export default class GameState {
       this.currentLevel++;
 
       if (this.currentLevel < levelsData.length) {
-        this.world.levelData = levelsData[this.currentLevel].worldData;
         this.world.resetScene();
+        this.numberOfTeddyBears = this.world.numberOfTeddyBears;
         this.world.pixieHasReachedEnd = false;
         this.stateStack.push(new HintState(this.stage, this.stateStack, this, this.currentLevel+1, levelsData[this.currentLevel].hintData));
       } else {

@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.4.0</string>
         <key>fileName</key>
-        <string>/Users/jguyonnet/Downloads/pixi/pixie-perilousness.tps</string>
+        <string>/Users/jguyonnet/Documents/tests/javascript/pixi-js-tutorial/public/images/pixie-perilousness.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -72,7 +72,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -199,6 +199,19 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">balloon.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>7,12,15,24</rect>
+                <key>scale9Paddings</key>
+                <rect>7,12,15,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">clouds.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -212,10 +225,52 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">fire-1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,12,17,23</rect>
+                <key>scale9Paddings</key>
+                <rect>8,12,17,23</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">fire-2.png</key>
+            <key type="filename">fire-3.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,12,15,24</rect>
+                <key>scale9Paddings</key>
+                <rect>8,12,15,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">fire-4.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,11,16,23</rect>
+                <key>scale9Paddings</key>
+                <rect>8,11,16,23</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">gift.png</key>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
+            <key type="filename">teddybear.png</key>
             <key type="filename">violet.png</key>
+            <key type="filename">weight.png</key>
             <key type="filename">yellow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -270,6 +325,13 @@
             <filename>violet.png</filename>
             <filename>yellow.png</filename>
             <filename>gift.png</filename>
+            <filename>balloon.png</filename>
+            <filename>weight.png</filename>
+            <filename>fire-1.png</filename>
+            <filename>fire-2.png</filename>
+            <filename>fire-3.png</filename>
+            <filename>fire-4.png</filename>
+            <filename>teddybear.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

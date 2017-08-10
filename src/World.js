@@ -5,7 +5,7 @@ import { randomInt } from './helpers/RandomNumbers.js';
 import contain from './helpers/contain.js';
 import hitTestRectangle from './helpers/hitTestRectangle.js';
 
-import { Container, Sprite, BitmapText } from './const/aliases.js';
+import { Container, Sprite, AnimatedSprite, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/appConstants.js';
 
@@ -19,6 +19,8 @@ import { backgroundScrollingSpeed,
          gapReductionFrequency,
          gravity } from './const/worldData.js';
 
+import { maxNumberOfLives } from './const/gameData.js';
+
 export default class World {
   constructor(stage, textures, gameState) {
     this.stage = stage;
@@ -28,6 +30,7 @@ export default class World {
     this.hasAlivePlayer = true;
     this.pixieHasReachedEnd = false;
     this.gameOver = false;
+    this.numberOfTeddyBears = this.gameState.numberOfTeddyBears;
 
     this.sky = this.stage.getChildAt(0);
 
@@ -37,18 +40,35 @@ export default class World {
     this.stage.addChild(this.pickups);
     this.createPickups();
 
-    this.createLivesDisplay(this.gameState.numberOfLives);
+    this.createInfoDisplay(this.gameState.numberOfLives);
     this.createFinish();
     this.createPixie();
 
     this.addKeyControllers();
+
+    this.createPickupActions();
   }
 
   createBlocks() {
     this.blocks = new Container();
     this.stage.addChild(this.blocks);
 
+    let numberOfBlocks = numberOfPillars * pillarHeight;
+    let numberOfGapSizes = numberOfPillars / gapReductionFrequency;
+    for (let i = 0; i < numberOfGapSizes; i++) {
+      numberOfBlocks -= (maxGapSize - i) * gapReductionFrequency;
+    }
+
+    for (let i = 0; i < numberOfBlocks; i++) {
+      this.blocks.addChild(new Sprite(this.textures['greenBlock.png']));
+    }
+
+    this.randomizeBlocks();
+  }
+
+  randomizeBlocks() {
     let gapSize = maxGapSize;
+    let blockCounter = 0;
 
     for (let i = 0; i < numberOfPillars; i++) {
       // Randomly select the starting vertical position for the gap
@@ -62,10 +82,10 @@ export default class World {
       for (let j = 0; j < pillarHeight; j++) {
         // Create a block if it's not within the gap
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
-          let block = new Sprite(this.textures['greenBlock.png']);
-          this.blocks.addChild(block);
+          let block = this.blocks.children[blockCounter];
           block.x = (i * 384) + 512;
           block.y = j * 64;
+          blockCounter++;
         }
       }
     }
@@ -73,31 +93,39 @@ export default class World {
 
   createPickups() {
     for (let i = 0; i < numberOfPillars; i++) {
-      let pickup = new Sprite(this.textures['gift.png']);//(this.textures[`gift-${randomInt(1, 9)}.png`]);
+      let pickup = new Sprite(this.textures['gift.png']);
       this.pickups.addChild(pickup);
       pickup.x = (i * 384) + 736 - pickup.width / 2;
       pickup.y = randomInt(50, rendererHeight - 50);
     }
   }
 
-  createLivesDisplay(numberOfLives) {
-    this.livesContainer = new Container();
-    this.livesContainer.x = 20;
-    this.livesContainer.y = 20;
-    this.stage.addChild(this.livesContainer);
+  createInfoDisplay(numberOfLives) {
+    let infoContainer = new Container();
+    infoContainer.x = 20;
+    infoContainer.y = 20;
+    this.stage.addChild(infoContainer);
 
+    this.livesContainer = new Container();
+    infoContainer.addChild(this.livesContainer);
     for (let i = 0; i < numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
     }
+
+    let teddybearContainer = new Container();
+    teddybearContainer.y = 50;
+    infoContainer.addChild(teddybearContainer);
+    teddybearContainer.addChild(new Sprite(this.textures['teddybear.png']));
+    this.numberOfTeddyBearsText = new BitmapText(this.numberOfTeddyBears.toString(), {font: '30px pixie-font'});
+    this.numberOfTeddyBearsText.x = 40;
+    this.numberOfTeddyBearsText.y = 4;
+    teddybearContainer.addChild(this.numberOfTeddyBearsText);
   }
 
   createFinish() {
-    this.finish = new BitmapText(
-      'Finish!',
-      {font: '96px pixie-font'}
-    );
+    this.finish = new BitmapText('Finish!', {font: '96px pixie-font'});
 
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
     this.finish.y = 192;
@@ -143,16 +171,27 @@ export default class World {
   }
 
   resetScene() {
+    this.emitter.particleSystem.clear();
+
     this.blocks.x = 0;
+    this.randomizeBlocks();
+    for (let block of this.blocks.children) {
+      block.visible = true;
+    }
 
     this.pickups.removeChildren();
     this.pickups.x = 0;
     this.createPickups();
 
+    this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
+
     this.finish.x = ((numberOfPillars - 1) * 384) + 896;
 
     this.pixie.vy = 0;
     this.pixie.y = playerStartY;
+    this.pixie.addedGravity = 0;
+    this.pixie.onFire = false;
+    this.pixie.removeChildren();
   }
 
   resetEmitter() {
@@ -169,12 +208,12 @@ export default class World {
   addKeyControllers() {
     let pixieFlapWings = () => {
       this.pixie.play();
-      this.pixie.ay = gravity + this.pixie.wingPower;
+      this.pixie.ay = gravity + this.pixie.addedGravity + this.pixie.wingPower;
       this.emitter.emit();
     };
     let pixieStopFlapping = () => {
       this.pixie.gotoAndStop(0);
-      this.pixie.ay = gravity;
+      this.pixie.ay = gravity + this.pixie.addedGravity;
       this.emitter.stop();
     };
 
@@ -183,6 +222,47 @@ export default class World {
 
   removeKeyControllers() {
     this.pixieController.remove();
+  }
+
+  createPickupActions() {
+    let pickUpActions = [
+      this.gainExtraLife.bind(this),
+      this.pixie.gainFire.bind(this.pixie, new AnimatedSprite(
+        [
+          this.textures['fire-1.png'],
+          this.textures['fire-2.png'],
+          this.textures['fire-3.png'],
+          this.textures['fire-4.png']
+        ])),
+      this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png'])),
+      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png'])),
+      this.gainTeddyBear.bind(this)
+    ];
+
+    let weights = [1, 1, 1, 1, 8];
+
+    this.pickUpActions = [];
+
+    for (let i = 0; i < weights.length; i++) {
+      for (let j = 0; j < weights[i]; j++) {
+        this.pickUpActions.push(pickUpActions[i]);
+      }
+    }
+  }
+
+  gainExtraLife() {
+    if (this.gameState.numberOfLives < maxNumberOfLives) {
+      let life = new Sprite(this.textures['pixie-0.png']);
+      life.x = this.gameState.numberOfLives * (life.width + 10);
+      this.livesContainer.addChild(life);
+
+      this.gameState.numberOfLives++;
+    }
+  }
+
+  gainTeddyBear() {
+    this.numberOfTeddyBears++;
+    this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
   }
 
   update(dt) {
@@ -197,7 +277,7 @@ export default class World {
     }
 
     // Update pixie's velocity and position
-    this.pixie.updatePosition(dt);
+    this.pixie.updateCurrent(dt);
 
     // Update emitter
     this.emitter.update(dt);
@@ -225,20 +305,25 @@ export default class World {
   }
 
   checkCollisions() {
-    let pixieVsBlocks = this.blocks.children.some(block => {
-      return hitTestRectangle(this.pixie, block, true);
-    });
-
-    let pixieVsFinish = hitTestRectangle(this.pixie, this.finish, true);
-
-    for (let pickup of this.pickups.children) {
-      if (hitTestRectangle(this.pixie, pickup, true)) {
-        this.pickups.removeChild(pickup);
+    // blocks
+    let pixieCrashed = false;
+    if (!this.pixie.onFire) {
+      pixieCrashed = this.blocks.children.some(block => {
+        return hitTestRectangle(this.pixie, block, true);
+      });
+    }
+    else {
+      for (let block of this.blocks.children) {
+        if (hitTestRectangle(this.pixie, block, true)) {
+          block.visible = false;
+        }
       }
     }
 
-    if (pixieVsBlocks) {
+    if (pixieCrashed) {
+      this.pixie.removeChildren();
       this.pixie.visible = false;
+      this.pixie.addedGravity = 0;
 
       this.emitter.stop();
       this.emitter.minInitialSpeed = 0.1;
@@ -254,7 +339,22 @@ export default class World {
       this.gameOver = true;
     }
 
-    if (pixieVsFinish) {
+    // pickups
+    for (let pickup of this.pickups.children) {
+      if (hitTestRectangle(this.pixie, pickup, true)) {
+        this.pickups.removeChild(pickup);
+
+        if (this.pixie.addedGravity === 0 && this.pixie.onFire === false) {
+          this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
+        }
+        else {
+          this.gainTeddyBear();
+        }
+      }
+    }
+
+    // finish
+    if (hitTestRectangle(this.pixie, this.finish, true)) {
       this.pixieHasReachedEnd = true;
     }
   }

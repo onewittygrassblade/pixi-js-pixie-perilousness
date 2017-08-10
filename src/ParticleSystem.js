@@ -14,6 +14,11 @@ export default class ParticleSystem {
     this.container.addChild(particle);
   }
 
+  clear() {
+    this.container.removeChildren();
+    this.particles = [];
+  }
+
   update(dt) {
     while (this.particles.length > 0 && this.particles[0].currentLifetime >= this.particles[0].lifetime) {
       this.container.removeChild(this.particles[0]);

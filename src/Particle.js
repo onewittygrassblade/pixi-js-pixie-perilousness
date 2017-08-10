@@ -4,11 +4,22 @@ import { randomInt } from './helpers/RandomNumbers.js';
 import { ParticleContainer } from './const/aliases.js';
 
 export default class Particle extends Entity {
-  constructor(textureFrames, size, x, y, vx, vy, gravity, rotationVelocity, shrinkVelocity, lifetime) {
+  constructor(
+    textureFrames,
+    lifetime,
+    size = null,
+    x = 0, y = 0,
+    vx = 0, vy = 0,
+    gravity = 0,
+    rotationVelocity = 0,
+    shrinkVelocity = 0) {
+
     super(textureFrames, x, y, vx, vy, 0, gravity, 0, rotationVelocity);
 
-    this.width = size;
-    this.height = size;
+    if (size) {
+      this.width = size;
+      this.height = size;
+    }
 
     if (this.totalFrames > 0) {
       this.gotoAndStop(randomInt(0, this.totalFrames - 1));

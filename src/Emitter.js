@@ -81,6 +81,7 @@ export default class Emitter {
 
       this.particleSystem.addParticle(new Particle(
         this.textureFrames,
+        randomInt(this.minLifetime, this.maxLifetime),
         randomInt(this.minSize, this.maxSize),
         this.parent.x + this.offsetX,
         this.parent.y + this.offsetY,
@@ -88,8 +89,7 @@ export default class Emitter {
         speed * Math.sin(directionAngle),
         randomFloat(this.minGravity, this.maxGravity),
         randomFloat(this.minRotationVelocity, this.maxRotationVelocity),
-        randomFloat(this.minShrinkVelocity, this.maxShrinkVelocity),
-        randomInt(this.minLifetime, this.maxLifetime)
+        randomFloat(this.minShrinkVelocity, this.maxShrinkVelocity)
       ));
 
       if (!this.randomSpacing) {
