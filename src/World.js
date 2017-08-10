@@ -22,9 +22,10 @@ import { backgroundScrollingSpeed,
 import { maxNumberOfLives } from './const/gameData.js';
 
 export default class World {
-  constructor(stage, textures, gameState) {
+  constructor(stage, textures, sounds, gameState) {
     this.stage = stage;
     this.textures = textures;
+    this.sounds = sounds;
     this.gameState = gameState;
 
     this.hasAlivePlayer = true;
@@ -34,6 +35,8 @@ export default class World {
 
     this.sky = this.stage.getChildAt(0);
 
+    this.blocks = new Container();
+    this.stage.addChild(this.blocks);
     this.createBlocks();
 
     this.pickups = new Container();
@@ -50,25 +53,7 @@ export default class World {
   }
 
   createBlocks() {
-    this.blocks = new Container();
-    this.stage.addChild(this.blocks);
-
-    let numberOfBlocks = numberOfPillars * pillarHeight;
-    let numberOfGapSizes = numberOfPillars / gapReductionFrequency;
-    for (let i = 0; i < numberOfGapSizes; i++) {
-      numberOfBlocks -= (maxGapSize - i) * gapReductionFrequency;
-    }
-
-    for (let i = 0; i < numberOfBlocks; i++) {
-      this.blocks.addChild(new Sprite(this.textures['greenBlock.png']));
-    }
-
-    this.randomizeBlocks();
-  }
-
-  randomizeBlocks() {
     let gapSize = maxGapSize;
-    let blockCounter = 0;
 
     for (let i = 0; i < numberOfPillars; i++) {
       // Randomly select the starting vertical position for the gap
@@ -82,10 +67,10 @@ export default class World {
       for (let j = 0; j < pillarHeight; j++) {
         // Create a block if it's not within the gap
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
-          let block = this.blocks.children[blockCounter];
+          let block = new Sprite(this.textures['greenBlock.png']);
+          this.blocks.addChild(block);
           block.x = (i * 384) + 512;
           block.y = j * 64;
-          blockCounter++;
         }
       }
     }
@@ -174,10 +159,8 @@ export default class World {
     this.emitter.particleSystem.clear();
 
     this.blocks.x = 0;
-    this.randomizeBlocks();
-    for (let block of this.blocks.children) {
-      block.visible = true;
-    }
+    this.blocks.removeChildren();
+    this.createBlocks();
 
     this.pickups.removeChildren();
     this.pickups.x = 0;
@@ -315,7 +298,8 @@ export default class World {
     else {
       for (let block of this.blocks.children) {
         if (hitTestRectangle(this.pixie, block, true)) {
-          block.visible = false;
+          this.sounds.bang.play();
+          this.blocks.removeChild(block);
         }
       }
     }
@@ -342,6 +326,7 @@ export default class World {
     // pickups
     for (let pickup of this.pickups.children) {
       if (hitTestRectangle(this.pixie, pickup, true)) {
+        this.sounds.pickup.play();
         this.pickups.removeChild(pickup);
 
         if (this.pixie.addedGravity === 0 && this.pixie.onFire === false) {

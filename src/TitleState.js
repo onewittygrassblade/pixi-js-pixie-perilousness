@@ -8,10 +8,11 @@ import { rendererWidth, rendererHeight } from './const/appConstants.js';
 import { levelsData } from './const/levelsData.js';
 
 export default class TitleState {
-  constructor(stage, stateStack, textures) {
+  constructor(stage, stateStack, textures, sounds) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
+    this.sounds = sounds;
 
     this.createTitle();
     this.createMenu();
@@ -54,7 +55,7 @@ export default class TitleState {
     this.stage.removeChildren(1, this.stage.children.length);
 
     this.stateStack.pop();
-    let gameState = new GameState(this.stage, this.stateStack, this.textures);
+    let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
     this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 1, levelsData[0].hintData));
   }

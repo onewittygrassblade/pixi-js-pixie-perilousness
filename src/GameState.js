@@ -7,16 +7,17 @@ import KeyBinder from './KeyBinder.js';
 import { levelsData } from './const/levelsData.js'
 
 export default class GameState {
-  constructor(stage, stateStack, textures) {
+  constructor(stage, stateStack, textures, sounds) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
+    this.sounds = sounds;
 
     this.currentLevel = 0;
     this.numberOfLives = 3;
     this.numberOfTeddyBears = 0;
 
-    this.world = new World(stage, textures, this);
+    this.world = new World(stage, textures, sounds, this);
 
     this.addKeyControllers();
   }

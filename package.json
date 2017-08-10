@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@pixi/filter-glow": "^2.0.0",
+    "pixi-sound": "^1.4.2",
     "pixi.js": "^4.5.3",
     "webpack": "^3.2.0",
     "webpack-dev-server": "^2.5.1"

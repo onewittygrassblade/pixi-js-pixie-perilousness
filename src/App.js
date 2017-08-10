@@ -36,11 +36,33 @@ export default class App {
     });
   }
 
+  static loadSounds() {
+    const sounds = {
+      pickup: 'sounds/pickup.mp3',
+      bang: 'sounds/bang.mp3'
+    };
+
+    return new Promise((resolve, reject) => {
+      for (let soundName in sounds) {
+        loader
+        .add(soundName, sounds[soundName]);
+      }
+      loader
+      .on('error', reject)
+      .load(resolve);
+    });
+  }
+
   setup() {
-    let textures = resources['images/pixie-perilousness.json'].textures;
+    const textures = resources['images/pixie-perilousness.json'].textures;
     this.stage.addChild(new TilingSprite(textures['clouds.png'], rendererWidth, rendererHeight));
 
-    this.stateStack.push(new TitleState(this.stage, this.stateStack, textures));
+    const sounds = {
+      pickup: resources.pickup.data,
+      bang: resources.bang.data
+    };
+
+    this.stateStack.push(new TitleState(this.stage, this.stateStack, textures, sounds));
 
     this.run();
   }
