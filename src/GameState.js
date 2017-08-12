@@ -60,6 +60,7 @@ export default class GameState {
 
     if (this.world.pixieHasReachedEnd) {
       this.currentLevel++;
+      this.sounds.tada.play();
 
       if (this.currentLevel < levelsData.length) {
         this.world.resetScene();

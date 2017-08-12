@@ -216,9 +216,9 @@ export default class World {
           this.textures['fire-2.png'],
           this.textures['fire-3.png'],
           this.textures['fire-4.png']
-        ])),
-      this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png'])),
-      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png'])),
+        ]), this.sounds.fire),
+      this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png']), this.sounds.metal),
+      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png']), this.sounds.whoosh),
       this.gainTeddyBear.bind(this)
     ];
 
@@ -240,12 +240,15 @@ export default class World {
       this.livesContainer.addChild(life);
 
       this.gameState.numberOfLives++;
+
+      this.sounds.powerup.play();
     }
   }
 
   gainTeddyBear() {
     this.numberOfTeddyBears++;
     this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
+    this.sounds.pickup.play();
   }
 
   update(dt) {
@@ -326,7 +329,6 @@ export default class World {
     // pickups
     for (let pickup of this.pickups.children) {
       if (hitTestRectangle(this.pixie, pickup, true)) {
-        this.sounds.pickup.play();
         this.pickups.removeChild(pickup);
 
         if (this.pixie.addedGravity === 0 && this.pixie.onFire === false) {

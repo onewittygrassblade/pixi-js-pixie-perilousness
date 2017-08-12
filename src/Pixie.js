@@ -11,7 +11,7 @@ export default class Pixie extends Entity {
     this.onFire = false;
   }
 
-  gainWeight(sprite) {
+  gainWeight(sprite, sound) {
     sprite.anchor.set(0.5);
     sprite.y = 35;
     this.addChild(sprite);
@@ -20,9 +20,11 @@ export default class Pixie extends Entity {
     sprite.lifetime = 10000;
 
     this.addedGravity = 0.00025;
+
+    sound.play();
   }
 
-  gainBalloon(sprite) {
+  gainBalloon(sprite, sound) {
     sprite.anchor.set(0.5);
     sprite.y = -35;
     this.addChild(sprite);
@@ -31,9 +33,11 @@ export default class Pixie extends Entity {
     sprite.lifetime = 10000;
 
     this.addedGravity = -0.00015;
+
+    sound.play();
   }
 
-  gainFire(sprite) {
+  gainFire(sprite, sound) {
     sprite.anchor.set(0.5);
     sprite.y = -3;
     sprite.width = 40;
@@ -46,6 +50,8 @@ export default class Pixie extends Entity {
     sprite.lifetime = 6000;
 
     this.onFire = true;
+
+    sound.play();
   }
 
   updateCurrent(dt) {

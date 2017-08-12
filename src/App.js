@@ -38,8 +38,13 @@ export default class App {
 
   static loadSounds() {
     const sounds = {
+      bang: 'sounds/bang.mp3',
+      fire: 'sounds/fire.mp3',
+      metal: 'sounds/metal.mp3',
       pickup: 'sounds/pickup.mp3',
-      bang: 'sounds/bang.mp3'
+      powerup: 'sounds/powerup.mp3',
+      tada: 'sounds/tada.mp3',
+      whoosh: 'sounds/whoosh.mp3'
     };
 
     return new Promise((resolve, reject) => {
@@ -58,8 +63,13 @@ export default class App {
     this.stage.addChild(new TilingSprite(textures['clouds.png'], rendererWidth, rendererHeight));
 
     const sounds = {
+      bang: resources.bang.data,
+      fire: resources.fire.data,
+      metal: resources.metal.data,
       pickup: resources.pickup.data,
-      bang: resources.bang.data
+      powerup: resources.powerup.data,
+      tada: resources.tada.data,
+      whoosh: resources.whoosh.data
     };
 
     this.stateStack.push(new TitleState(this.stage, this.stateStack, textures, sounds));
