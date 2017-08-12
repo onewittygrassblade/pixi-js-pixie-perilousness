@@ -5,7 +5,6 @@ import HintState from './HintState.js';
 import { Container, BitmapText } from './const/aliases.js';
 
 import { rendererWidth, rendererHeight } from './const/appConstants.js';
-import { levelsData } from './const/levelsData.js';
 
 export default class TitleState {
   constructor(stage, stateStack, textures, sounds) {
@@ -57,7 +56,7 @@ export default class TitleState {
     this.stateStack.pop();
     let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
-    this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 1, levelsData[0].hintData));
+    this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 'Level 1'));
   }
 
   update(dt) {

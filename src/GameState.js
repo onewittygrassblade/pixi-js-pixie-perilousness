@@ -4,8 +4,6 @@ import PauseState from './PauseState.js';
 import GameOverState from './GameOverState.js';
 import KeyBinder from './KeyBinder.js';
 
-import { levelsData } from './const/levelsData.js'
-
 export default class GameState {
   constructor(stage, stateStack, textures, sounds) {
     this.stage = stage;
@@ -47,7 +45,7 @@ export default class GameState {
         this.world.pixie.visible = true;
         this.world.hasAlivePlayer = true;
         this.world.gameOver = false;
-        this.stateStack.push(new HintState(this.stage, this.stateStack, this, this.currentLevel+1, levelsData[this.currentLevel].hintData));
+        this.stateStack.push(new HintState(this.stage, this.stateStack, this, `Level ${this.currentLevel+1}`));
         this.numberOfLives--;
       }
       else {
@@ -60,13 +58,14 @@ export default class GameState {
 
     if (this.world.pixieHasReachedEnd) {
       this.currentLevel++;
+      this.world.level++;
       this.sounds.tada.play();
 
-      if (this.currentLevel < levelsData.length) {
+      if (this.currentLevel <= 10) {
         this.world.resetScene();
         this.numberOfTeddyBears = this.world.numberOfTeddyBears;
         this.world.pixieHasReachedEnd = false;
-        this.stateStack.push(new HintState(this.stage, this.stateStack, this, this.currentLevel+1, levelsData[this.currentLevel].hintData));
+        this.stateStack.push(new HintState(this.stage, this.stateStack, this, `Level ${this.currentLevel+1}`));
       } else {
         this.stage.removeChildren(1, this.stage.children.length);
         this.pauseGameController.remove();

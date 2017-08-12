@@ -28,6 +28,7 @@ export default class World {
     this.sounds = sounds;
     this.gameState = gameState;
 
+    this.level = 0;
     this.hasAlivePlayer = true;
     this.pixieHasReachedEnd = false;
     this.gameOver = false;
@@ -37,19 +38,23 @@ export default class World {
 
     this.blocks = new Container();
     this.stage.addChild(this.blocks);
-    this.createBlocks();
 
     this.pickups = new Container();
     this.stage.addChild(this.pickups);
-    this.createPickups();
 
-    this.createInfoDisplay(this.gameState.numberOfLives);
-    this.createFinish();
-    this.createPixie();
+    this.buildScene();
 
     this.addKeyControllers();
 
     this.createPickupActions();
+  }
+
+  buildScene() {
+    this.createBlocks();
+    this.createPickups();
+    this.createInfoDisplay();
+    this.createFinish();
+    this.createPixie();
   }
 
   createBlocks() {
@@ -69,8 +74,17 @@ export default class World {
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
           let block = new Sprite(this.textures['greenBlock.png']);
           this.blocks.addChild(block);
-          block.x = (i * 384) + 512;
+          block.x = i * (384 + this.level * 64) + 512;
           block.y = j * 64;
+        }
+
+        if (j === startGapNumber - 1 || j === startGapNumber + gapSize) {
+          for (let l = 1; l <= this.level; l++) {
+            let block = new Sprite(this.textures['greenBlock.png']);
+            this.blocks.addChild(block);
+            block.x = i * (384 + this.level * 64) + l * 64 + 512;
+            block.y = j * 64;
+          }
         }
       }
     }
@@ -80,12 +94,12 @@ export default class World {
     for (let i = 0; i < numberOfPillars; i++) {
       let pickup = new Sprite(this.textures['gift.png']);
       this.pickups.addChild(pickup);
-      pickup.x = (i * 384) + 736 - pickup.width / 2;
+      pickup.x = i * (384 + this.level * 64) + this.level * 64 + 720;
       pickup.y = randomInt(50, rendererHeight - 50);
     }
   }
 
-  createInfoDisplay(numberOfLives) {
+  createInfoDisplay() {
     let infoContainer = new Container();
     infoContainer.x = 20;
     infoContainer.y = 20;
@@ -93,7 +107,7 @@ export default class World {
 
     this.livesContainer = new Container();
     infoContainer.addChild(this.livesContainer);
-    for (let i = 0; i < numberOfLives; i++) {
+    for (let i = 0; i < this.gameState.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
@@ -112,7 +126,7 @@ export default class World {
   createFinish() {
     this.finish = new BitmapText('Finish!', {font: '96px pixie-font'});
 
-    this.finish.x = ((numberOfPillars - 1) * 384) + 896;
+    this.finish.x = (numberOfPillars - 1) * 384 + 896;
     this.finish.y = 192;
 
     this.stage.addChild(this.finish);
@@ -168,7 +182,7 @@ export default class World {
 
     this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
 
-    this.finish.x = ((numberOfPillars - 1) * 384) + 896;
+    this.finish.x = (numberOfPillars - 1) * (384 + this.level * 64) + 896;
 
     this.pixie.vy = 0;
     this.pixie.y = playerStartY;
