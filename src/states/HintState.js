@@ -1,8 +1,8 @@
-import KeyBinder from './KeyBinder.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-import { Container, BitmapText } from './const/aliases.js';
+import { Container, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/appConstants.js';
+import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 export default class HintState {
   constructor(stage, stateStack, parent, message) {

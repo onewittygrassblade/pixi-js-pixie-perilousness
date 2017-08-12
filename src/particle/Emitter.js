@@ -1,7 +1,7 @@
 import Particle from './Particle.js';
 import ParticleSystem from './ParticleSystem.js';
 
-import { randomInt, randomFloat } from './helpers/RandomNumbers.js';
+import { randomInt, randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Emitter {
   constructor(

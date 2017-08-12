@@ -1,7 +1,7 @@
-import Entity from './Entity.js';
-import { randomInt } from './helpers/RandomNumbers.js';
+import Entity from '../game/Entity.js';
+import { randomInt } from '../helpers/RandomNumbers.js';
 
-import { ParticleContainer } from './const/aliases.js';
+import { ParticleContainer } from '../const/aliases.js';
 
 export default class Particle extends Entity {
   constructor(

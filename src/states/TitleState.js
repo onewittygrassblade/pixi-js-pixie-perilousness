@@ -1,10 +1,10 @@
-import MenuItem from './MenuItem.js';
+import MenuItem from '../gui/MenuItem.js';
 import GameState from './GameState.js';
 import HintState from './HintState.js';
 
-import { Container, BitmapText } from './const/aliases.js';
+import { Container, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/appConstants.js';
+import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 export default class TitleState {
   constructor(stage, stateStack, textures, sounds) {
@@ -41,13 +41,13 @@ export default class TitleState {
     });
     menuContainer.addChild(play);
 
-    let about = new MenuItem('About', menuItemStyle);
-    about.y = play.height + 20;
-    menuContainer.addChild(about);
+    let howto = new MenuItem('How to play', menuItemStyle);
+    howto.y = play.height + 20;
+    menuContainer.addChild(howto);
 
-    let credits = new MenuItem('Credits', menuItemStyle);
-    credits.y = about.y + about.height + 20;
-    menuContainer.addChild(credits);
+    let about = new MenuItem('About', menuItemStyle);
+    about.y = howto.y + howto.height + 20;
+    menuContainer.addChild(about);
   }
 
   startGame() {

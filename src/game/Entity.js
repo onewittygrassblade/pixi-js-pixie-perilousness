@@ -1,4 +1,4 @@
-import { AnimatedSprite } from './const/aliases.js';
+import { AnimatedSprite } from '../const/aliases.js';
 
 export default class Entity extends AnimatedSprite {
   constructor(

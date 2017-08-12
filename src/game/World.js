@@ -1,13 +1,13 @@
 import Pixie from './Pixie.js';
-import Emitter from './Emitter.js';
-import KeyBinder from './KeyBinder.js';
-import { randomInt } from './helpers/RandomNumbers.js';
-import contain from './helpers/contain.js';
-import hitTestRectangle from './helpers/hitTestRectangle.js';
+import Emitter from '../particle/Emitter.js';
+import KeyBinder from '../helpers/KeyBinder.js';
+import { randomInt } from '../helpers/RandomNumbers.js';
+import contain from '../helpers/contain.js';
+import hitTestRectangle from '../helpers/hitTestRectangle.js';
 
-import { Container, Sprite, AnimatedSprite, BitmapText } from './const/aliases.js';
+import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/appConstants.js';
+import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 import { backgroundScrollingSpeed,
          foregroundScrollingSpeed,
@@ -17,9 +17,9 @@ import { backgroundScrollingSpeed,
          pillarHeight,
          maxGapSize,
          gapReductionFrequency,
-         gravity } from './const/worldData.js';
+         gravity } from '../const/worldData.js';
 
-import { maxNumberOfLives } from './const/gameData.js';
+import { maxNumberOfLives } from '../const/gameData.js';
 
 export default class World {
   constructor(stage, textures, sounds, gameState) {

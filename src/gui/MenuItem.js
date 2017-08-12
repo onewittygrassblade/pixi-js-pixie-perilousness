@@ -1,4 +1,4 @@
-import { BitmapText } from './const/aliases.js';
+import { BitmapText } from '../const/aliases.js';
 
 import {GlowFilter} from '@pixi/filter-glow';
 

@@ -1,4 +1,4 @@
-import { ParticleContainer } from './const/aliases.js';
+import { ParticleContainer } from '../const/aliases.js';
 
 export default class ParticleSystem {
   constructor() {

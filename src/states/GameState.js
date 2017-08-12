@@ -1,8 +1,8 @@
-import World from './World.js';
+import World from '../game/World.js';
 import HintState from './HintState.js';
 import PauseState from './PauseState.js';
 import GameOverState from './GameOverState.js';
-import KeyBinder from './KeyBinder.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
 export default class GameState {
   constructor(stage, stateStack, textures, sounds) {

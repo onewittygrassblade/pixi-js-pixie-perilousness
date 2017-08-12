@@ -1,9 +1,9 @@
 import TitleState from './TitleState.js';
-import KeyBinder from './KeyBinder.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-import { Container, TilingSprite, BitmapText } from './const/aliases.js';
+import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from './const/appConstants.js';
+import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 export default class GameOverState {
   constructor(stage, stateStack, textures, success) {

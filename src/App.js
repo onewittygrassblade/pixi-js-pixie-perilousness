@@ -1,5 +1,5 @@
 import StateStack from './StateStack.js';
-import TitleState from './TitleState.js';
+import TitleState from './states/TitleState.js';
 
 import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
 
