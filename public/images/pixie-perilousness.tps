@@ -312,6 +312,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">scroll.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>222,125,445,250</rect>
+                <key>scale9Paddings</key>
+                <rect>222,125,445,250</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
@@ -332,6 +345,7 @@
             <filename>fire-3.png</filename>
             <filename>fire-4.png</filename>
             <filename>teddybear.png</filename>
+            <filename>scroll.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

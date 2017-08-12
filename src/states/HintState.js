@@ -1,6 +1,6 @@
 import KeyBinder from '../helpers/KeyBinder.js';
 
-import { Container, BitmapText } from '../const/aliases.js';
+import { BitmapText } from '../const/aliases.js';
 
 import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 

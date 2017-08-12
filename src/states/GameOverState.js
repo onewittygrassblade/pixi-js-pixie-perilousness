@@ -6,14 +6,17 @@ import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
 import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 export default class GameOverState {
-  constructor(stage, stateStack, textures, success) {
+  constructor(stage, stateStack, textures, sounds, success) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
+    this.sounds = sounds;
 
     this.createTexts(success);
 
     this.addKeyControllers();
+
+    this.sounds.fail.play();
   }
 
   createTexts(success) {
@@ -49,7 +52,7 @@ export default class GameOverState {
       this.stage.removeChildren(1, this.stage.children.length);
 
       this.stateStack.pop();
-      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures));
+      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
     }
 
     this.restartGameController = new KeyBinder(32, null, restartGame);

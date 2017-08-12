@@ -1,6 +1,8 @@
 import MenuItem from '../gui/MenuItem.js';
 import GameState from './GameState.js';
 import HintState from './HintState.js';
+import HowToState from './HowToState.js';
+import AboutState from './AboutState.js';
 
 import { Container, BitmapText } from '../const/aliases.js';
 
@@ -43,6 +45,9 @@ export default class TitleState {
 
     let howto = new MenuItem('How to play', menuItemStyle);
     howto.y = play.height + 20;
+    howto.on('click', e => {
+      this.showHowToPlay();
+    });
     menuContainer.addChild(howto);
 
     let about = new MenuItem('About', menuItemStyle);
@@ -57,6 +62,10 @@ export default class TitleState {
     let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
     this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 'Level 1'));
+  }
+
+  showHowToPlay() {
+    this.stateStack.push(new HowToState(this.stage, this.stateStack, this.textures, this.sounds));
   }
 
   update(dt) {

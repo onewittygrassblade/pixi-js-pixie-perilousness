@@ -52,7 +52,7 @@ export default class GameState {
         this.stage.removeChildren(1, this.stage.children.length);
         this.pauseGameController.remove();
         this.stateStack.pop();
-        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, false));
+        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, false));
       }
     }
 
@@ -70,7 +70,7 @@ export default class GameState {
         this.stage.removeChildren(1, this.stage.children.length);
         this.pauseGameController.remove();
         this.stateStack.pop();
-        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, true));
+        this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, true));
       }
     }
 

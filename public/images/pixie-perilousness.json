@@ -2,7 +2,7 @@
 
 "balloon.png":
 {
-	"frame": {"x":0,"y":49,"w":29,"h":48},
+	"frame": {"x":0,"y":0,"w":29,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":29,"h":48},
@@ -11,7 +11,7 @@
 },
 "clouds.png":
 {
-	"frame": {"x":0,"y":115,"w":512,"h":512},
+	"frame": {"x":31,"y":0,"w":512,"h":512},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
@@ -20,7 +20,7 @@
 },
 "fire-1.png":
 {
-	"frame": {"x":420,"y":0,"w":33,"h":46},
+	"frame": {"x":545,"y":0,"w":33,"h":46},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":46},
@@ -29,7 +29,7 @@
 },
 "fire-2.png":
 {
-	"frame": {"x":31,"y":49,"w":30,"h":48},
+	"frame": {"x":580,"y":0,"w":30,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":48},
@@ -38,7 +38,7 @@
 },
 "fire-3.png":
 {
-	"frame": {"x":455,"y":0,"w":30,"h":47},
+	"frame": {"x":612,"y":0,"w":30,"h":47},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":47},
@@ -47,7 +47,7 @@
 },
 "fire-4.png":
 {
-	"frame": {"x":386,"y":0,"w":32,"h":45},
+	"frame": {"x":644,"y":0,"w":32,"h":45},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":45},
@@ -56,7 +56,7 @@
 },
 "gift.png":
 {
-	"frame": {"x":252,"y":0,"w":32,"h":32},
+	"frame": {"x":678,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -65,7 +65,7 @@
 },
 "green.png":
 {
-	"frame": {"x":0,"y":0,"w":32,"h":32},
+	"frame": {"x":712,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -74,7 +74,7 @@
 },
 "greenBlock.png":
 {
-	"frame": {"x":63,"y":49,"w":64,"h":64},
+	"frame": {"x":746,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -83,7 +83,7 @@
 },
 "pink.png":
 {
-	"frame": {"x":218,"y":0,"w":32,"h":32},
+	"frame": {"x":812,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -92,7 +92,7 @@
 },
 "pixie-0.png":
 {
-	"frame": {"x":118,"y":0,"w":48,"h":32},
+	"frame": {"x":846,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
@@ -101,7 +101,7 @@
 },
 "pixie-1.png":
 {
-	"frame": {"x":168,"y":0,"w":48,"h":32},
+	"frame": {"x":896,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
@@ -110,16 +110,25 @@
 },
 "pixie-2.png":
 {
-	"frame": {"x":34,"y":0,"w":48,"h":32},
+	"frame": {"x":946,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
 	"sourceSize": {"w":48,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"scroll.png":
+{
+	"frame": {"x":996,"y":0,"w":910,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":910,"h":512},
+	"sourceSize": {"w":910,"h":512},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "teddybear.png":
 {
-	"frame": {"x":84,"y":0,"w":32,"h":32},
+	"frame": {"x":1908,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -128,7 +137,7 @@
 },
 "violet.png":
 {
-	"frame": {"x":320,"y":0,"w":32,"h":32},
+	"frame": {"x":1942,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -137,7 +146,7 @@
 },
 "weight.png":
 {
-	"frame": {"x":354,"y":0,"w":30,"h":40},
+	"frame": {"x":1976,"y":0,"w":30,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":40},
@@ -146,7 +155,7 @@
 },
 "yellow.png":
 {
-	"frame": {"x":286,"y":0,"w":32,"h":32},
+	"frame": {"x":2008,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -158,8 +167,8 @@
 	"version": "1.0",
 	"image": "pixie-perilousness.png",
 	"format": "RGBA8888",
-	"size": {"w":512,"h":627},
+	"size": {"w":2040,"h":512},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:8029e054322d022a00a9bb248f488b73:17a354343728940c5b7795e383e26a89:662821b8805fa4a84e1b0cce0a40ca88$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3bd7af00b736b10fc81e1896e3900707:3f396e2db874b8320755e77f73ee9991:662821b8805fa4a84e1b0cce0a40ca88$"
 }
 }
