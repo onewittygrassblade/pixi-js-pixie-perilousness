@@ -39,6 +39,7 @@ export default class App {
   static loadSounds() {
     const sounds = {
       bang: 'sounds/bang.mp3',
+      die: 'sounds/die.mp3',
       fail: 'sounds/fail.mp3',
       fire: 'sounds/fire.mp3',
       metal: 'sounds/metal.mp3',
@@ -65,6 +66,7 @@ export default class App {
 
     const sounds = {
       bang: resources.bang.data,
+      die: resources.die.data,
       fail: resources.fail.data,
       fire: resources.fire.data,
       metal: resources.metal.data,

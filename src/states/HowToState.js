@@ -5,11 +5,10 @@ import { Container, Sprite, BitmapText } from '../const/aliases.js';
 import { rendererWidth, rendererHeight } from '../const/appConstants.js';
 
 export default class HowToState {
-  constructor(stage, stateStack, textures, sounds) {
+  constructor(stage, stateStack, textures) {
     this.stage = stage;
     this.stateStack = stateStack;
     this.textures = textures;
-    this.sounds = sounds;
 
     this.buildScene();
 
@@ -88,9 +87,7 @@ export default class HowToState {
   addKeyControllers() {
     let toMenuState = () => {
       this.toMenuStateController.remove();
-
       this.stage.removeChildren(this.stage.children.length - 6, this.stage.children.length);
-
       this.stateStack.pop();
     }
 

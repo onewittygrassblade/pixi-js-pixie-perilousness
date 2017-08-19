@@ -184,6 +184,7 @@ export default class World {
 
     this.finish.x = (numberOfPillars - 1) * (384 + this.level * 64) + 896;
 
+    this.resetPixie();
     this.pixie.vy = 0;
     this.pixie.y = playerStartY;
     this.pixie.addedGravity = 0;
@@ -198,6 +199,12 @@ export default class World {
     this.emitter.maxDirectionAngle = 3.6;
   }
 
+  resetPixie() {
+    this.pixie.gotoAndStop(0);
+    this.pixie.ay = gravity + this.pixie.addedGravity;
+    this.emitter.stop();
+  }
+
   decreaseNumberOfLives() {
     this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
   }
@@ -209,9 +216,7 @@ export default class World {
       this.emitter.emit();
     };
     let pixieStopFlapping = () => {
-      this.pixie.gotoAndStop(0);
-      this.pixie.ay = gravity + this.pixie.addedGravity;
-      this.emitter.stop();
+      this.resetPixie();
     };
 
     this.pixieController = new KeyBinder(32, pixieFlapWings, pixieStopFlapping);
@@ -322,6 +327,8 @@ export default class World {
     }
 
     if (pixieCrashed) {
+      this.sounds.die.play();
+
       this.pixie.removeChildren();
       this.pixie.visible = false;
       this.pixie.addedGravity = 0;
@@ -356,6 +363,8 @@ export default class World {
 
     // finish
     if (hitTestRectangle(this.pixie, this.finish, true)) {
+      this.resetPixie();
+
       this.pixieHasReachedEnd = true;
     }
   }

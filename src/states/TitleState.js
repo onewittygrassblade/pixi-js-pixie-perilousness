@@ -52,6 +52,9 @@ export default class TitleState {
 
     let about = new MenuItem('About', menuItemStyle);
     about.y = howto.y + howto.height + 20;
+    about.on('click', e => {
+      this.showAbout();
+    });
     menuContainer.addChild(about);
   }
 
@@ -65,7 +68,11 @@ export default class TitleState {
   }
 
   showHowToPlay() {
-    this.stateStack.push(new HowToState(this.stage, this.stateStack, this.textures, this.sounds));
+    this.stateStack.push(new HowToState(this.stage, this.stateStack, this.textures));
+  }
+
+  showAbout() {
+    this.stateStack.push(new AboutState(this.stage, this.stateStack, this.textures));
   }
 
   update(dt) {
