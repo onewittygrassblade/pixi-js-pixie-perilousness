@@ -1,17 +1,15 @@
-import KeyBinder from '../helpers/KeyBinder.js';
-
 import { Container, Sprite, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
+import State from './State.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-export default class HowToState {
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+
+export default class HowToState extends State {
   constructor(stage, stateStack, textures) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.textures = textures;
+    super(stage, stateStack, textures);
 
     this.buildScene();
-
     this.addKeyControllers();
   }
 
@@ -25,7 +23,7 @@ export default class HowToState {
       'Help Pixie find teddy bears among the scattered presents!',
       textSyle
     );
-    goalText.x = rendererWidth / 2 - goalText.width / 2;
+    goalText.x = RENDERER_WIDTH / 2 - goalText.width / 2;
     goalText.y = 80;
     this.stage.addChild(goalText);
 
@@ -40,7 +38,7 @@ export default class HowToState {
     pixieText.x = pixieSprite.width + 20;
     pixieText.y = pixieSprite.height / 2 - pixieText.height / 2;
     pixieContainer.addChild(pixieText);
-    pixieContainer.x = rendererWidth / 2 - pixieContainer.width / 2;
+    pixieContainer.x = RENDERER_WIDTH / 2 - pixieContainer.width / 2;
     pixieContainer.y = goalText.y + goalText.height + 60;
     this.stage.addChild(pixieContainer);
 
@@ -55,7 +53,7 @@ export default class HowToState {
     blockText.x = blockSprite.width + 20;
     blockText.y = blockSprite.height / 2 - blockText.height / 2;
     blockContainer.addChild(blockText);
-    blockContainer.x = rendererWidth / 2 - blockContainer.width / 2;
+    blockContainer.x = RENDERER_WIDTH / 2 - blockContainer.width / 2;
     blockContainer.y = pixieContainer.y + pixieContainer.height + 30;
     this.stage.addChild(blockContainer);
 
@@ -70,7 +68,7 @@ export default class HowToState {
     giftText.x = giftSprite.width + 20;
     giftText.y = giftSprite.height / 2 - giftText.height / 2 + 3;
     giftContainer.addChild(giftText);
-    giftContainer.x = rendererWidth / 2 - giftContainer.width / 2;
+    giftContainer.x = RENDERER_WIDTH / 2 - giftContainer.width / 2;
     giftContainer.y = blockContainer.y + blockContainer.height + 30;
     this.stage.addChild(giftContainer);
 
@@ -79,7 +77,7 @@ export default class HowToState {
       'Press space to return to menu',
       textSyle
     );
-    returnToMenuText.x = rendererWidth / 2 - returnToMenuText.width / 2;
+    returnToMenuText.x = RENDERER_WIDTH / 2 - returnToMenuText.width / 2;
     returnToMenuText.y = giftContainer.y + giftContainer.height + 60;
     this.stage.addChild(returnToMenuText);
   }
@@ -92,9 +90,5 @@ export default class HowToState {
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);
-  }
-
-  update(dt) {
-    return false;
   }
 }

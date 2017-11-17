@@ -1,27 +1,25 @@
-import KeyBinder from '../helpers/KeyBinder.js';
-
 import { BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
+import State from './State.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-export default class HintState {
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+
+export default class HintState extends State {
   constructor(stage, stateStack, parent, message) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.parent = parent;
+    super(stage, stateStack, null, null, parent);
 
     this.parent.removeKeyControllers();
     this.parent.world.removeKeyControllers();
 
     this.createText(message);
-
     this.addKeyControllers();
   }
 
   createText(message) {
     let messageText = new BitmapText(message, {font: '64px pixie-font'});
-    messageText.x = rendererWidth / 2 - messageText.width / 2;
-    messageText.y = rendererHeight / 2 - messageText.height / 2;
+    messageText.x = RENDERER_WIDTH / 2 - messageText.width / 2;
+    messageText.y = RENDERER_HEIGHT / 2 - messageText.height / 2;
     this.stage.addChild(messageText);
   }
 
@@ -38,9 +36,5 @@ export default class HintState {
     }
 
     this.startGameController = new KeyBinder(32, null, startGame);
-  }
-
-  update(dt) {
-    return false;
   }
 }

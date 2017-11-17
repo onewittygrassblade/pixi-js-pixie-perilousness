@@ -1,17 +1,16 @@
 import { BitmapText } from '../const/aliases.js';
 
-import {GlowFilter} from '@pixi/filter-glow';
+import { GlowFilter } from '@pixi/filter-glow';
 
 export default class MenuItem extends BitmapText {
   constructor(text, style) {
     super(text, style);
 
     this.anchor.x = 0.5;
-
     this.interactive = true;
     this.buttonMode = true;
 
-    let glowFilter = new GlowFilter(
+    const glowFilter = new GlowFilter(
       12,       // distance
       2,        // outerStrength
       1,        // innerStrength

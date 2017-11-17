@@ -1,20 +1,15 @@
-import KeyBinder from '../helpers/KeyBinder.js';
-
 import { BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
+import State from './State.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-export default class PauseState {
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+
+export default class PauseState extends State {
   constructor(stage, stateStack, textures, parent) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.textures = textures;
-    this.parent = parent;
-
-    this.parent.world.removeKeyControllers();
+    super(stage, stateStack, textures, null, parent);
 
     this.createText();
-
     this.addKeyControllers();
   }
 
@@ -23,15 +18,15 @@ export default class PauseState {
       'Game paused',
       {font: '72px pixie-font'}
     );
-    message.x = rendererWidth / 2 - message.width / 2;
-    message.y = rendererHeight / 2 - message.height / 2 - 40;
+    message.x = RENDERER_WIDTH / 2 - message.width / 2;
+    message.y = RENDERER_HEIGHT / 2 - message.height / 2 - 40;
     this.stage.addChild(message);
 
     let hint = new BitmapText(
       'Press ESC to resume',
       {font: '48px pixie-font'}
     );
-    hint.x = rendererWidth / 2 - hint.width / 2;
+    hint.x = RENDERER_WIDTH / 2 - hint.width / 2;
     hint.y = message.y + 100;
     this.stage.addChild(hint);
   }
@@ -49,9 +44,5 @@ export default class PauseState {
     }
 
     this.leavePauseStateController = new KeyBinder(27, null, leavePauseState);
-  }
-
-  update(dt) {
-    return false;
   }
 }

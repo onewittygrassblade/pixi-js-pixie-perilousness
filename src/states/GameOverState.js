@@ -1,19 +1,16 @@
+import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
+
+import State from './State.js';
 import TitleState from './TitleState.js';
 import KeyBinder from '../helpers/KeyBinder.js';
 
-import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
-
-export default class GameOverState {
+export default class GameOverState extends State {
   constructor(stage, stateStack, textures, sounds, success) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.textures = textures;
-    this.sounds = sounds;
+    super(stage, stateStack, textures, sounds);
 
     this.createTexts(success);
-
     this.addKeyControllers();
 
     this.sounds.fail.play();
@@ -21,7 +18,7 @@ export default class GameOverState {
 
   createTexts(success) {
     let textContainer = new Container();
-    textContainer.x = rendererWidth / 2;
+    textContainer.x = RENDERER_WIDTH / 2;
 
     let messageText = new BitmapText(
       'Whoops!',
@@ -41,7 +38,7 @@ export default class GameOverState {
     hintText.y = messageText.y + messageText.height + 40;
     textContainer.addChild(hintText);
 
-    textContainer.y = rendererHeight / 2 - textContainer.height / 2;
+    textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
     this.stage.addChild(textContainer);
   }
 
@@ -56,9 +53,5 @@ export default class GameOverState {
     }
 
     this.restartGameController = new KeyBinder(32, null, restartGame);
-  }
-
-  update(dt) {
-    return false;
   }
 }

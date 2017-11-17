@@ -1,19 +1,17 @@
+import { Container, BitmapText } from '../const/aliases.js';
+
+import State from './State.js';
 import MenuItem from '../gui/MenuItem.js';
 import GameState from './GameState.js';
 import HintState from './HintState.js';
 import HowToState from './HowToState.js';
 import AboutState from './AboutState.js';
 
-import { Container, BitmapText } from '../const/aliases.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
-
-export default class TitleState {
+export default class TitleState extends State {
   constructor(stage, stateStack, textures, sounds) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.textures = textures;
-    this.sounds = sounds;
+    super(stage, stateStack, textures, sounds);
 
     this.createTitle();
     this.createMenu();
@@ -24,15 +22,15 @@ export default class TitleState {
       'Pixie Perilousness!',
       {font: '72px pixie-font'}
     );
-    title.x = rendererWidth / 2 - title.width / 2;
+    title.x = RENDERER_WIDTH / 2 - title.width / 2;
     title.y = 120;
     this.stage.addChild(title);
   }
 
   createMenu() {
     let menuContainer = new Container();
-    menuContainer.x = rendererWidth / 2 - menuContainer.width / 2;
-    menuContainer.y = rendererHeight / 2 - menuContainer.height / 2;
+    menuContainer.x = RENDERER_WIDTH / 2 - menuContainer.width / 2;
+    menuContainer.y = RENDERER_HEIGHT / 2 - menuContainer.height / 2;
     this.stage.addChild(menuContainer);
 
     let menuItemStyle = {font: '48px pixie-font'};
@@ -73,9 +71,5 @@ export default class TitleState {
 
   showAbout() {
     this.stateStack.push(new AboutState(this.stage, this.stateStack, this.textures));
-  }
-
-  update(dt) {
-    return false;
   }
 }

@@ -1,17 +1,15 @@
-import KeyBinder from '../helpers/KeyBinder.js';
-
 import { Container, Sprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
 
-import { rendererWidth, rendererHeight } from '../const/appConstants.js';
+import State from './State.js';
+import KeyBinder from '../helpers/KeyBinder.js';
 
-export default class AboutState {
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+
+export default class AboutState extends State {
   constructor(stage, stateStack, textures) {
-    this.stage = stage;
-    this.stateStack = stateStack;
-    this.textures = textures;
+    super(stage, stateStack, textures);
 
     this.buildScene();
-
     this.addKeyControllers();
   }
 
@@ -27,7 +25,7 @@ export default class AboutState {
     });
 
     let introText = new Text("Pixie Perilousness! is an original concept by Rex Van der Spuy from his tutorial on Pixi.js, available at github.com/kittykatattack/learnPixiJS.", textSyle);
-    introText.x = rendererWidth / 2 - introText.width / 2;
+    introText.x = RENDERER_WIDTH / 2 - introText.width / 2;
     introText.y = 80;
     this.stage.addChild(introText);
 
@@ -35,7 +33,7 @@ export default class AboutState {
       'Press space to return to menu',
       {font: '26px pixie-font'}
     );
-    returnToMenuText.x = rendererWidth / 2 - returnToMenuText.width / 2;
+    returnToMenuText.x = RENDERER_WIDTH / 2 - returnToMenuText.width / 2;
     returnToMenuText.y = introText.y + introText.height + 60;
     this.stage.addChild(returnToMenuText);
   }
@@ -48,9 +46,5 @@ export default class AboutState {
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);
-  }
-
-  update(dt) {
-    return false;
   }
 }

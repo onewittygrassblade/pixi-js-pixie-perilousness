@@ -1,16 +1,16 @@
+import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
+
 import StateStack from './StateStack.js';
 import TitleState from './states/TitleState.js';
 
-import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
-
-import {  timePerFrame, rendererWidth, rendererHeight } from './const/appConstants.js';
+import {  TIME_PER_FRAME, RENDERER_WIDTH, RENDERER_HEIGHT, SOUND_NAMES } from './const/appConstants.js';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
 
 export default class App {
   constructor() {
-    this.renderer = autoDetectRenderer(rendererWidth, rendererHeight);
+    this.renderer = autoDetectRenderer(RENDERER_WIDTH, RENDERER_HEIGHT);
     document.getElementById('root').appendChild(this.renderer.view);
 
     this.stage = new Container();
@@ -27,7 +27,7 @@ export default class App {
     });
   }
 
-  static loadFonts() {
+  static loadFont() {
     return new Promise((resolve, reject) => {
       loader
       .add('fonts/pixie-font.fnt')
@@ -37,23 +37,11 @@ export default class App {
   }
 
   static loadSounds() {
-    const sounds = {
-      bang: 'sounds/bang.mp3',
-      die: 'sounds/die.mp3',
-      fail: 'sounds/fail.mp3',
-      fire: 'sounds/fire.mp3',
-      metal: 'sounds/metal.mp3',
-      pickup: 'sounds/pickup.mp3',
-      powerup: 'sounds/powerup.mp3',
-      tada: 'sounds/tada.mp3',
-      whoosh: 'sounds/whoosh.mp3'
-    };
-
     return new Promise((resolve, reject) => {
-      for (let soundName in sounds) {
-        loader
-        .add(soundName, sounds[soundName]);
+      for (let soundName of SOUND_NAMES) {
+        loader.add(soundName, 'sounds/' + soundName + '.mp3');
       }
+
       loader
       .on('error', reject)
       .load(resolve);
@@ -62,19 +50,13 @@ export default class App {
 
   setup() {
     const textures = resources['images/pixie-perilousness.json'].textures;
-    this.stage.addChild(new TilingSprite(textures['clouds.png'], rendererWidth, rendererHeight));
 
-    const sounds = {
-      bang: resources.bang.data,
-      die: resources.die.data,
-      fail: resources.fail.data,
-      fire: resources.fire.data,
-      metal: resources.metal.data,
-      pickup: resources.pickup.data,
-      powerup: resources.powerup.data,
-      tada: resources.tada.data,
-      whoosh: resources.whoosh.data
-    };
+    const sounds = SOUND_NAMES.reduce((acc, item) => {
+      acc[item] = resources[item].data;
+      return acc;
+    }, {});
+
+    this.stage.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
 
     this.stateStack.push(new TitleState(this.stage, this.stateStack, textures, sounds));
 
@@ -89,9 +71,9 @@ export default class App {
     timeSinceLastUpdate += timestamp - lastFrameTimestamp;
     lastFrameTimestamp = timestamp;
 
-    while (timeSinceLastUpdate > timePerFrame) {
-      timeSinceLastUpdate -= timePerFrame;
-      this.stateStack.update(timePerFrame);
+    while (timeSinceLastUpdate > TIME_PER_FRAME) {
+      timeSinceLastUpdate -= TIME_PER_FRAME;
+      this.stateStack.update(TIME_PER_FRAME);
     }
 
     this.renderer.render(this.stage);
