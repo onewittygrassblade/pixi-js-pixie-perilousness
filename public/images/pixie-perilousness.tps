@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.4.0</string>
+        <string>4.5.0</string>
         <key>fileName</key>
         <string>/Users/jguyonnet/Documents/tests/javascript/pixi-js-tutorial/public/images/pixie-perilousness.tps</string>
         <key>autoSDSettings</key>
@@ -225,46 +225,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">fire-1.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,12,17,23</rect>
-                <key>scale9Paddings</key>
-                <rect>8,12,17,23</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">fire-2.png</key>
-            <key type="filename">fire-3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,12,15,24</rect>
-                <key>scale9Paddings</key>
-                <rect>8,12,15,24</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">fire-4.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,11,16,23</rect>
-                <key>scale9Paddings</key>
-                <rect>8,11,16,23</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">gift.png</key>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
@@ -319,9 +279,9 @@
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>222,125,445,250</rect>
+                <rect>228,128,455,256</rect>
                 <key>scale9Paddings</key>
-                <rect>222,125,445,250</rect>
+                <rect>228,128,455,256</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -340,10 +300,6 @@
             <filename>gift.png</filename>
             <filename>balloon.png</filename>
             <filename>weight.png</filename>
-            <filename>fire-1.png</filename>
-            <filename>fire-2.png</filename>
-            <filename>fire-3.png</filename>
-            <filename>fire-4.png</filename>
             <filename>teddybear.png</filename>
             <filename>scroll.png</filename>
         </array>

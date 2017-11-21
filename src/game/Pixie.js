@@ -1,14 +1,16 @@
 import Entity from './Entity.js';
+import { randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Pixie extends Entity {
   constructor(textureFrames, x, y, ay) {
     super(textureFrames, x, y, 0, 0, 0, ay);
 
     this.animationSpeed = 0.4;
-
     this.wingPower = -0.001;
     this.addedGravity = 0;
-    this.onFire = false;
+    this.invincible = false;
+    this.effectTimer = 0;
+    this.effectChangeTimer = 0;
   }
 
   gainWeight(sprite, sound) {
@@ -16,10 +18,8 @@ export default class Pixie extends Entity {
     sprite.y = 35;
     this.addChild(sprite);
 
-    sprite.currentLifetime = 0;
-    sprite.lifetime = 10000;
-
     this.addedGravity = 0.00025;
+    this.effectTimer = 10000;
 
     sound.play();
   }
@@ -29,40 +29,54 @@ export default class Pixie extends Entity {
     sprite.y = -35;
     this.addChild(sprite);
 
-    sprite.currentLifetime = 0;
-    sprite.lifetime = 10000;
-
     this.addedGravity = -0.00015;
+    this.effectTimer = 10000;
 
     sound.play();
   }
 
-  gainFire(sprite, sound) {
-    sprite.anchor.set(0.5);
-    sprite.y = -3;
-    sprite.width = 40;
-    sprite.alpha = 0.7;
-    sprite.animationSpeed = 0.1;
-    sprite.play();
-    this.addChild(sprite);
+  gainInvincibility() {
+    this.invincible = true;
+    this.effectTimer = 10000;
 
-    sprite.currentLifetime = 0;
-    sprite.lifetime = 6000;
+    // sound.play();
+  }
 
-    this.onFire = true;
+  resetProperties() {
+    this.addedGravity = 0;
+    this.invincible = false;
+    this.filters = null;
+    this.effectChangeTimer = 0;
 
-    sound.play();
+    for (let child of this.children) {
+      this.removeChild(child);
+    }
+  }
+
+  blink(rate) {
+    if (this.effectChangeTimer > rate) {
+      let colorMatrix = new PIXI.filters.ColorMatrixFilter();
+      colorMatrix.brightness(randomFloat(1, 1.25), true);
+      this.filters = [colorMatrix];
+
+      this.effectChangeTimer -= rate;
+    }
   }
 
   updateCurrent(dt) {
     this.updatePosition(dt);
 
-    for (let child of this.children) {
-      child.currentLifetime += dt;
-      if (child.currentLifetime >= child.lifetime) {
-        this.removeChild(child);
-        this.addedGravity = 0;
-        this.onFire = false;
+    if (this.effectTimer > 0) {
+      this.effectChangeTimer += dt;
+
+      if (this.invincible) {
+        blink(50);
+      }
+
+      this.effectTimer -= dt;
+
+      if (this.effectTimer <= 0) {
+        this.resetProperties();
       }
     }
   }

@@ -188,7 +188,7 @@ export default class World {
     this.pixie.vy = 0;
     this.pixie.y = PLAYER_START_Y;
     this.pixie.addedGravity = 0;
-    this.pixie.onFire = false;
+    this.pixie.invincible = false;
     this.pixie.removeChildren();
   }
 
@@ -229,13 +229,7 @@ export default class World {
   createPickupActions() {
     let pickUpActions = [
       this.gainExtraLife.bind(this),
-      this.pixie.gainFire.bind(this.pixie, new AnimatedSprite(
-        [
-          this.textures['fire-1.png'],
-          this.textures['fire-2.png'],
-          this.textures['fire-3.png'],
-          this.textures['fire-4.png']
-        ]), this.sounds.fire),
+      this.pixie.gainInvincibility.bind(this.pixie),
       this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png']), this.sounds.metal),
       this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png']), this.sounds.whoosh),
       this.gainTeddyBear.bind(this)
@@ -312,7 +306,7 @@ export default class World {
   checkCollisions() {
     // blocks
     let pixieCrashed = false;
-    if (!this.pixie.onFire) {
+    if (!this.pixie.invincible) {
       pixieCrashed = this.blocks.children.some(block => {
         return hitTestRectangle(this.pixie, block, true);
       });
@@ -352,7 +346,7 @@ export default class World {
       if (hitTestRectangle(this.pixie, pickup, true)) {
         this.pickups.removeChild(pickup);
 
-        if (this.pixie.addedGravity === 0 && this.pixie.onFire === false) {
+        if (this.pixie.effectTimer <= 0) {
           this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
         }
         else {
