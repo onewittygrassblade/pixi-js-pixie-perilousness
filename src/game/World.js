@@ -22,8 +22,8 @@ import { BACKGROUND_SCROLL_SPEED,
 import { MAX_NUMBER_OF_LIVES } from '../const/gameData.js';
 
 export default class World {
-  constructor(stage, textures, sounds, gameState) {
-    this.stage = stage;
+  constructor(stage, gameContainer, textures, sounds, gameState) {
+    this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
     this.gameState = gameState;
@@ -34,13 +34,13 @@ export default class World {
     this.pixieHasReachedEnd = false;
     this.numberOfTeddyBears = this.gameState.numberOfTeddyBears;
 
-    this.sky = this.stage.getChildAt(0);
+    this.sky = stage.getChildAt(0);
 
     this.blocks = new Container();
-    this.stage.addChild(this.blocks);
+    this.container.addChild(this.blocks);
 
     this.pickups = new Container();
-    this.stage.addChild(this.pickups);
+    this.container.addChild(this.pickups);
 
     this.buildScene();
 
@@ -103,7 +103,7 @@ export default class World {
     let infoContainer = new Container();
     infoContainer.x = 20;
     infoContainer.y = 20;
-    this.stage.addChild(infoContainer);
+    this.container.addChild(infoContainer);
 
     this.livesContainer = new Container();
     infoContainer.addChild(this.livesContainer);
@@ -129,7 +129,7 @@ export default class World {
     this.finish.x = (NUM_PILLARS - 1) * 384 + 896;
     this.finish.y = 192;
 
-    this.stage.addChild(this.finish);
+    this.container.addChild(this.finish);
   }
 
   createPixie() {
@@ -165,8 +165,8 @@ export default class World {
       3               // numberOfParticlesPerEmit
     );
 
-    this.stage.addChild(this.emitter.particleSystem.container);
-    this.stage.addChild(this.pixie);
+    this.container.addChild(this.emitter.particleSystem.container);
+    this.container.addChild(this.pixie);
   }
 
   resetScene() {
@@ -282,7 +282,7 @@ export default class World {
     this.emitter.update(dt);
 
     // Keep pixie within canvas
-    let pixieVsStage = contain(
+    let pixieVsCanvas = contain(
       this.pixie,
       {
         x: 0,
@@ -292,8 +292,8 @@ export default class World {
       }
     );
 
-    if (pixieVsStage) {
-      if (pixieVsStage.has('bottom') || pixieVsStage.has('top')) {
+    if (pixieVsCanvas) {
+      if (pixieVsCanvas.has('bottom') || pixieVsCanvas.has('top')) {
         this.pixie.vy = 0;
       }
     }

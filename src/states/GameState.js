@@ -15,7 +15,7 @@ export default class GameState extends State {
     this.numberOfLives = 3;
     this.numberOfTeddyBears = 0;
 
-    this.world = new World(stage, textures, sounds, this);
+    this.world = new World(stage, this.container, textures, sounds, this);
 
     this.addKeyControllers();
   }
@@ -72,9 +72,8 @@ export default class GameState extends State {
   }
 
   gameOver(sucess) {
-    this.stage.removeChildren(1, this.stage.children.length);
     this.pauseGameController.remove();
-    this.stateStack.pop();
+    this.pop();
     this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, sucess));
   }
 }

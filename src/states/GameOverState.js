@@ -39,16 +39,14 @@ export default class GameOverState extends State {
     textContainer.addChild(hintText);
 
     textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
-    this.stage.addChild(textContainer);
+    this.container.addChild(textContainer);
   }
 
   addKeyControllers() {
     let restartGame = () => {
       this.restartGameController.remove();
 
-      this.stage.removeChildren(1, this.stage.children.length);
-
-      this.stateStack.pop();
+      this.pop();
       this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
     }
 

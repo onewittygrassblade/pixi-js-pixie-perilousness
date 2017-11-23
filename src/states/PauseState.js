@@ -20,7 +20,7 @@ export default class PauseState extends State {
     );
     message.x = RENDERER_WIDTH / 2 - message.width / 2;
     message.y = RENDERER_HEIGHT / 2 - message.height / 2 - 40;
-    this.stage.addChild(message);
+    this.container.addChild(message);
 
     let hint = new BitmapText(
       'Press ESC to resume',
@@ -28,7 +28,7 @@ export default class PauseState extends State {
     );
     hint.x = RENDERER_WIDTH / 2 - hint.width / 2;
     hint.y = message.y + 100;
-    this.stage.addChild(hint);
+    this.container.addChild(hint);
   }
 
   addKeyControllers() {
@@ -38,9 +38,7 @@ export default class PauseState extends State {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChildren(this.stage.children.length - 2, this.stage.children.length);
-
-      this.stateStack.pop();
+      this.pop();
     }
 
     this.leavePauseStateController = new KeyBinder(27, null, leavePauseState);

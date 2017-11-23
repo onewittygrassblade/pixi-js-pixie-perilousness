@@ -70,7 +70,7 @@ export default class Pixie extends Entity {
       this.effectChangeTimer += dt;
 
       if (this.invincible) {
-        blink(50);
+        this.blink(50);
       }
 
       this.effectTimer -= dt;

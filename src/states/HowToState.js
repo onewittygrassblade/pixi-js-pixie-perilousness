@@ -14,7 +14,7 @@ export default class HowToState extends State {
   }
 
   buildScene() {
-    this.stage.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
+    this.container.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
 
     let textSyle = {font: '26px pixie-font'};
 
@@ -25,7 +25,7 @@ export default class HowToState extends State {
     );
     goalText.x = RENDERER_WIDTH / 2 - goalText.width / 2;
     goalText.y = 80;
-    this.stage.addChild(goalText);
+    this.container.addChild(goalText);
 
     // pixie
     let pixieContainer = new Container();
@@ -40,7 +40,7 @@ export default class HowToState extends State {
     pixieContainer.addChild(pixieText);
     pixieContainer.x = RENDERER_WIDTH / 2 - pixieContainer.width / 2;
     pixieContainer.y = goalText.y + goalText.height + 60;
-    this.stage.addChild(pixieContainer);
+    this.container.addChild(pixieContainer);
 
     // block
     let blockContainer = new Container();
@@ -55,7 +55,7 @@ export default class HowToState extends State {
     blockContainer.addChild(blockText);
     blockContainer.x = RENDERER_WIDTH / 2 - blockContainer.width / 2;
     blockContainer.y = pixieContainer.y + pixieContainer.height + 30;
-    this.stage.addChild(blockContainer);
+    this.container.addChild(blockContainer);
 
     // gift
     let giftContainer = new Container();
@@ -70,7 +70,7 @@ export default class HowToState extends State {
     giftContainer.addChild(giftText);
     giftContainer.x = RENDERER_WIDTH / 2 - giftContainer.width / 2;
     giftContainer.y = blockContainer.y + blockContainer.height + 30;
-    this.stage.addChild(giftContainer);
+    this.container.addChild(giftContainer);
 
     // return to menu text
     let returnToMenuText = new BitmapText(
@@ -79,14 +79,13 @@ export default class HowToState extends State {
     );
     returnToMenuText.x = RENDERER_WIDTH / 2 - returnToMenuText.width / 2;
     returnToMenuText.y = giftContainer.y + giftContainer.height + 60;
-    this.stage.addChild(returnToMenuText);
+    this.container.addChild(returnToMenuText);
   }
 
   addKeyControllers() {
     let toMenuState = () => {
       this.toMenuStateController.remove();
-      this.stage.removeChildren(this.stage.children.length - 6, this.stage.children.length);
-      this.stateStack.pop();
+      this.pop();
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);

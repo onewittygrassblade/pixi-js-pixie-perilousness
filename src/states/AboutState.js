@@ -1,4 +1,4 @@
-import { Container, Sprite, TilingSprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
+import { Sprite, TilingSprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -14,7 +14,7 @@ export default class AboutState extends State {
   }
 
   buildScene() {
-    this.stage.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
+    this.container.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
 
     let textSyle = new TextStyle({
       fontSize: 24,
@@ -27,7 +27,7 @@ export default class AboutState extends State {
     let introText = new Text("Pixie Perilousness! is an original concept by Rex Van der Spuy from his tutorial on Pixi.js, available at github.com/kittykatattack/learnPixiJS.", textSyle);
     introText.x = RENDERER_WIDTH / 2 - introText.width / 2;
     introText.y = 80;
-    this.stage.addChild(introText);
+    this.container.addChild(introText);
 
     let returnToMenuText = new BitmapText(
       'Press space to return to menu',
@@ -35,14 +35,13 @@ export default class AboutState extends State {
     );
     returnToMenuText.x = RENDERER_WIDTH / 2 - returnToMenuText.width / 2;
     returnToMenuText.y = introText.y + introText.height + 60;
-    this.stage.addChild(returnToMenuText);
+    this.container.addChild(returnToMenuText);
   }
 
   addKeyControllers() {
     let toMenuState = () => {
       this.toMenuStateController.remove();
-      this.stage.removeChildren(this.stage.children.length - 3, this.stage.children.length);
-      this.stateStack.pop();
+      this.pop();
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);

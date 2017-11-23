@@ -20,7 +20,7 @@ export default class HintState extends State {
     let messageText = new BitmapText(message, {font: '64px pixie-font'});
     messageText.x = RENDERER_WIDTH / 2 - messageText.width / 2;
     messageText.y = RENDERER_HEIGHT / 2 - messageText.height / 2;
-    this.stage.addChild(messageText);
+    this.container.addChild(messageText);
   }
 
   addKeyControllers() {
@@ -30,9 +30,7 @@ export default class HintState extends State {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.stage.removeChildAt(this.stage.children.length - 1);
-
-      this.stateStack.pop();
+      this.pop();
     }
 
     this.startGameController = new KeyBinder(32, null, startGame);
