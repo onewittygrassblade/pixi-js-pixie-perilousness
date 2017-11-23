@@ -1,4 +1,4 @@
-import { Container, Sprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
+import { Container, Sprite, TilingSprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -14,7 +14,7 @@ export default class AboutState extends State {
   }
 
   buildScene() {
-    this.stage.addChild(new Sprite(this.textures['scroll.png']));
+    this.stage.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
 
     let textSyle = new TextStyle({
       fontSize: 24,

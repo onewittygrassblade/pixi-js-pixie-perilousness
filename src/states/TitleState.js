@@ -35,25 +35,28 @@ export default class TitleState extends State {
 
     let menuItemStyle = {font: '48px pixie-font'};
 
-    let play = new MenuItem('Play', menuItemStyle);
-    play.on('click', e => {
-      this.startGame();
-    });
-    menuContainer.addChild(play);
+    let menuItemData = [{
+      title: 'Play',
+      callback: this.startGame.bind(this)
+    }, {
+      title: 'How to play',
+      callback: this.showHowToPlay.bind(this)
+    }, {
+      title: 'About',
+      callback: this.showAbout.bind(this)
+    }];
 
-    let howto = new MenuItem('How to play', menuItemStyle);
-    howto.y = play.height + 20;
-    howto.on('click', e => {
-      this.showHowToPlay();
-    });
-    menuContainer.addChild(howto);
+    let yPos = 0;
 
-    let about = new MenuItem('About', menuItemStyle);
-    about.y = howto.y + howto.height + 20;
-    about.on('click', e => {
-      this.showAbout();
-    });
-    menuContainer.addChild(about);
+    for (let data of menuItemData) {
+      let menuItem = new MenuItem(data.title, menuItemStyle);
+      menuItem.on('click', e => {
+        data.callback();
+      });
+      menuItem.y = yPos;
+      yPos += menuItem.height + 20;
+      menuContainer.addChild(menuItem);
+    }
   }
 
   startGame() {
