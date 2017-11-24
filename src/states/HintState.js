@@ -30,7 +30,7 @@ export default class HintState extends State {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.pop();
+      this.popFromStack();
     }
 
     this.startGameController = new KeyBinder(32, null, startGame);

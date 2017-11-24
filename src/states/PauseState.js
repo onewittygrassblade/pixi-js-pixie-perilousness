@@ -38,7 +38,7 @@ export default class PauseState extends State {
       this.parent.addKeyControllers();
       this.parent.world.addKeyControllers();
 
-      this.pop();
+      this.popFromStack();
     }
 
     this.leavePauseStateController = new KeyBinder(27, null, leavePauseState);

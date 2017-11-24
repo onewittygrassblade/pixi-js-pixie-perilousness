@@ -5,9 +5,17 @@ export default class StateStack {
 
   push(state) {
     this.stack.push(state);
+
+    for (let previousState of this.stack.slice(0, this.stack.length - 1)) {
+      previousState.toggleVisibility();
+    }
   }
 
   pop() {
+    if (this.stack.length > 1) {
+      this.stack[this.stack.length - 2].show();
+    }
+
     return this.stack.pop();
   }
 

@@ -1,4 +1,4 @@
-import { Sprite, TilingSprite, Text, TextStyle, BitmapText } from '../const/aliases.js';
+import { Text, TextStyle, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -14,8 +14,6 @@ export default class AboutState extends State {
   }
 
   buildScene() {
-    this.container.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
-
     let textSyle = new TextStyle({
       fontSize: 24,
       // fontWeight: 'bold',
@@ -41,7 +39,7 @@ export default class AboutState extends State {
   addKeyControllers() {
     let toMenuState = () => {
       this.toMenuStateController.remove();
-      this.pop();
+      this.popFromStack();
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);

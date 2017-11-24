@@ -60,7 +60,7 @@ export default class TitleState extends State {
   }
 
   startGame() {
-    this.pop();
+    this.popFromStack();
 
     let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
@@ -73,5 +73,9 @@ export default class TitleState extends State {
 
   showAbout() {
     this.stateStack.push(new AboutState(this.stage, this.stateStack, this.textures));
+  }
+
+  toggleVisibility() {
+    this.container.visible = false;
   }
 }

@@ -46,7 +46,7 @@ export default class GameOverState extends State {
     let restartGame = () => {
       this.restartGameController.remove();
 
-      this.pop();
+      this.popFromStack();
       this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
     }
 

@@ -73,7 +73,7 @@ export default class GameState extends State {
 
   gameOver(sucess) {
     this.pauseGameController.remove();
-    this.pop();
+    this.popFromStack();
     this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, sucess));
   }
 }

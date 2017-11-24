@@ -1,4 +1,4 @@
-import { Container, Sprite, TilingSprite, BitmapText } from '../const/aliases.js';
+import { Container, Sprite, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -14,8 +14,6 @@ export default class HowToState extends State {
   }
 
   buildScene() {
-    this.container.addChild(new TilingSprite(this.textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
-
     let textSyle = {font: '26px pixie-font'};
 
     // game goal text
@@ -85,7 +83,7 @@ export default class HowToState extends State {
   addKeyControllers() {
     let toMenuState = () => {
       this.toMenuStateController.remove();
-      this.pop();
+      this.popFromStack();
     }
 
     this.toMenuStateController = new KeyBinder(32, null, toMenuState);
