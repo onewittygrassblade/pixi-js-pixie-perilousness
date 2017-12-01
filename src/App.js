@@ -2,6 +2,7 @@ import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from 
 
 import StateStack from './StateStack.js';
 import TitleState from './states/TitleState.js';
+import centerCanvas from './helpers/centerCanvas.js';
 
 import {  TIME_PER_FRAME, RENDERER_WIDTH, RENDERER_HEIGHT, SOUND_NAMES } from './const/appConstants.js';
 
@@ -12,6 +13,10 @@ export default class App {
   constructor() {
     this.renderer = autoDetectRenderer(RENDERER_WIDTH, RENDERER_HEIGHT);
     document.getElementById('root').appendChild(this.renderer.view);
+    centerCanvas(this.renderer.view);
+    window.addEventListener('resize', event => {
+      centerCanvas(this.renderer.view);
+    });
 
     this.stage = new Container();
 
