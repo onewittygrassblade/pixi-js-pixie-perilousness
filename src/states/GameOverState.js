@@ -11,15 +11,16 @@ export default class GameOverState extends State {
     super(stage, stateStack, textures, sounds);
 
     this.createTexts(success);
-    this.addKeyControllers();
+
+    this.keyControllers.push(new KeyBinder(32, null, () => {
+      this.popFromStack();
+      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
+    }));
 
     this.sounds.fail.play();
   }
 
   createTexts(success) {
-    let textContainer = new Container();
-    textContainer.x = RENDERER_WIDTH / 2;
-
     let messageText = new BitmapText(
       'Whoops!',
       {font: '64px pixie-font'}
@@ -28,7 +29,7 @@ export default class GameOverState extends State {
       messageText.text = 'Yay!';
     }
     messageText.anchor.x = 0.5;
-    textContainer.addChild(messageText);
+    this.container.addChild(messageText);
 
     let hintText = new BitmapText(
       'Press space to continue',
@@ -36,20 +37,9 @@ export default class GameOverState extends State {
     );
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
-    textContainer.addChild(hintText);
+    this.container.addChild(hintText);
 
-    textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
-    this.container.addChild(textContainer);
-  }
-
-  addKeyControllers() {
-    let restartGame = () => {
-      this.restartGameController.remove();
-
-      this.popFromStack();
-      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
-    }
-
-    this.restartGameController = new KeyBinder(32, null, restartGame);
+    this.container.x = RENDERER_WIDTH / 2;
+    this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
   }
 }

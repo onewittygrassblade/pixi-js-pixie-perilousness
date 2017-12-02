@@ -9,38 +9,30 @@ export default class PauseState extends State {
   constructor(stage, stateStack, textures, parent) {
     super(stage, stateStack, textures, null, parent);
 
-    this.createText();
-    this.addKeyControllers();
+    this.createTexts();
+
+    this.keyControllers.push(new KeyBinder(27, null, () => {
+      this.popFromStack();
+    }));
   }
 
-  createText() {
-    let message = new BitmapText(
+  createTexts() {
+    let messageText = new BitmapText(
       'Game paused',
       {font: '72px pixie-font'}
     );
-    message.x = RENDERER_WIDTH / 2 - message.width / 2;
-    message.y = RENDERER_HEIGHT / 2 - message.height / 2 - 40;
-    this.container.addChild(message);
+    messageText.anchor.x = 0.5;
+    this.container.addChild(messageText);
 
-    let hint = new BitmapText(
+    let hintText = new BitmapText(
       'Press ESC to resume',
       {font: '48px pixie-font'}
     );
-    hint.x = RENDERER_WIDTH / 2 - hint.width / 2;
-    hint.y = message.y + 100;
-    this.container.addChild(hint);
-  }
+    hintText.anchor.x = 0.5;
+    hintText.y = messageText.y + messageText.height + 40;
+    this.container.addChild(hintText);
 
-  addKeyControllers() {
-    let leavePauseState = () => {
-      this.leavePauseStateController.remove();
-
-      this.parent.addKeyControllers();
-      this.parent.world.addKeyControllers();
-
-      this.popFromStack();
-    }
-
-    this.leavePauseStateController = new KeyBinder(27, null, leavePauseState);
+    this.container.x = RENDERER_WIDTH / 2;
+    this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
   }
 }

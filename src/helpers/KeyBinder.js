@@ -5,9 +5,6 @@ export default class KeyBinder {
     this.release = release;
     this.downHandler = this.downHandler.bind(this);
     this.upHandler = this.upHandler.bind(this);
-
-    window.addEventListener('keydown', this.downHandler, false);
-    window.addEventListener('keyup', this.upHandler, false);
   }
 
   downHandler(e) {
@@ -24,7 +21,12 @@ export default class KeyBinder {
     e.preventDefault();
   }
 
-  remove() {
+  addEventListeners() {
+    window.addEventListener('keydown', this.downHandler, false);
+    window.addEventListener('keyup', this.upHandler, false);
+  }
+
+  removeEventListeners() {
     window.removeEventListener('keydown', this.downHandler, false);
     window.removeEventListener('keyup', this.upHandler, false);
   }

@@ -64,7 +64,7 @@ export default class TitleState extends State {
 
     let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
-    this.stateStack.push(new HintState(this.stage, this.stateStack, gameState, 'Level 1'));
+    this.stateStack.push(new HintState(this.stage, this.stateStack, 'Level 1'));
   }
 
   showHowToPlay() {
@@ -75,7 +75,7 @@ export default class TitleState extends State {
     this.stateStack.push(new AboutState(this.stage, this.stateStack, this.textures));
   }
 
-  toggleVisibility() {
-    this.container.visible = false;
+  shouldBeHiddenWhenPushedUnder() {
+    return true;
   }
 }

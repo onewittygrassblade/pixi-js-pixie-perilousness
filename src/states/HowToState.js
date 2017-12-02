@@ -10,7 +10,10 @@ export default class HowToState extends State {
     super(stage, stateStack, textures);
 
     this.buildScene();
-    this.addKeyControllers();
+
+    this.keyControllers.push(new KeyBinder(32, null, () => {
+      this.popFromStack();
+    }));
   }
 
   buildScene() {
@@ -68,14 +71,5 @@ export default class HowToState extends State {
     }
 
     this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
-  }
-
-  addKeyControllers() {
-    let toMenuState = () => {
-      this.toMenuStateController.remove();
-      this.popFromStack();
-    }
-
-    this.toMenuStateController = new KeyBinder(32, null, toMenuState);
   }
 }

@@ -44,8 +44,6 @@ export default class World {
 
     this.buildScene();
 
-    this.addKeyControllers();
-
     this.createPickupActions();
   }
 
@@ -209,7 +207,7 @@ export default class World {
     this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
   }
 
-  addKeyControllers() {
+  addEventListeners() {
     let pixieFlapWings = () => {
       this.pixie.play();
       this.pixie.ay = WORLD_GRAVITY + this.pixie.addedGravity + this.pixie.wingPower;
@@ -220,10 +218,11 @@ export default class World {
     };
 
     this.pixieController = new KeyBinder(32, pixieFlapWings, pixieStopFlapping);
+    this.pixieController.addEventListeners();
   }
 
-  removeKeyControllers() {
-    this.pixieController.remove();
+  removeEventListeners() {
+    this.pixieController.removeEventListeners();
   }
 
   createPickupActions() {

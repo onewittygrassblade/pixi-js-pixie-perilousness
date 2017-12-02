@@ -15,23 +15,21 @@ export default class GameState extends State {
     this.numberOfLives = 3;
     this.numberOfTeddyBears = 0;
 
+    this.keyControllers.push(new KeyBinder(27, null, () => {
+      this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
+    }));
+
     this.world = new World(stage, this.container, textures, sounds, this);
-
-    this.addKeyControllers();
   }
 
-  addKeyControllers() {
-    let pauseGame = () => {
-      this.removeKeyControllers();
-      this.world.removeKeyControllers();
-      this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures, this));
-    }
-
-    this.pauseGameController = new KeyBinder(27, null, pauseGame);
+  addEventListeners() {
+    super.addEventListeners();
+    this.world.addEventListeners();
   }
 
-  removeKeyControllers() {
-    this.pauseGameController.remove();
+  removeEventListeners() {
+    super.removeEventListeners();
+    this.world.removeEventListeners();
   }
 
   update(dt) {
@@ -71,9 +69,8 @@ export default class GameState extends State {
     return false;
   }
 
-  gameOver(sucess) {
-    this.pauseGameController.remove();
+  gameOver(success) {
     this.popFromStack();
-    this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, sucess));
+    this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, success));
   }
 }
