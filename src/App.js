@@ -5,7 +5,7 @@ import StateStack from './StateStack.js';
 import TitleState from './states/TitleState.js';
 import centerCanvas from './helpers/centerCanvas.js';
 
-import {  TIME_PER_FRAME, RENDERER_WIDTH, RENDERER_HEIGHT, SOUND_NAMES } from './const/appConstants.js';
+import {  SOUND_NAMES, RENDERER_WIDTH, RENDERER_HEIGHT, TIME_PER_FRAME  } from './const/appConstants.js';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
@@ -17,31 +17,15 @@ export default class App {
     this.stateStack = new StateStack();
   }
 
-  static loadImages() {
-    return new Promise((resolve, reject) => {
-      loader
-      .add('images/pixie-perilousness.json')
-      .on('error', reject)
-      .load(resolve);
-    });
-  }
-
-  static loadFont() {
-    return new Promise((resolve, reject) => {
-      loader
-      .add('fonts/pixie-font.fnt')
-      .on('error', reject)
-      .load(resolve);
-    });
-  }
-
-  static loadSounds() {
+  static loadAssets() {
     return new Promise((resolve, reject) => {
       for (let soundName of SOUND_NAMES) {
         loader.add(soundName, 'sounds/' + soundName + '.mp3');
       }
 
       loader
+      .add('images/pixie-perilousness.json')
+      .add('fonts/pixie-font.fnt')
       .on('error', reject)
       .load(resolve);
     });
@@ -59,10 +43,6 @@ export default class App {
 
     this.stateStack.push(new TitleState(this.stage, this.stateStack, textures, sounds));
 
-    this.run();
-  }
-
-  run() {
     requestAnimationFrame(this.gameLoop.bind(this));
   }
 
