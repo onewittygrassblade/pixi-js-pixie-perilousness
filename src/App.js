@@ -1,5 +1,6 @@
-import {  autoDetectRenderer, loader, resources, Container, TilingSprite } from './const/aliases.js';
+import { loader, resources, Container, TilingSprite } from './const/aliases.js';
 
+import Engine from './Engine.js';
 import StateStack from './StateStack.js';
 import TitleState from './states/TitleState.js';
 import centerCanvas from './helpers/centerCanvas.js';
@@ -11,15 +12,8 @@ let timeSinceLastUpdate = 0;
 
 export default class App {
   constructor() {
-    this.renderer = autoDetectRenderer(RENDERER_WIDTH, RENDERER_HEIGHT);
-    document.getElementById('root').appendChild(this.renderer.view);
-    centerCanvas(this.renderer.view);
-    window.addEventListener('resize', event => {
-      centerCanvas(this.renderer.view);
-    });
-
+    this.engine = new Engine();
     this.stage = new Container();
-
     this.stateStack = new StateStack();
   }
 
@@ -81,7 +75,7 @@ export default class App {
       this.stateStack.update(TIME_PER_FRAME);
     }
 
-    this.renderer.render(this.stage);
+    this.engine.render(this.stage);
 
     requestAnimationFrame(this.gameLoop.bind(this));
   }
