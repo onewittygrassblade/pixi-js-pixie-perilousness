@@ -1,4 +1,4 @@
-import { Text, TextStyle, BitmapText } from '../const/aliases.js';
+import { BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -14,26 +14,29 @@ export default class AboutState extends State {
   }
 
   buildScene() {
-    let textSyle = new TextStyle({
-      fontSize: 24,
-      // fontWeight: 'bold',
-      fill: 0xe6007e,
-      wordWrap: true,
-      wordWrapWidth: 760
-    });
+    const texts = [
+      'Pixie Perilousness! is an original concept from the',
+      'awesome tutorial Learn Pixi.js, available at',
+      'github.com/kittykatattack/learnPixiJS.',
+      'Please see',
+      'github.com/onewittygrassblade/pixi-js-pixie-perilousness',
+      'for full credits and source code.',
+      'Press space to return to menu'
+    ];
 
-    let introText = new Text("Pixie Perilousness! is an original concept by Rex Van der Spuy from his tutorial on Pixi.js, available at github.com/kittykatattack/learnPixiJS.", textSyle);
-    introText.x = RENDERER_WIDTH / 2 - introText.width / 2;
-    introText.y = 80;
-    this.container.addChild(introText);
+    const textSyle = {font: '30px pixie-font'};
 
-    let returnToMenuText = new BitmapText(
-      'Press space to return to menu',
-      {font: '26px pixie-font'}
-    );
-    returnToMenuText.x = RENDERER_WIDTH / 2 - returnToMenuText.width / 2;
-    returnToMenuText.y = introText.y + introText.height + 60;
-    this.container.addChild(returnToMenuText);
+    let yPos = 0;
+
+    for (let i = 0; i < texts.length; i++) {
+      let bitmapText = new BitmapText(texts[i], textSyle);
+      bitmapText.x = RENDERER_WIDTH / 2 - bitmapText.width / 2;
+      bitmapText.y = yPos;
+      yPos += bitmapText.height + (i != texts.length - 2 ? 20 : 60);
+      this.container.addChild(bitmapText);
+    }
+
+    this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
   }
 
   addKeyControllers() {
