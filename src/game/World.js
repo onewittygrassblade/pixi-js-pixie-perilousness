@@ -88,7 +88,7 @@ export default class World {
   }
 
   createPickups() {
-    for (let i = 0; i < NUM_PILLARS; i++) {
+    for (let i = 0; i < NUM_PILLARS - 1; i++) {
       if (i % 2 === 0) {
         let pickup = new Sprite(this.textures['gift.png']);
         this.pickups.addChild(pickup);
@@ -110,7 +110,7 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new BitmapText('Finish!', {font: '96px pixie-font'});
+    this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
 
     this.finish.x = (NUM_PILLARS - 1) * 384 + 896;
     this.finish.y = 192;
@@ -191,6 +191,10 @@ export default class World {
 
   decreaseNumberOfLives() {
     this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
+  }
+
+  setFinishTextForFinalLevel() {
+    this.finish.text = 'To home!';
   }
 
   addEventListeners() {

@@ -17,7 +17,9 @@ export default class GameOverState extends State {
       this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
     }));
 
-    this.sounds.fail.play();
+    if (!success) {
+      this.sounds.fail.play();
+    }
   }
 
   createTexts(success) {

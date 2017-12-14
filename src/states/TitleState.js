@@ -64,7 +64,7 @@ export default class TitleState extends State {
 
     let gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
     this.stateStack.push(gameState);
-    this.stateStack.push(new HintState(this.stage, this.stateStack, 'Level 1'));
+    this.stateStack.push(new HintState(this.stage, this.stateStack, 'Hello Pixie!'));
   }
 
   showHowToPlay() {

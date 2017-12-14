@@ -5,7 +5,7 @@ import GameOverState from './GameOverState.js';
 import World from '../game/World.js';
 import KeyBinder from '../helpers/KeyBinder.js';
 
-import { NUMBER_OF_LEVELS } from '../const/gameData.js';
+import { LEVELS_DATA } from '../const/levelsData.js';
 
 export default class GameState extends State {
   constructor(stage, stateStack, textures, sounds) {
@@ -42,7 +42,7 @@ export default class GameState extends State {
         this.world.pixie.visible = true;
         this.world.pixieHasCrashed = false;
         this.world.pixieIsExploding = false;
-        this.stateStack.push(new HintState(this.stage, this.stateStack, this, `Level ${this.currentLevel+1}`));
+        this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
         this.numberOfLives--;
       } else {
         this.gameOver(false);
@@ -54,10 +54,10 @@ export default class GameState extends State {
       this.world.level++;
       this.sounds.tada.play();
 
-      if (this.currentLevel <= NUMBER_OF_LEVELS) {
+      if (this.currentLevel < LEVELS_DATA.length) {
         this.world.resetScene();
         this.world.pixieHasReachedEnd = false;
-        this.stateStack.push(new HintState(this.stage, this.stateStack, this, `Level ${this.currentLevel+1}`));
+        this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
       } else {
         this.gameOver(true);
       }
