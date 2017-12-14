@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.5.0</string>
         <key>fileName</key>
-        <string>/Users/jguyonnet/Documents/tests/javascript/pixi-js-tutorial/public/images/pixie-perilousness.tps</string>
+        <string>/Users/jguyonnet/Documents/tests/javascript/pixi-js-pixie-perilousness/public/images/pixie-perilousness.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -228,7 +228,6 @@
             <key type="filename">gift.png</key>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
-            <key type="filename">teddybear.png</key>
             <key type="filename">violet.png</key>
             <key type="filename">weight.png</key>
             <key type="filename">yellow.png</key>
@@ -287,7 +286,6 @@
             <filename>gift.png</filename>
             <filename>balloon.png</filename>
             <filename>weight.png</filename>
-            <filename>teddybear.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

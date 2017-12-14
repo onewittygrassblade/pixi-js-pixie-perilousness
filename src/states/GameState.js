@@ -13,7 +13,6 @@ export default class GameState extends State {
 
     this.currentLevel = 0;
     this.numberOfLives = 3;
-    this.numberOfTeddyBears = 0;
 
     this.keyControllers.push(new KeyBinder(27, null, () => {
       this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
@@ -37,7 +36,6 @@ export default class GameState extends State {
 
     if (this.world.pixieHasCrashed) {
       if (this.numberOfLives > 1) {
-        this.world.numberOfTeddyBears = this.numberOfTeddyBears;
         this.world.resetScene();
         this.world.resetEmitter();
         this.world.decreaseNumberOfLives();
@@ -58,7 +56,6 @@ export default class GameState extends State {
 
       if (this.currentLevel <= NUMBER_OF_LEVELS) {
         this.world.resetScene();
-        this.numberOfTeddyBears = this.world.numberOfTeddyBears;
         this.world.pixieHasReachedEnd = false;
         this.stateStack.push(new HintState(this.stage, this.stateStack, this, `Level ${this.currentLevel+1}`));
       } else {

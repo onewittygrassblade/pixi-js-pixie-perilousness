@@ -19,7 +19,7 @@ export default class HowToState extends State {
   buildScene() {
     const data = [
       {
-        text: 'Help Pixie find teddy bears among the scattered presents!',
+        text: 'Help Pixie get home!',
         sprite: null,
         yOffset: 60
       },
@@ -34,7 +34,7 @@ export default class HowToState extends State {
         yOffset: 60
       },
       {
-        text: 'Pick up presents to get teddy bears or surprises',
+        text: 'Pick up presents to get surprises',
         sprite: new Sprite(this.textures['gift.png']),
         yOffset: 60
       },

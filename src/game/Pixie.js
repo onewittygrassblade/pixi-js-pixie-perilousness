@@ -19,7 +19,7 @@ export default class Pixie extends Entity {
     this.addChild(sprite);
 
     this.addedGravity = 0.00025;
-    this.effectTimer = 10000;
+    this.effectTimer = 8000;
 
     sound.play();
   }
@@ -30,16 +30,14 @@ export default class Pixie extends Entity {
     this.addChild(sprite);
 
     this.addedGravity = -0.00015;
-    this.effectTimer = 10000;
+    this.effectTimer = 8000;
 
     sound.play();
   }
 
   gainInvincibility() {
     this.invincible = true;
-    this.effectTimer = 10000;
-
-    // sound.play();
+    this.effectTimer = 8000;
   }
 
   resetProperties() {

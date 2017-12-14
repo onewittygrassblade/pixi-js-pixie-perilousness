@@ -32,7 +32,6 @@ export default class World {
     this.pixieIsExploding = false;
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
-    this.numberOfTeddyBears = this.gameState.numberOfTeddyBears;
 
     this.sky = stage.getChildAt(0);
 
@@ -90,35 +89,24 @@ export default class World {
 
   createPickups() {
     for (let i = 0; i < NUM_PILLARS; i++) {
-      let pickup = new Sprite(this.textures['gift.png']);
-      this.pickups.addChild(pickup);
-      pickup.x = i * (384 + this.level * 64) + this.level * 64 + 720;
-      pickup.y = randomInt(50, RENDERER_HEIGHT - 50);
+      if (i % 2 === 0) {
+        let pickup = new Sprite(this.textures['gift.png']);
+        this.pickups.addChild(pickup);
+        pickup.x = i * (384 + this.level * 64) + this.level * 64 + 720;
+        pickup.y = randomInt(50, RENDERER_HEIGHT - 50);
+      }
     }
   }
 
   createInfoDisplay() {
-    let infoContainer = new Container();
-    infoContainer.x = 20;
-    infoContainer.y = 20;
-    this.container.addChild(infoContainer);
-
     this.livesContainer = new Container();
-    infoContainer.addChild(this.livesContainer);
+    this.container.addChild(this.livesContainer);
+
     for (let i = 0; i < this.gameState.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
     }
-
-    let teddybearContainer = new Container();
-    teddybearContainer.y = 50;
-    infoContainer.addChild(teddybearContainer);
-    teddybearContainer.addChild(new Sprite(this.textures['teddybear.png']));
-    this.numberOfTeddyBearsText = new BitmapText(this.numberOfTeddyBears.toString(), {font: '30px pixie-font'});
-    this.numberOfTeddyBearsText.x = 40;
-    this.numberOfTeddyBearsText.y = 4;
-    teddybearContainer.addChild(this.numberOfTeddyBearsText);
   }
 
   createFinish() {
@@ -178,8 +166,6 @@ export default class World {
     this.pickups.x = 0;
     this.createPickups();
 
-    this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
-
     this.finish.x = (NUM_PILLARS - 1) * (384 + this.level * 64) + 896;
 
     this.resetPixie();
@@ -226,23 +212,12 @@ export default class World {
   }
 
   createPickupActions() {
-    let pickUpActions = [
+    this.pickUpActions = [
       this.gainExtraLife.bind(this),
       this.pixie.gainInvincibility.bind(this.pixie),
       this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png']), this.sounds.metal),
-      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png']), this.sounds.whoosh),
-      this.gainTeddyBear.bind(this)
+      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png']), this.sounds.whoosh)
     ];
-
-    let weights = [1, 1, 1, 1, 8];
-
-    this.pickUpActions = [];
-
-    for (let i = 0; i < weights.length; i++) {
-      for (let j = 0; j < weights[i]; j++) {
-        this.pickUpActions.push(pickUpActions[i]);
-      }
-    }
   }
 
   gainExtraLife() {
@@ -255,12 +230,6 @@ export default class World {
 
       this.sounds.powerup.play();
     }
-  }
-
-  gainTeddyBear() {
-    this.numberOfTeddyBears++;
-    this.numberOfTeddyBearsText.text = this.numberOfTeddyBears.toString();
-    this.sounds.pickup.play();
   }
 
   update(dt) {
@@ -344,13 +313,7 @@ export default class World {
     for (let pickup of this.pickups.children) {
       if (hitTestRectangle(this.pixie, pickup, true)) {
         this.pickups.removeChild(pickup);
-
-        if (this.pixie.effectTimer <= 0) {
-          this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
-        }
-        else {
-          this.gainTeddyBear();
-        }
+        this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
       }
     }
 
