@@ -1,7 +1,7 @@
 import { Container, Sprite, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
-import KeyBinder from '../helpers/KeyBinder.js';
+import MenuItem from '../gui/MenuItem.js';
 
 import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
 
@@ -10,10 +10,6 @@ export default class HowToState extends State {
     super(stage, stateStack, textures);
 
     this.buildScene();
-
-    this.keyControllers.push(new KeyBinder(32, null, () => {
-      this.popFromStack();
-    }));
   }
 
   buildScene() {
@@ -37,11 +33,6 @@ export default class HowToState extends State {
         text: 'Pick up presents to get surprises',
         sprite: new Sprite(this.textures['gift.png']),
         yOffset: 60
-      },
-      {
-        text: 'Press space to return to menu',
-        sprite: null,
-        yOffset: 0
       }
     ];
 
@@ -69,6 +60,15 @@ export default class HowToState extends State {
 
       yPos += bitmapText.height + data[i].yOffset;
     }
+
+    const backToTitle = new MenuItem('Back', {font: '48px pixie-font'});
+    backToTitle.on('click', e => {
+      this.popFromStack();
+    });
+    backToTitle.anchor.set(0.5);
+    backToTitle.x = RENDERER_WIDTH / 2;
+    backToTitle.y = yPos + 40;
+    this.container.addChild(backToTitle);
 
     this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
   }
