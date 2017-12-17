@@ -9,10 +9,10 @@ export default class AboutState extends State {
   constructor(stage, stateStack, textures) {
     super(stage, stateStack, textures);
 
-    this.buildScene();
+    this.createTexts();
   }
 
-  buildScene() {
+  createTexts() {
     const texts = [
       'Pixie Perilousness! is an original concept from the',
       'awesome tutorial Learn Pixi.js, available at',
@@ -22,13 +22,11 @@ export default class AboutState extends State {
       'for full credits and source code.'
     ];
 
-    const textSyle = {font: '30px pixie-font'};
-
     let yPos = 0;
 
     for (let i = 0; i < texts.length; i++) {
-      let bitmapText = new BitmapText(texts[i], textSyle);
-      bitmapText.x = RENDERER_WIDTH / 2 - bitmapText.width / 2;
+      let bitmapText = new BitmapText(texts[i], {font: '30px pixie-font'});
+      bitmapText.anchor.x = 0.5;
       bitmapText.y = yPos;
       yPos += bitmapText.height + 30;
       this.container.addChild(bitmapText);
@@ -38,11 +36,11 @@ export default class AboutState extends State {
     backToTitle.on('click', e => {
       this.popFromStack();
     });
-    backToTitle.anchor.set(0.5);
-    backToTitle.x = RENDERER_WIDTH / 2;
+    backToTitle.anchor.x = 0.5;
     backToTitle.y = yPos + 40;
     this.container.addChild(backToTitle);
 
+    this.container.x = RENDERER_WIDTH / 2;
     this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
   }
 }

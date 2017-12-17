@@ -9,39 +9,37 @@ export default class HowToState extends State {
   constructor(stage, stateStack, textures) {
     super(stage, stateStack, textures);
 
-    this.buildScene();
+    this.createTexts();
   }
 
-  buildScene() {
+  createTexts() {
     const data = [
       {
         text: 'Help Pixie get home!',
         sprite: null,
-        yOffset: 60
+        yOffset: 50
       },
       {
         text: 'Press space to make Pixie flap her wings',
         sprite: new Sprite(this.textures['pixie-0.png']),
-        yOffset: 30
+        yOffset: 50
       },
       {
         text: 'Avoid the green blocks',
         sprite: new Sprite(this.textures['greenBlock.png']),
-        yOffset: 60
+        yOffset: 80
       },
       {
         text: 'Pick up presents to get surprises',
         sprite: new Sprite(this.textures['gift.png']),
-        yOffset: 60
+        yOffset: 100
       }
     ];
-
-    const textSyle = {font: '30px pixie-font'};
 
     let yPos = 0;
 
     for (let i = 0; i < data.length; i++)  {
-      let bitmapText = new BitmapText(data[i].text, textSyle);
+      let bitmapText = new BitmapText(data[i].text, {font: '30px pixie-font'});
 
       if (data[i].sprite) {
         bitmapText.x = data[i].sprite.width + 20;
@@ -65,9 +63,8 @@ export default class HowToState extends State {
     backToTitle.on('click', e => {
       this.popFromStack();
     });
-    backToTitle.anchor.set(0.5);
     backToTitle.x = RENDERER_WIDTH / 2;
-    backToTitle.y = yPos + 40;
+    backToTitle.y = yPos;;
     this.container.addChild(backToTitle);
 
     this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
