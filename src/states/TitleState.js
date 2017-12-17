@@ -18,10 +18,7 @@ export default class TitleState extends State {
   }
 
   createTitle() {
-    let title = new BitmapText(
-      'Pixie Perilousness!',
-      {font: '72px pixie-font'}
-    );
+    let title = new BitmapText('Pixie Perilousness!', {font: '72px pixie-font'});
     title.x = RENDERER_WIDTH / 2 - title.width / 2;
     title.y = 120;
     this.container.addChild(title);
@@ -32,8 +29,6 @@ export default class TitleState extends State {
     menuContainer.x = RENDERER_WIDTH / 2 - menuContainer.width / 2;
     menuContainer.y = RENDERER_HEIGHT / 2 - menuContainer.height / 2;
     this.container.addChild(menuContainer);
-
-    let menuItemStyle = {font: '48px pixie-font'};
 
     let menuItemData = [{
       title: 'Play',
@@ -49,7 +44,7 @@ export default class TitleState extends State {
     let yPos = 0;
 
     for (let data of menuItemData) {
-      let menuItem = new MenuItem(data.title, menuItemStyle);
+      let menuItem = new MenuItem(data.title, {font: '48px pixie-font'});
       menuItem.on('click', e => {
         data.callback();
       });

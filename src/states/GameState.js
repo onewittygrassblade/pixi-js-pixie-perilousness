@@ -12,7 +12,6 @@ export default class GameState extends State {
     super(stage, stateStack, textures, sounds)
 
     this.currentLevel = 0;
-    this.numberOfLives = 3;
 
     this.keyControllers.push(new KeyBinder(27, null, () => {
       this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
@@ -35,15 +34,9 @@ export default class GameState extends State {
     this.world.update(dt);
 
     if (this.world.pixieHasCrashed) {
-      if (this.numberOfLives > 1) {
-        this.world.resetScene();
-        this.world.resetEmitter();
-        this.world.decreaseNumberOfLives();
-        this.world.pixie.visible = true;
-        this.world.pixieHasCrashed = false;
-        this.world.pixieIsExploding = false;
+      if (this.world.hasLives()) {
+        this.world.resetAfterCrash();
         this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
-        this.numberOfLives--;
       } else {
         this.gameOver(false);
       }
@@ -51,12 +44,13 @@ export default class GameState extends State {
 
     if (this.world.pixieHasReachedEnd) {
       this.currentLevel++;
-      this.world.level++;
       this.sounds.tada.play();
 
       if (this.currentLevel < LEVELS_DATA.length) {
-        this.world.resetScene();
-        this.world.pixieHasReachedEnd = false;
+        this.world.resetForNextLevel();
+        if (this.currentLevel === LEVELS_DATA.length - 1) {
+          this.world.setFinishTextForFinalLevel();
+        }
         this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
       } else {
         this.gameOver(true);

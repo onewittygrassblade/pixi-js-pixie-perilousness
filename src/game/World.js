@@ -22,16 +22,15 @@ import { BACKGROUND_SCROLL_SPEED,
 import { MAX_NUMBER_OF_LIVES } from '../const/gameData.js';
 
 export default class World {
-  constructor(stage, gameContainer, textures, sounds, gameState) {
+  constructor(stage, gameContainer, textures, sounds) {
     this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
-    this.gameState = gameState;
 
-    this.level = 0;
     this.pixieIsExploding = false;
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
+    this.numberOfLives = 3;
 
     this.sky = stage.getChildAt(0);
 
@@ -49,7 +48,7 @@ export default class World {
   buildScene() {
     this.createBlocks();
     this.createPickups();
-    this.createInfoDisplay();
+    this.createLivesDisplay();
     this.createFinish();
     this.createPixie();
   }
@@ -71,17 +70,8 @@ export default class World {
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
           let block = new Sprite(this.textures['greenBlock.png']);
           this.blocks.addChild(block);
-          block.x = i * (384 + this.level * 64) + 512;
+          block.x = i * 384 + 512;
           block.y = j * 64;
-        }
-
-        if (j === startGapNumber - 1 || j === startGapNumber + gapSize) {
-          for (let l = 1; l <= this.level; l++) {
-            let block = new Sprite(this.textures['greenBlock.png']);
-            this.blocks.addChild(block);
-            block.x = i * (384 + this.level * 64) + l * 64 + 512;
-            block.y = j * 64;
-          }
         }
       }
     }
@@ -92,17 +82,17 @@ export default class World {
       if (i % 2 === 0) {
         let pickup = new Sprite(this.textures['gift.png']);
         this.pickups.addChild(pickup);
-        pickup.x = i * (384 + this.level * 64) + this.level * 64 + 720;
+        pickup.x = i * 384 + 720;
         pickup.y = randomInt(50, RENDERER_HEIGHT - 50);
       }
     }
   }
 
-  createInfoDisplay() {
+  createLivesDisplay() {
     this.livesContainer = new Container();
     this.container.addChild(this.livesContainer);
 
-    for (let i = 0; i < this.gameState.numberOfLives; i++) {
+    for (let i = 0; i < this.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
@@ -166,14 +156,12 @@ export default class World {
     this.pickups.x = 0;
     this.createPickups();
 
-    this.finish.x = (NUM_PILLARS - 1) * (384 + this.level * 64) + 896;
+    this.finish.x = (NUM_PILLARS - 1) * 384 + 896;
 
     this.resetPixie();
     this.pixie.vy = 0;
     this.pixie.y = PLAYER_START_Y;
-    this.pixie.addedGravity = 0;
-    this.pixie.invincible = false;
-    this.pixie.removeChildren();
+    this.pixie.resetProperties();
   }
 
   resetEmitter() {
@@ -189,8 +177,17 @@ export default class World {
     this.emitter.stop();
   }
 
-  decreaseNumberOfLives() {
-    this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
+  resetAfterCrash() {
+    this.resetScene();
+    this.resetEmitter();
+    this.pixie.visible = true;
+    this.pixieHasCrashed = false;
+    this.pixieIsExploding = false;
+  }
+
+  resetForNextLevel() {
+    this.resetScene();
+    this.pixieHasReachedEnd = false;
   }
 
   setFinishTextForFinalLevel() {
@@ -225,15 +222,24 @@ export default class World {
   }
 
   gainExtraLife() {
-    if (this.gameState.numberOfLives < MAX_NUMBER_OF_LIVES) {
+    if (this.numberOfLives < MAX_NUMBER_OF_LIVES) {
       let life = new Sprite(this.textures['pixie-0.png']);
-      life.x = this.gameState.numberOfLives * (life.width + 10);
+      life.x = this.numberOfLives * (life.width + 10);
       this.livesContainer.addChild(life);
 
-      this.gameState.numberOfLives++;
+      this.numberOfLives++;
 
       this.sounds.powerup.play();
     }
+  }
+
+  loseLife() {
+    this.numberOfLives--;
+    this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
+  }
+
+  hasLives() {
+    return this.numberOfLives > 0;
   }
 
   update(dt) {
@@ -307,6 +313,7 @@ export default class World {
       this.emitter.burst(40);
 
       setTimeout(() => {
+        this.loseLife();
         this.pixieHasCrashed = true;
       }, 1000);
 

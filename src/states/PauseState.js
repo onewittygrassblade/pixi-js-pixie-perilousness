@@ -17,17 +17,11 @@ export default class PauseState extends State {
   }
 
   createTexts() {
-    let messageText = new BitmapText(
-      'Game paused',
-      {font: '64px pixie-font'}
-    );
+    let messageText = new BitmapText('Game paused', {font: '64px pixie-font'});
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    let hintText = new BitmapText(
-      'Press ESC to resume',
-      {font: '40px pixie-font'}
-    );
+    let hintText = new BitmapText('Press ESC to resume', {font: '40px pixie-font'});
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);

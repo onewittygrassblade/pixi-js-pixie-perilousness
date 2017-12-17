@@ -23,20 +23,14 @@ export default class GameOverState extends State {
   }
 
   createTexts(success) {
-    let messageText = new BitmapText(
-      'Whoops!',
-      {font: '64px pixie-font'}
-    );
+    let messageText = new BitmapText('Whoops!', {font: '64px pixie-font'});
     if (success) {
       messageText.text = 'Yay!';
     }
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    let hintText = new BitmapText(
-      'Press space to continue',
-      {font: '48px pixie-font'}
-    );
+    let hintText = new BitmapText('Press space to continue', {font: '48px pixie-font'});
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);
