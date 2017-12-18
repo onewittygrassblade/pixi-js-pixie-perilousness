@@ -17,7 +17,7 @@ export default class GameState extends State {
       this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
     }));
 
-    this.world = new World(stage, this.container, textures, sounds, this);
+    this.world = new World(stage, this.container, textures, sounds, LEVELS_DATA[0].world);
   }
 
   addEventListeners() {
@@ -47,6 +47,7 @@ export default class GameState extends State {
       this.sounds.tada.play();
 
       if (this.currentLevel < LEVELS_DATA.length) {
+        this.world.levelData = LEVELS_DATA[this.currentLevel].world;
         this.world.resetForNextLevel();
         if (this.currentLevel === LEVELS_DATA.length - 1) {
           this.world.setFinishTextForFinalLevel();

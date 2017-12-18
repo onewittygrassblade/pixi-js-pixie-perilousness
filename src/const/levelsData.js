@@ -2,31 +2,46 @@ export const LEVELS_DATA = [
   {
     hint: 'Hello Pixie!',
     world: {
-      gravity: 0.0003
+      tunnels: false,
+      sliding: false,
+      night: false,
+      winter: false
     }
   },
-  // {
-  //   hint: 'Tunnels!',
-  //   world: {
-  //     gravity: 0.00015
-  //   }
-  // },
-  // {
-  //   hint: 'Sliding pillars!',
-  //   world: {
-  //     gravity: 0.00045
-  //   }
-  // },
-  // {
-  //   hint: 'Night time',
-  //   world: {
-  //     gravity: 0.00045
-  //   }
-  // },
-  // {
-  //   hint: 'Winter!',
-  //   world: {
-  //     gravity: 0.00045
-  //   }
-  // }
+  {
+    hint: 'Tunnels!',
+    world: {
+      tunnels: true,
+      sliding: false,
+      night: false,
+      winter: false
+    }
+  },
+  {
+    hint: 'Sliding pillars!',
+    world: {
+      tunnels: false,
+      sliding: true,
+      night: false,
+      winter: false
+    }
+  },
+  {
+    hint: 'Night time',
+    world: {
+      tunnels: false,
+      sliding: false,
+      night: true,
+      winter: false
+    }
+  },
+  {
+    hint: 'Winter!',
+    world: {
+      tunnels: false,
+      sliding: false,
+      night: false,
+      winter: true
+    }
+  }
 ];

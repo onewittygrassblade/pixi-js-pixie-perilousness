@@ -13,16 +13,23 @@ import { BACKGROUND_SCROLL_SPEED,
          FOREGROUND_SCROLL_SPEED,
          PLAYER_START_X,
          PLAYER_START_Y,
+         BLOCK_WIDTH,
+         BLOCK_HEIGHT,
+         PILLAR_START_X,
+         PILLAR_SPACING,
          NUM_PILLARS,
          PILLAR_HEIGHT,
          MAX_GAP_SIZE,
          GAP_REDUCTION_FREQUENCY,
+         TUNNEL_LENGTH,
+         FINISH_X_OFFSET,
+         FINISH_Y,
+         INITIAL_NUMBER_OF_LIVES,
+         MAX_NUMBER_OF_LIVES,
          WORLD_GRAVITY } from '../const/worldData.js';
 
-import { MAX_NUMBER_OF_LIVES } from '../const/gameData.js';
-
 export default class World {
-  constructor(stage, gameContainer, textures, sounds) {
+  constructor(stage, gameContainer, textures, sounds, levelData) {
     this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
@@ -30,7 +37,8 @@ export default class World {
     this.pixieIsExploding = false;
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
-    this.numberOfLives = 3;
+    this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
+    this.levelData = levelData;
 
     this.sky = stage.getChildAt(0);
 
@@ -58,7 +66,7 @@ export default class World {
 
     for (let i = 0; i < NUM_PILLARS; i++) {
       // Randomly select the starting vertical position for the gap
-      let startGapNumber = randomInt(0, 8 - gapSize);
+      let startGapNumber = randomInt(0, PILLAR_HEIGHT - gapSize);
 
       // Periodically reduce gap size by 1
       if (i > 0 && i % GAP_REDUCTION_FREQUENCY === 0) {
@@ -70,8 +78,19 @@ export default class World {
         if (j < startGapNumber || j > startGapNumber + gapSize -1) {
           let block = new Sprite(this.textures['greenBlock.png']);
           this.blocks.addChild(block);
-          block.x = i * 384 + 512;
-          block.y = j * 64;
+          block.x = this.levelData.tunnels ?
+            i * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + PILLAR_START_X :
+            i * PILLAR_SPACING + PILLAR_START_X;
+          block.y = j * BLOCK_HEIGHT;
+        }
+
+        if (this.levelData.tunnels && (j === startGapNumber - 1 || j === startGapNumber + gapSize)) {
+          for (let k = 1; k <= TUNNEL_LENGTH; k++) {
+            let block = new Sprite(this.textures['greenBlock.png']);
+            this.blocks.addChild(block);
+            block.x = i * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + k * BLOCK_WIDTH + PILLAR_START_X;
+            block.y = j * BLOCK_HEIGHT;
+          }
         }
       }
     }
@@ -82,7 +101,7 @@ export default class World {
       if (i % 2 === 0) {
         let pickup = new Sprite(this.textures['gift.png']);
         this.pickups.addChild(pickup);
-        pickup.x = i * 384 + 720;
+        pickup.x = i * PILLAR_SPACING + PILLAR_START_X + PILLAR_SPACING / 2 + pickup.width / 2;
         pickup.y = randomInt(50, RENDERER_HEIGHT - 50);
       }
     }
@@ -90,20 +109,22 @@ export default class World {
 
   createLivesDisplay() {
     this.livesContainer = new Container();
-    this.container.addChild(this.livesContainer);
 
     for (let i = 0; i < this.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
     }
+
+    this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
+    this.container.addChild(this.livesContainer);
   }
 
   createFinish() {
     this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
 
-    this.finish.x = (NUM_PILLARS - 1) * 384 + 896;
-    this.finish.y = 192;
+    this.finish.x = NUM_PILLARS * PILLAR_SPACING + FINISH_X_OFFSET;
+    this.finish.y = FINISH_Y;
 
     this.container.addChild(this.finish);
   }
@@ -156,7 +177,9 @@ export default class World {
     this.pickups.x = 0;
     this.createPickups();
 
-    this.finish.x = (NUM_PILLARS - 1) * 384 + 896;
+    this.finish.x = this.levelData.tunnels ?
+      NUM_PILLARS * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + FINISH_X_OFFSET :
+      NUM_PILLARS * PILLAR_SPACING + FINISH_X_OFFSET;
 
     this.resetPixie();
     this.pixie.vy = 0;
@@ -226,6 +249,7 @@ export default class World {
       let life = new Sprite(this.textures['pixie-0.png']);
       life.x = this.numberOfLives * (life.width + 10);
       this.livesContainer.addChild(life);
+      this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
       this.numberOfLives++;
 
@@ -236,6 +260,7 @@ export default class World {
   loseLife() {
     this.numberOfLives--;
     this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
+    this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
   }
 
   hasLives() {
