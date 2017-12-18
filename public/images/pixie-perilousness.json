@@ -20,11 +20,11 @@
 },
 "gift.png":
 {
-	"frame": {"x":199,"y":0,"w":32,"h":32},
+	"frame": {"x":199,"y":0,"w":32,"h":35},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32},
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":35},
+	"sourceSize": {"w":32,"h":35},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "green.png":
@@ -115,6 +115,6 @@
 	"format": "RGBA8888",
 	"size": {"w":512,"h":578},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:edcaebd96f0b0a232ba6b6e9c24ef6f5:e3634573d83eb3dcb90ac3d2b0f87ef8:662821b8805fa4a84e1b0cce0a40ca88$"
+	"smartupdate": "$TexturePacker:SmartUpdate:462509849bb712c29b768078cc9c61a2:7fd46f03ca5339b4b595bb13170125d6:662821b8805fa4a84e1b0cce0a40ca88$"
 }
 }

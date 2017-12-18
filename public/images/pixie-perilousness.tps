@@ -226,6 +226,18 @@
                 <false/>
             </struct>
             <key type="filename">gift.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,9,16,18</rect>
+                <key>scale9Paddings</key>
+                <rect>8,9,16,18</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
             <key type="filename">violet.png</key>
@@ -283,9 +295,9 @@
             <filename>pixie-2.png</filename>
             <filename>violet.png</filename>
             <filename>yellow.png</filename>
-            <filename>gift.png</filename>
             <filename>balloon.png</filename>
             <filename>weight.png</filename>
+            <filename>gift.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
