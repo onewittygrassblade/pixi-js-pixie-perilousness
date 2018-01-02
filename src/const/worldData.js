@@ -4,6 +4,7 @@ export const PLAYER_START_X = 232;
 export const PLAYER_START_Y = 256;
 export const BLOCK_WIDTH = 64;
 export const BLOCK_HEIGHT = 64;
+export const PICKUP_WIDTH = 32;
 export const PILLAR_START_X = 512;
 export const PILLAR_SPACING = 384;
 export const NUM_PILLARS = 15;
