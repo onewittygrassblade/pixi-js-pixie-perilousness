@@ -27,7 +27,7 @@ import { BACKGROUND_SCROLL_SPEED,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
          MAX_NUMBER_OF_LIVES,
-         WORLD_GRAVITY } from '../const/worldData.js';
+         GRAVITY } from '../const/worldData.js';
 
 export default class World {
   constructor(stage, gameContainer, textures, sounds, levelData) {
@@ -135,7 +135,7 @@ export default class World {
       [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
       PLAYER_START_X,
       PLAYER_START_Y,
-      WORLD_GRAVITY
+      GRAVITY
     );
 
     this.emitter = new PixieEmitter(
@@ -192,7 +192,7 @@ export default class World {
 
   resetPixie() {
     this.pixie.gotoAndStop(0);
-    this.pixie.ay = WORLD_GRAVITY + this.pixie.addedGravity;
+    this.pixie.ay = GRAVITY + this.pixie.addedWeight;
     this.emitter.stop();
   }
 
@@ -223,7 +223,7 @@ export default class World {
   addEventListeners() {
     let pixieFlapWings = () => {
       this.pixie.play();
-      this.pixie.ay = WORLD_GRAVITY + this.pixie.addedGravity + this.pixie.wingPower;
+      this.pixie.ay = GRAVITY + this.pixie.addedWeight + this.pixie.wingPower;
       this.emitter.emit();
     };
     let pixieStopFlapping = () => {

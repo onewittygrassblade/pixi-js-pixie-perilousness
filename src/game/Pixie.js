@@ -1,5 +1,4 @@
 import Entity from './Entity.js';
-import { randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Pixie extends Entity {
   constructor(textureFrames, x, y, ay) {
@@ -7,10 +6,11 @@ export default class Pixie extends Entity {
 
     this.animationSpeed = 0.4;
     this.wingPower = -0.001;
-    this.addedGravity = 0;
+    this.addedWeight = 0;
     this.invincible = false;
     this.effectTimer = 0;
-    this.effectChangeTimer = 0;
+    this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
+    this.hueRotation = 0;
   }
 
   gainWeight(sprite, sound) {
@@ -18,7 +18,7 @@ export default class Pixie extends Entity {
     sprite.y = 35;
     this.addChild(sprite);
 
-    this.addedGravity = 0.00025;
+    this.addedWeight = 0.00025;
     this.effectTimer = 8000;
 
     sound.play();
@@ -29,7 +29,7 @@ export default class Pixie extends Entity {
     sprite.y = -35;
     this.addChild(sprite);
 
-    this.addedGravity = -0.00015;
+    this.addedWeight = -0.00015;
     this.effectTimer = 8000;
 
     sound.play();
@@ -41,7 +41,7 @@ export default class Pixie extends Entity {
   }
 
   resetProperties() {
-    this.addedGravity = 0;
+    this.addedWeight = 0;
     this.invincible = false;
     this.filters = null;
     this.effectChangeTimer = 0;
@@ -51,14 +51,13 @@ export default class Pixie extends Entity {
     }
   }
 
-  blink(rate) {
-    if (this.effectChangeTimer > rate) {
-      let colorMatrix = new PIXI.filters.ColorMatrixFilter();
-      colorMatrix.brightness(randomFloat(1, 1.25), true);
-      this.filters = [colorMatrix];
-
-      this.effectChangeTimer -= rate;
+  blink() {
+    this.colorMatrix.hue(this.hueRotation, false);
+    this.hueRotation += 20;
+    if (this.hueRotation == 360) {
+      this.hueRotation = 0;
     }
+    this.filters = [this.colorMatrix];
   }
 
   updateCurrent(dt) {
@@ -68,7 +67,7 @@ export default class Pixie extends Entity {
       this.effectChangeTimer += dt;
 
       if (this.invincible) {
-        this.blink(50);
+        this.blink();
       }
 
       this.effectTimer -= dt;
