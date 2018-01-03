@@ -1,4 +1,7 @@
+import { GlowFilter } from '@pixi/filter-glow';
+
 import Entity from './Entity.js';
+import { randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Pixie extends Entity {
   constructor(textureFrames, x, y, ay) {
@@ -9,8 +12,15 @@ export default class Pixie extends Entity {
     this.addedWeight = 0;
     this.invincible = false;
     this.effectTimer = 0;
-    this.colorMatrix = new PIXI.filters.ColorMatrixFilter();
-    this.hueRotation = 0;
+
+    this.glowFilter = new GlowFilter(
+      10,       // distance
+      1.5,        // outerStrength
+      0.5,        // innerStrength
+      0xfffce5, // color
+      0.5       // quality
+    );
+    this.filterChangeTimer = 0;
   }
 
   gainWeight(sprite, sound) {
@@ -37,6 +47,7 @@ export default class Pixie extends Entity {
 
   gainInvincibility() {
     this.invincible = true;
+    this.filters = [ this.glowFilter ];
     this.effectTimer = 8000;
   }
 
@@ -51,23 +62,21 @@ export default class Pixie extends Entity {
     }
   }
 
-  blink() {
-    this.colorMatrix.hue(this.hueRotation, false);
-    this.hueRotation += 20;
-    if (this.hueRotation == 360) {
-      this.hueRotation = 0;
+  blink(rate) {
+    if (this.filterChangeTimer > rate) {
+      this.glowFilter.outerStrength = randomFloat(0.8, 1.8);
+      this.filterChangeTimer -= rate;
     }
-    this.filters = [this.colorMatrix];
   }
 
   updateCurrent(dt) {
     this.updatePosition(dt);
 
     if (this.effectTimer > 0) {
-      this.effectChangeTimer += dt;
+      this.filterChangeTimer += dt;
 
       if (this.invincible) {
-        this.blink();
+        this.blink(75);
       }
 
       this.effectTimer -= dt;
