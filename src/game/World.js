@@ -364,7 +364,12 @@ export default class World {
     for (let pickUp of this.pickUps.children) {
       if (pickUp.visible && hitTestRectangle(this.pixie, pickUp, true)) {
         pickUp.visible = false;
-        this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
+
+        if (this.pixie.effectTimer <= 0) {
+          this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
+        } else {
+          this.uselessPickUp();
+        }
       }
     }
 
