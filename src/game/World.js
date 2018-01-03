@@ -22,7 +22,7 @@ import { BACKGROUND_SCROLL_SPEED,
          PILLAR_HEIGHT,
          MAX_GAP_SIZE,
          GAP_REDUCTION_FREQUENCY,
-         TUNNEL_LENGTH,
+         PILLAR_SLIDING_SPEED,
          FINISH_X_OFFSET,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
@@ -42,12 +42,8 @@ export default class World {
     this.levelData = levelData;
 
     this.sky = stage.getChildAt(0);
-
-    this.blocks = new Container();
-    this.container.addChild(this.blocks);
-
-    this.pickUps = new Container();
-    this.container.addChild(this.pickUps);
+    this.foreground = new Container();
+    this.container.addChild(this.foreground);
 
     this.buildScene();
 
@@ -55,78 +51,75 @@ export default class World {
   }
 
   buildScene() {
-    const positions = this.computePositions();
-    this.createBlocks(positions.blocks);
-    this.createPickups(positions.pickUps);
+    this.createPillars();
+    this.createPickups();
     this.createFinish();
     this.createPixie();
     this.createLivesDisplay();
   }
 
-  computePositions() {
-    let blockPositions = [];
-    let pickUpPositions = [];
+  createPillars() {
+    this.pillars = new Container();
+    this.foreground.addChild(this.pillars);
 
     let gapSize = MAX_GAP_SIZE;
 
     for (let i = 0; i < NUM_PILLARS; i++) {
-      // Randomly select the starting vertical position for the gap
-      let startGapNumber = randomInt(0, PILLAR_HEIGHT - gapSize);
+      let pillar = new Container();
+      this.pillars.addChild(pillar);
+      pillar.x = i * PILLAR_SPACING + PILLAR_START_X;
+      pillar.gapSize = gapSize;
 
-      // Periodically reduce gap size by 1
+      // All pillars are made taller than the screen to allow sliding
+      for (let j = 0; j < PILLAR_HEIGHT - gapSize; j++) {
+        let upperBlock = new Sprite(this.textures['greenBlock.png']);
+        upperBlock.y = j * BLOCK_HEIGHT;
+        pillar.addChild(upperBlock);
+
+        let lowerBlock = new Sprite(this.textures['greenBlock.png']);
+        lowerBlock.y = (j + PILLAR_HEIGHT) * BLOCK_HEIGHT;
+        pillar.addChild(lowerBlock);
+      }
+
       if (i > 0 && i % GAP_REDUCTION_FREQUENCY === 0) {
         gapSize--;
       }
-
-      for (let j = 0; j < PILLAR_HEIGHT; j++) {
-        // Create a block if it's not within the gap
-        if (j < startGapNumber || j > startGapNumber + gapSize - 1) {
-          blockPositions.push({
-            x: this.levelData.tunnels ?
-              i * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + PILLAR_START_X :
-              i * PILLAR_SPACING + PILLAR_START_X,
-            y: j * BLOCK_HEIGHT
-          });
-        }
-
-        if (this.levelData.tunnels && (j === startGapNumber - 1 || j === startGapNumber + gapSize)) {
-          for (let k = 1; k <= TUNNEL_LENGTH; k++) {
-            blockPositions.push({
-              x: i * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + k * BLOCK_WIDTH + PILLAR_START_X,
-              y: j * BLOCK_HEIGHT
-            });
-          }
-        }
-      }
-
-      pickUpPositions.push({
-        x: this.levelData.tunnels ?
-          i * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + PILLAR_START_X + (TUNNEL_LENGTH / 2 + 1) * BLOCK_WIDTH - PICKUP_WIDTH / 2 :
-          i * PILLAR_SPACING + PILLAR_START_X + BLOCK_WIDTH + (PILLAR_SPACING - BLOCK_WIDTH) / 2 - PICKUP_WIDTH / 2,
-        y: this.levelData.tunnels ?
-          randomInt(startGapNumber * BLOCK_HEIGHT + 50, (startGapNumber + gapSize) * BLOCK_HEIGHT - 50) :
-          randomInt(50, RENDERER_HEIGHT - 50)
-      });
     }
 
-    return { blocks: blockPositions, pickUps: pickUpPositions };
+    this.randomizePillarYPositions();
+    this.randomizePillarYSpeed();
   }
 
-  createBlocks(positions) {
-    for (let pos of positions) {
-      let block = new Sprite(this.textures['greenBlock.png']);
-      block.x = pos.x;
-      block.y = pos.y;
-      this.blocks.addChild(block);
+  randomizePillarYPositions() {
+    for (let pillar of this.pillars.children) {
+      pillar.y = randomInt(0, PILLAR_HEIGHT - pillar.gapSize) * BLOCK_HEIGHT * -1;
     }
   }
 
-  createPickups(positions) {
-    for (let pos of positions) {
+  randomizePillarYSpeed() {
+    for (let pillar of this.pillars.children) {
+      pillar.vy = this.levelData.sliding ?
+        PILLAR_SLIDING_SPEED * (Math.random() < 0.5 ? -1 : 1) :
+        0;
+    }
+  }
+
+  createPickups() {
+    this.pickUps = new Container();
+    this.foreground.addChild(this.pickUps);
+
+    for (let i = 0; i < NUM_PILLARS; i++) {
       let pickUp = new Sprite(this.textures['gift.png']);
-      pickUp.x = pos.x;
-      pickUp.y = pos.y;
+      pickUp.x = i * PILLAR_SPACING + PILLAR_START_X + BLOCK_WIDTH + (PILLAR_SPACING - BLOCK_WIDTH) / 2 - PICKUP_WIDTH / 2;
       this.pickUps.addChild(pickUp);
+    }
+
+    this.randomizePickUpYPositions();
+  }
+
+  randomizePickUpYPositions() {
+    for (let pickUp of this.pickUps.children) {
+      pickUp.y = randomInt(50, RENDERER_HEIGHT - 50);
     }
   }
 
@@ -134,7 +127,7 @@ export default class World {
     this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
     this.finish.x = NUM_PILLARS * PILLAR_SPACING + FINISH_X_OFFSET;
     this.finish.y = FINISH_Y;
-    this.container.addChild(this.finish);
+    this.foreground.addChild(this.finish);
   }
 
   createPixie() {
@@ -156,6 +149,7 @@ export default class World {
 
   createLivesDisplay() {
     this.livesContainer = new Container();
+    this.container.addChild(this.livesContainer);
 
     for (let i = 0; i < this.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
@@ -164,30 +158,36 @@ export default class World {
     }
 
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
-    this.container.addChild(this.livesContainer);
   }
 
   resetScene() {
     this.emitter.particleSystem.clear();
 
-    const positions = this.computePositions();
-
-    this.blocks.x = 0;
-    this.blocks.removeChildren();
-    this.createBlocks(positions.blocks);
-
-    this.pickUps.removeChildren();
-    this.pickUps.x = 0;
-    this.createPickups(positions.pickUps);
-
-    this.finish.x = this.levelData.tunnels ?
-      NUM_PILLARS * (PILLAR_SPACING + TUNNEL_LENGTH * BLOCK_WIDTH) + FINISH_X_OFFSET :
-      NUM_PILLARS * PILLAR_SPACING + FINISH_X_OFFSET;
+    this.foreground.x = 0;
+    this.resetPillars();
+    this.resetPickups();
 
     this.resetPixie();
     this.pixie.vy = 0;
     this.pixie.y = PLAYER_START_Y;
     this.pixie.resetProperties();
+  }
+
+  resetPillars() {
+    for (let pillar of this.pillars.children) {
+      for (let block of pillar.children) {
+        block.visible = true;
+      }
+    }
+    this.randomizePillarYPositions();
+    this.randomizePillarYSpeed();
+  }
+
+  resetPickups() {
+    for (let pickUp of this.pickUps.children) {
+      pickUp.visible = true;
+    }
+    this.randomizePickUpYPositions();
   }
 
   resetPixie() {
@@ -209,15 +209,6 @@ export default class World {
     this.emitter.maxInitialSpeed = 0.1;
     this.emitter.minDirectionAngle = 2.4;
     this.emitter.maxDirectionAngle = 3.6;
-  }
-
-  explosion() {
-    this.emitter.stop();
-    this.emitter.minInitialSpeed = 0.1;
-    this.emitter.maxInitialSpeed = 0.3;
-    this.emitter.minDirectionAngle = 0;
-    this.emitter.maxDirectionAngle = 6.28;
-    this.emitter.burst(40);
   }
 
   resetForNextLevel() {
@@ -297,6 +288,10 @@ export default class World {
   update(dt) {
     this.scroll(dt);
 
+    if (this.levelData.sliding) {
+      this.slidePillars(dt);
+    }
+
     this.pixie.updateCurrent(dt);
     this.emitter.update(dt);
 
@@ -311,9 +306,17 @@ export default class World {
     this.sky.tilePosition.x -= BACKGROUND_SCROLL_SPEED * dt;
 
     if (this.finish.getGlobalPosition().x > 220) {
-      this.blocks.x -= FOREGROUND_SCROLL_SPEED * dt;
-      this.pickUps.x -= FOREGROUND_SCROLL_SPEED * dt;
-      this.finish.x -= FOREGROUND_SCROLL_SPEED * dt;
+      this.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
+    }
+  }
+
+  slidePillars(dt) {
+    for (let pillar of this.pillars.children) {
+      pillar.y += pillar.vy * dt;
+
+      if (pillar.y > 0 || pillar.y < (PILLAR_HEIGHT - pillar.gapSize) * BLOCK_HEIGHT * -1) {
+        pillar.vy *= -1;
+      }
     }
   }
 
@@ -338,40 +341,29 @@ export default class World {
   checkCollisions() {
     // blocks
     let pixieCrashed = false;
-    if (!this.pixie.invincible) {
-      pixieCrashed = this.blocks.children.some(block => {
-        return hitTestRectangle(this.pixie, block, true);
-      });
-    }
-    else {
-      for (let block of this.blocks.children) {
-        if (hitTestRectangle(this.pixie, block, true)) {
-          this.sounds.bang.play();
-          this.blocks.removeChild(block);
+
+    pillars: for (let pillar of this.pillars.children) {
+      blocks: for (let block of pillar.children) {
+        if (block.visible && hitTestRectangle(this.pixie, block, true)) {
+          if (this.pixie.invincible) {
+            block.visible = false;
+            this.sounds.bang.play();
+          } else {
+            pixieCrashed = true;
+            break pillars;
+          }
         }
       }
     }
 
     if (pixieCrashed) {
-      this.sounds.die.play();
-
-      this.pixie.resetProperties();
-      this.pixie.visible = false;
-
-      this.explosion();
-
-      setTimeout(() => {
-        this.loseLife();
-        this.pixieHasCrashed = true;
-      }, 1000);
-
-      this.pixieIsExploding = true;
+      this.pixieExplosion();
     }
 
     // pickUps
     for (let pickUp of this.pickUps.children) {
-      if (hitTestRectangle(this.pixie, pickUp, true)) {
-        this.pickUps.removeChild(pickUp);
+      if (pickUp.visible && hitTestRectangle(this.pixie, pickUp, true)) {
+        pickUp.visible = false;
         this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
       }
     }
@@ -379,8 +371,32 @@ export default class World {
     // finish
     if (hitTestRectangle(this.pixie, this.finish, true)) {
       this.resetPixie();
-
       this.pixieHasReachedEnd = true;
     }
+  }
+
+  pixieExplosion() {
+    this.sounds.die.play();
+
+    this.pixie.resetProperties();
+    this.pixie.visible = false;
+
+    this.emitterExplosion();
+
+    setTimeout(() => {
+      this.loseLife();
+      this.pixieHasCrashed = true;
+    }, 1000);
+
+    this.pixieIsExploding = true;
+  }
+
+  emitterExplosion() {
+    this.emitter.stop();
+    this.emitter.minInitialSpeed = 0.1;
+    this.emitter.maxInitialSpeed = 0.3;
+    this.emitter.minDirectionAngle = 0;
+    this.emitter.maxDirectionAngle = 6.28;
+    this.emitter.burst(40);
   }
 }
