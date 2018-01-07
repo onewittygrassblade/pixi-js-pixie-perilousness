@@ -2,6 +2,8 @@ import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.
 
 import Pixie from './Pixie.js';
 import PixieEmitter from './PixieEmitter.js';
+import Night from './Night.js';
+import Light from './Light.js';
 import KeyBinder from '../helpers/KeyBinder.js';
 import { randomInt } from '../helpers/RandomNumbers.js';
 import contain from '../helpers/contain.js';
@@ -35,7 +37,6 @@ export default class World {
     this.textures = textures;
     this.sounds = sounds;
 
-    this.pixieIsExploding = false;
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
@@ -55,6 +56,7 @@ export default class World {
     this.createPickups();
     this.createFinish();
     this.createPixie();
+    this.createNight();
     this.createLivesDisplay();
   }
 
@@ -147,6 +149,17 @@ export default class World {
     this.container.addChild(this.pixie);
   }
 
+  createNight() {
+    this.night = new Night({ x: RENDERER_WIDTH, y: RENDERER_HEIGHT });
+    this.container.addChild(this.night);
+    this.light = new Light({ x: this.pixie.x, y: this.pixie.y }, { x: RENDERER_WIDTH, y: RENDERER_HEIGHT });
+    this.night.mask = this.light.sprite;
+
+    if (!this.levelData.night) {
+      this.night.visible = false;
+    }
+  }
+
   createLivesDisplay() {
     this.livesContainer = new Container();
     this.container.addChild(this.livesContainer);
@@ -171,6 +184,13 @@ export default class World {
     this.pixie.vy = 0;
     this.pixie.y = PLAYER_START_Y;
     this.pixie.resetProperties();
+
+    if (this.levelData.night) {
+      this.night.visible = true;
+      this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
+    } else {
+      this.night.visible = false;
+    }
   }
 
   resetPillars() {
@@ -201,7 +221,6 @@ export default class World {
     this.resetEmitter();
     this.pixie.visible = true;
     this.pixieHasCrashed = false;
-    this.pixieIsExploding = false;
   }
 
   resetEmitter() {
@@ -294,10 +313,13 @@ export default class World {
 
     this.pixie.updateCurrent(dt);
     this.emitter.update(dt);
+    if (this.levelData.night && this.pixie.visible) {
+      this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
+    }
 
     this.containPixie();
 
-    if (!this.pixieIsExploding) {
+    if (this.pixie.visible) {
       this.checkCollisions();
     }
   }
@@ -392,8 +414,6 @@ export default class World {
       this.loseLife();
       this.pixieHasCrashed = true;
     }, 1000);
-
-    this.pixieIsExploding = true;
   }
 
   emitterExplosion() {
