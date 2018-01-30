@@ -1,4 +1,4 @@
-import { Container, BitmapText } from '../const/aliases.js';
+import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import MenuItem from '../gui/MenuItem.js';
@@ -13,6 +13,7 @@ export default class TitleState extends State {
   constructor(stage, stateStack, textures, sounds) {
     super(stage, stateStack, textures, sounds);
 
+    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
     this.createTitle();
     this.createMenu();
   }

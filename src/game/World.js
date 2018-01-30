@@ -1,7 +1,8 @@
 import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.js';
 
+import Sky from './Sky.js';
 import Pixie from './Pixie.js';
-import PixieEmitter from './PixieEmitter.js';
+import PointEmitter from '../particle/PointEmitter.js';
 import Night from './Night.js';
 import Light from './Light.js';
 import KeyBinder from '../helpers/KeyBinder.js';
@@ -32,7 +33,7 @@ import { BACKGROUND_SCROLL_SPEED,
          GRAVITY } from '../const/worldData.js';
 
 export default class World {
-  constructor(stage, gameContainer, textures, sounds, levelData) {
+  constructor(gameContainer, textures, sounds, levelData) {
     this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
@@ -42,22 +43,29 @@ export default class World {
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
     this.levelData = levelData;
 
-    this.sky = stage.getChildAt(0);
-    this.foreground = new Container();
-    this.container.addChild(this.foreground);
-
-    this.buildScene();
-
-    this.createPickupActions();
-  }
-
-  buildScene() {
-    this.createPillars();
-    this.createPickups();
-    this.createFinish();
+    this.createSky();
+    this.createForeground();
     this.createPixie();
     this.createNight();
     this.createLivesDisplay();
+    this.createPickupActions();
+  }
+
+  createSky() {
+    this.sky = new Sky(this.textures, RENDERER_WIDTH, RENDERER_HEIGHT);
+    this.container.addChild(this.sky.container);
+    if (this.levelData.winter) {
+      this.sky.winterize();
+    }
+  }
+
+  createForeground() {
+    this.foreground = new Container();
+    this.container.addChild(this.foreground);
+
+    this.createPillars();
+    this.createPickups();
+    this.createFinish();
   }
 
   createPillars() {
@@ -140,12 +148,24 @@ export default class World {
       GRAVITY
     );
 
-    this.emitter = new PixieEmitter(
-      this.pixie,
-      [this.textures["pink.png"], this.textures["yellow.png"], this.textures["green.png"], this.textures["violet.png"]]
+    this.pixieEmitter = new PointEmitter(
+      [ this.textures["pink.png"], this.textures["yellow.png"], this.textures["green.png"], this.textures["violet.png"] ],
+      18, 24,             // minSize, maxSize
+      this.pixie,         // parent
+      0, 16,              // offsetX, offsetY
+      0, 0.1,             // minInitialSpeed, maxInitialSpeed
+      0.0001, 0.0003,     // minGravity, maxGravity
+      -0.00628, 0.00628,  // minRotationVelocity, maxRotationVelocity
+      0.0001, 0.0005,     // minShrinkVelocity, maxShrinkVelocity
+      500, 2000,          // minLifetime, maxLifetime
+      3.5, 5.1,           // minDirectionAngle, maxDirectionAngle
+      true,               // randomSpacing
+      false,              // emitting
+      10,                 // emissionRate
+      3                   // numberOfParticlesPerEmit
     );
 
-    this.container.addChild(this.emitter.particleSystem.container);
+    this.container.addChild(this.pixieEmitter.particleSystem.container);
     this.container.addChild(this.pixie);
   }
 
@@ -174,7 +194,7 @@ export default class World {
   }
 
   resetScene() {
-    this.emitter.particleSystem.clear();
+    this.pixieEmitter.particleSystem.clear();
 
     this.foreground.x = 0;
     this.resetPillars();
@@ -190,6 +210,12 @@ export default class World {
       this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
     } else {
       this.night.visible = false;
+    }
+
+    if (this.levelData.winter) {
+      this.sky.winterize();
+    } else {
+      this.sky.summerize();
     }
   }
 
@@ -213,7 +239,7 @@ export default class World {
   resetPixie() {
     this.pixie.gotoAndStop(0);
     this.pixie.ay = GRAVITY + this.pixie.addedWeight;
-    this.emitter.stop();
+    this.pixieEmitter.stop();
   }
 
   resetAfterCrash() {
@@ -224,10 +250,10 @@ export default class World {
   }
 
   resetEmitter() {
-    this.emitter.minInitialSpeed = 0;
-    this.emitter.maxInitialSpeed = 0.1;
-    this.emitter.minDirectionAngle = 2.4;
-    this.emitter.maxDirectionAngle = 3.6;
+    this.pixieEmitter.minInitialSpeed = 0;
+    this.pixieEmitter.maxInitialSpeed = 0.1;
+    this.pixieEmitter.minDirectionAngle = 2.4;
+    this.pixieEmitter.maxDirectionAngle = 3.6;
   }
 
   resetForNextLevel() {
@@ -243,7 +269,7 @@ export default class World {
     let pixieFlapWings = () => {
       this.pixie.play();
       this.pixie.ay = GRAVITY + this.pixie.addedWeight + this.pixie.wingPower;
-      this.emitter.emit();
+      this.pixieEmitter.emit();
     };
     let pixieStopFlapping = () => {
       this.resetPixie();
@@ -312,7 +338,7 @@ export default class World {
     }
 
     this.pixie.updateCurrent(dt);
-    this.emitter.update(dt);
+    this.pixieEmitter.update(dt);
     if (this.levelData.night && this.pixie.visible) {
       this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
     }
@@ -325,7 +351,7 @@ export default class World {
   }
 
   scroll(dt) {
-    this.sky.tilePosition.x -= BACKGROUND_SCROLL_SPEED * dt;
+    this.sky.updateCurrent(BACKGROUND_SCROLL_SPEED, dt);
 
     if (this.finish.getGlobalPosition().x > 220) {
       this.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
@@ -417,11 +443,11 @@ export default class World {
   }
 
   emitterExplosion() {
-    this.emitter.stop();
-    this.emitter.minInitialSpeed = 0.1;
-    this.emitter.maxInitialSpeed = 0.3;
-    this.emitter.minDirectionAngle = 0;
-    this.emitter.maxDirectionAngle = 6.28;
-    this.emitter.burst(40);
+    this.pixieEmitter.stop();
+    this.pixieEmitter.minInitialSpeed = 0.1;
+    this.pixieEmitter.maxInitialSpeed = 0.3;
+    this.pixieEmitter.minDirectionAngle = 0;
+    this.pixieEmitter.maxDirectionAngle = 6.28;
+    this.pixieEmitter.burst(50);
   }
 }

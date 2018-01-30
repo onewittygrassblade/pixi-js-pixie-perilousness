@@ -1,4 +1,4 @@
-import { Container, Sprite, BitmapText } from '../const/aliases.js';
+import { Container, TilingSprite, Sprite, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import MenuItem from '../gui/MenuItem.js';
@@ -9,10 +9,14 @@ export default class HowToState extends State {
   constructor(stage, stateStack, textures) {
     super(stage, stateStack, textures);
 
+    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
     this.createTexts();
   }
 
   createTexts() {
+    const textContainer = new Container();
+    this.container.addChild(textContainer);
+
     const data = [
       {
         text: 'Help Pixie get home!',
@@ -49,11 +53,11 @@ export default class HowToState extends State {
         container.addChild(bitmapText);
         container.x = RENDERER_WIDTH / 2 - container.width / 2;
         container.y = yPos;
-        this.container.addChild(container);
+        textContainer.addChild(container);
       } else {
         bitmapText.x = RENDERER_WIDTH / 2 - bitmapText.width / 2;
         bitmapText.y = yPos;
-        this.container.addChild(bitmapText);
+        textContainer.addChild(bitmapText);
       }
 
       yPos += bitmapText.height + data[i].yOffset;
@@ -65,8 +69,8 @@ export default class HowToState extends State {
     });
     backToTitle.x = RENDERER_WIDTH / 2;
     backToTitle.y = yPos;;
-    this.container.addChild(backToTitle);
+    textContainer.addChild(backToTitle);
 
-    this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
+    textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
   }
 }

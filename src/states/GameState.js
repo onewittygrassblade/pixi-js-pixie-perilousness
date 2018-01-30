@@ -17,7 +17,7 @@ export default class GameState extends State {
       this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
     }));
 
-    this.world = new World(stage, this.container, textures, sounds, LEVELS_DATA[0].world);
+    this.world = new World(this.container, textures, sounds, LEVELS_DATA[0].world);
   }
 
   addEventListeners() {

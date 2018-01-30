@@ -1,4 +1,4 @@
-import { loader, resources, Container, TilingSprite } from './const/aliases.js';
+import { loader, resources, Container } from './const/aliases.js';
 
 import Engine from './Engine.js';
 import StateStack from './StateStack.js';
@@ -38,8 +38,6 @@ export default class App {
       acc[item] = resources[item].data;
       return acc;
     }, {});
-
-    this.stage.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
 
     this.stateStack.push(new TitleState(this.stage, this.stateStack, textures, sounds));
 

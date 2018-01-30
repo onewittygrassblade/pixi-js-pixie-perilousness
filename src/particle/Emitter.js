@@ -5,9 +5,6 @@ import { randomInt, randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Emitter {
   constructor(
-    parent,
-    offsetX,
-    offsetY,
     textureFrames,
     minSize,
     maxSize,
@@ -28,9 +25,6 @@ export default class Emitter {
     emissionRate = 30,
     numberOfParticlesPerEmit = 1) {
 
-    this.parent = parent;
-    this.offsetX = offsetX;
-    this.offsetY = offsetY;
     this.textureFrames = textureFrames;
     this.minSize = minSize;
     this.maxSize = maxSize;
@@ -64,7 +58,7 @@ export default class Emitter {
     this.accumulatedTime = 0;
   }
 
-  burst(numberOfParticles) {
+  burst(numberOfParticles, x, y) {
     let directionAngle;
     const directionAngleSpacing = (this.maxDirectionAngle - this.minDirectionAngle) / (numberOfParticles - 1);
 
@@ -83,10 +77,9 @@ export default class Emitter {
         this.textureFrames,
         randomInt(this.minLifetime, this.maxLifetime),
         randomInt(this.minSize, this.maxSize),
-        this.parent.x + this.offsetX,
-        this.parent.y + this.offsetY,
+        x, y,
         speed * Math.cos(directionAngle),
-        speed * Math.sin(directionAngle),
+        speed * Math.sin(directionAngle) * -1.0,
         randomFloat(this.minGravity, this.maxGravity),
         randomFloat(this.minRotationVelocity, this.maxRotationVelocity),
         randomFloat(this.minShrinkVelocity, this.maxShrinkVelocity)

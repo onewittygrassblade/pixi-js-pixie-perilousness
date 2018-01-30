@@ -11,3 +11,4 @@ export const Sprite = PIXI.Sprite;
 export const TilingSprite = PIXI.extras.TilingSprite;
 export const AnimatedSprite = PIXI.extras.AnimatedSprite;
 export const BitmapText = PIXI.extras.BitmapText;
+export const filters = PIXI.filters;

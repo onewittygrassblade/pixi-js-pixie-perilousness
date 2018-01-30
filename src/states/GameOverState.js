@@ -10,6 +10,7 @@ export default class GameOverState extends State {
   constructor(stage, stateStack, textures, sounds, success) {
     super(stage, stateStack, textures, sounds);
 
+    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
     this.createTexts(success);
 
     this.keyControllers.push(new KeyBinder(32, null, () => {
@@ -23,19 +24,22 @@ export default class GameOverState extends State {
   }
 
   createTexts(success) {
+    const textContainer = new Container();
+    this.container.addChild(textContainer);
+
     let messageText = new BitmapText('Whoops!', {font: '64px pixie-font'});
     if (success) {
       messageText.text = 'Yay!';
     }
     messageText.anchor.x = 0.5;
-    this.container.addChild(messageText);
+    textContainer.addChild(messageText);
 
     let hintText = new BitmapText('Press space to continue', {font: '48px pixie-font'});
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
-    this.container.addChild(hintText);
+    textContainer.addChild(hintText);
 
-    this.container.x = RENDERER_WIDTH / 2;
-    this.container.y = RENDERER_HEIGHT / 2 - this.container.height / 2;
+    textContainer.x = RENDERER_WIDTH / 2;
+    textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
   }
 }

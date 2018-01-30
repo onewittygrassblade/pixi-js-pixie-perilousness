@@ -12,7 +12,7 @@ export default class Light {
 
   renderGradient(center) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    let gradient = this.ctx.createRadialGradient(center.x, center.y, 220, center.x, center.y, 30);
+    let gradient = this.ctx.createRadialGradient(center.x, center.y, 230, center.x, center.y, 30);
     gradient.addColorStop(0, 'white');
     gradient.addColorStop(1, 'black');
     this.ctx.fillStyle = gradient;
