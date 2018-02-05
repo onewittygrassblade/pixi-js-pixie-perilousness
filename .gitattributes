@@ -1,0 +1,4 @@
+public/fonts/** linguist-detectable=false
+public/images/** linguist-detectable=false
+public/sounds/** linguist-detectable=false
+.babelrc linguist-detectable=false
