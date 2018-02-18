@@ -9,6 +9,7 @@ import KeyBinder from '../helpers/KeyBinder.js';
 import { randomInt } from '../helpers/RandomNumbers.js';
 import contain from '../helpers/contain.js';
 import hitTestRectangle from '../helpers/hitTestRectangle.js';
+import EffectTimer from '../helpers/EffectTimer.js';
 
 import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
 
@@ -42,14 +43,17 @@ export default class World {
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
     this.levelData = levelData;
+    this.pixieEffectTimer = new EffectTimer();
 
     this.createSky();
     this.createForeground();
     this.createPixie();
     this.createNight();
     this.createLivesDisplay();
-    this.createPickupActions();
+    this.createPickUpActions();
   }
+
+  // Create methods
 
   createSky() {
     this.sky = new Sky(this.textures, RENDERER_WIDTH, RENDERER_HEIGHT);
@@ -64,7 +68,7 @@ export default class World {
     this.container.addChild(this.foreground);
 
     this.createPillars();
-    this.createPickups();
+    this.createPickUps();
     this.createFinish();
   }
 
@@ -114,7 +118,7 @@ export default class World {
     }
   }
 
-  createPickups() {
+  createPickUps() {
     this.pickUps = new Container();
     this.foreground.addChild(this.pickUps);
 
@@ -193,17 +197,30 @@ export default class World {
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
   }
 
-  resetScene() {
-    this.pixieEmitter.particleSystem.clear();
+  // Reset methods
 
+  resetAfterCrash() {
+    this.resetWorld();
+    this.pixie.visible = true;
+    this.pixieHasCrashed = false;
+  }
+
+  resetForNextLevel() {
+    this.resetWorld();
+    this.pixieHasReachedEnd = false;
+  }
+
+  resetWorld() {
+    this.resetScene();
+    this.resetPixie();
+    this.resetEmitter();
+    this.resetPickUpActions();
+  }
+
+  resetScene() {
     this.foreground.x = 0;
     this.resetPillars();
-    this.resetPickups();
-
-    this.resetPixie();
-    this.pixie.vy = 0;
-    this.pixie.y = PLAYER_START_Y;
-    this.pixie.resetProperties();
+    this.resetPickUps();
 
     if (this.levelData.night) {
       this.night.visible = true;
@@ -229,7 +246,7 @@ export default class World {
     this.randomizePillarYSpeed();
   }
 
-  resetPickups() {
+  resetPickUps() {
     for (let pickUp of this.pickUps.children) {
       pickUp.visible = true;
     }
@@ -237,33 +254,21 @@ export default class World {
   }
 
   resetPixie() {
-    this.pixie.gotoAndStop(0);
-    this.pixie.ay = GRAVITY + this.pixie.addedWeight;
-    this.pixieEmitter.stop();
-  }
-
-  resetAfterCrash() {
-    this.resetScene();
-    this.resetEmitter();
-    this.pixie.visible = true;
-    this.pixieHasCrashed = false;
+    this.pixieStopFlapping();
+    this.pixie.vy = 0;
+    this.pixie.y = PLAYER_START_Y;
+    this.pixie.resetProperties();
   }
 
   resetEmitter() {
+    this.pixieEmitter.particleSystem.clear();
     this.pixieEmitter.minInitialSpeed = 0;
     this.pixieEmitter.maxInitialSpeed = 0.1;
     this.pixieEmitter.minDirectionAngle = 2.4;
     this.pixieEmitter.maxDirectionAngle = 3.6;
   }
 
-  resetForNextLevel() {
-    this.resetScene();
-    this.pixieHasReachedEnd = false;
-  }
-
-  setFinishTextForFinalLevel() {
-    this.finish.text = 'To home!';
-  }
+  // Event listeners
 
   addEventListeners() {
     let pixieFlapWings = () => {
@@ -271,28 +276,33 @@ export default class World {
       this.pixie.ay = GRAVITY + this.pixie.addedWeight + this.pixie.wingPower;
       this.pixieEmitter.emit();
     };
-    let pixieStopFlapping = () => {
-      this.resetPixie();
-    };
 
-    this.pixieController = new KeyBinder(32, pixieFlapWings, pixieStopFlapping);
+    this.pixieController = new KeyBinder(32, pixieFlapWings, this.pixieStopFlapping.bind(this));
     this.pixieController.addEventListeners();
+  }
+
+  pixieStopFlapping() {
+    this.pixie.gotoAndStop(0);
+    this.pixie.ay = GRAVITY + this.pixie.addedWeight;
+    this.pixieEmitter.stop();
   }
 
   removeEventListeners() {
     this.pixieController.removeEventListeners();
   }
 
-  createPickupActions() {
-    let pickUpActions = [
-      this.gainExtraLife.bind(this),
-      this.pixie.gainInvincibility.bind(this.pixie),
-      this.pixie.gainWeight.bind(this.pixie, new Sprite(this.textures['weight.png']), this.sounds.metal),
-      this.pixie.gainBalloon.bind(this.pixie, new Sprite(this.textures['balloon.png']), this.sounds.whoosh),
+  // Pick up actions
+
+  createPickUpActions() {
+    const pickUpActions = [
+      this.gainLife.bind(this),
+      this.gainInvincibility.bind(this),
+      this.gainWeight.bind(this),
+      this.gainBalloon.bind(this),
       this.uselessPickUp.bind(this)
     ];
 
-    let weights = [1, 1, 1, 1, 8];
+    const weights = [1, 1, 1, 1, 8];
 
     this.pickUpActions = [];
 
@@ -303,32 +313,95 @@ export default class World {
     }
   }
 
-  gainExtraLife() {
-    if (this.numberOfLives < MAX_NUMBER_OF_LIVES) {
-      let life = new Sprite(this.textures['pixie-0.png']);
-      life.x = this.numberOfLives * (life.width + 10);
-      this.livesContainer.addChild(life);
-      this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
+  resetPickUpActions() {
+    this.pickUpActions[1] = this.gainInvincibility.bind(this);
+    this.pickUpActions[2] = this.gainWeight.bind(this);
+    this.pickUpActions[3] = this.gainBalloon.bind(this);
+  }
 
-      this.numberOfLives++;
+  gainLife() {
+    let life = new Sprite(this.textures['pixie-0.png']);
+    life.x = this.numberOfLives * (life.width + 10);
+    this.livesContainer.addChild(life);
+    this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
-      this.sounds.powerup.play();
+    this.numberOfLives++;
+
+    this.sounds.powerup.play();
+
+    if (this.numberOfLives == MAX_NUMBER_OF_LIVES) {
+      this.pickUpActions[0] = this.uselessPickUp.bind(this);
     }
+  }
+
+  loseLife() {
+    this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
+    this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
+
+    this.numberOfLives--;
+
+    this.pickUpActions[0] = this.gainLife.bind(this);
+  }
+
+  hasLives() {
+    return this.numberOfLives > 0;
+  }
+
+  gainInvincibility() {
+    this.pixie.gainInvincibility();
+    this.pickUpActions[1] = this.uselessPickUp.bind(this);
+
+    this.pixieEffectTimer.setTimeout(() => {
+      this.pixie.resetInvincibility();
+      this.pickUpActions[1] = this.gainInvincibility.bind(this);
+    }, 8000);
+  }
+
+  gainWeight() {
+    const weight = new Sprite(this.textures['weight.png']);
+    weight.anchor.set(0.5);
+    weight.y = 35;
+    this.pixie.addChild(weight);
+
+    this.pixie.addedWeight = 0.00025;
+
+    this.sounds.metal.play();
+
+    this.pickUpActions[2] = this.uselessPickUp.bind(this);
+    this.pickUpActions[3] = this.uselessPickUp.bind(this);
+
+    this.pixieEffectTimer.setTimeout(() => {
+      this.pixie.resetWeight();
+      this.pickUpActions[2] = this.gainWeight.bind(this);
+      this.pickUpActions[3] = this.gainBalloon.bind(this);
+    }, 8000);
+  }
+
+  gainBalloon() {
+    const balloon = new Sprite(this.textures['balloon.png']);
+    balloon.anchor.set(0.5);
+    balloon.y = -35;
+    this.pixie.addChild(balloon);
+
+    this.pixie.addedWeight = -0.00015;
+
+    this.sounds.whoosh.play();
+
+    this.pickUpActions[2] = this.uselessPickUp.bind(this);
+    this.pickUpActions[3] = this.uselessPickUp.bind(this);
+
+    this.pixieEffectTimer.setTimeout(() => {
+      this.pixie.resetWeight();
+      this.pickUpActions[2] = this.gainWeight.bind(this);
+      this.pickUpActions[3] = this.gainBalloon.bind(this);
+    }, 8000);
   }
 
   uselessPickUp() {
     this.sounds.powerup.play();
   }
 
-  loseLife() {
-    this.numberOfLives--;
-    this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
-    this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
-  }
-
-  hasLives() {
-    return this.numberOfLives > 0;
-  }
+  // Update methods
 
   update(dt) {
     this.scroll(dt);
@@ -339,6 +412,7 @@ export default class World {
 
     this.pixie.updateCurrent(dt);
     this.pixieEmitter.update(dt);
+    this.pixieEffectTimer.update(dt);
     if (this.levelData.night && this.pixie.visible) {
       this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
     }
@@ -412,12 +486,7 @@ export default class World {
     for (let pickUp of this.pickUps.children) {
       if (pickUp.visible && hitTestRectangle(this.pixie, pickUp, true)) {
         pickUp.visible = false;
-
-        if (this.pixie.effectTimer <= 0) {
-          this.pickUpActions[randomInt(0, this.pickUpActions.length - 1)]();
-        } else {
-          this.uselessPickUp();
-        }
+        this.pickUpActions[randomInt(0, 11)]();
       }
     }
 
@@ -449,5 +518,9 @@ export default class World {
     this.pixieEmitter.minDirectionAngle = 0;
     this.pixieEmitter.maxDirectionAngle = 6.28;
     this.pixieEmitter.burst(50);
+  }
+
+  setFinishTextForFinalLevel() {
+    this.finish.text = 'To home!';
   }
 }

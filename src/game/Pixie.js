@@ -11,78 +11,49 @@ export default class Pixie extends Entity {
     this.wingPower = -0.001;
     this.addedWeight = 0;
     this.invincible = false;
-    this.effectTimer = 0;
 
     this.glowFilter = new GlowFilter(
-      10,       // distance
+      10,         // distance
       1.5,        // outerStrength
       0.5,        // innerStrength
-      0xfffce5, // color
-      0.5       // quality
+      0xfffce5,   // color
+      0.5         // quality
     );
     this.filterChangeTimer = 0;
-  }
-
-  gainWeight(sprite, sound) {
-    sprite.anchor.set(0.5);
-    sprite.y = 35;
-    this.addChild(sprite);
-
-    this.addedWeight = 0.00025;
-    this.effectTimer = 8000;
-
-    sound.play();
-  }
-
-  gainBalloon(sprite, sound) {
-    sprite.anchor.set(0.5);
-    sprite.y = -35;
-    this.addChild(sprite);
-
-    this.addedWeight = -0.00015;
-    this.effectTimer = 8000;
-
-    sound.play();
   }
 
   gainInvincibility() {
     this.invincible = true;
     this.filters = [ this.glowFilter ];
-    this.effectTimer = 8000;
   }
 
-  resetProperties() {
-    this.addedWeight = 0;
+  resetInvincibility() {
     this.invincible = false;
     this.filters = null;
-    this.effectChangeTimer = 0;
+    this.filterChangeTimer = 0;
+  }
 
+  resetWeight() {
+    this.addedWeight = 0;
     for (let child of this.children) {
       this.removeChild(child);
     }
   }
 
-  blink(rate) {
-    if (this.filterChangeTimer > rate) {
-      this.glowFilter.outerStrength = randomFloat(0.8, 1.8);
-      this.filterChangeTimer -= rate;
-    }
+  resetProperties() {
+    this.resetInvincibility();
+    this.resetWeight();
   }
 
   updateCurrent(dt) {
     this.updatePosition(dt);
 
-    if (this.effectTimer > 0) {
+    if (this.invincible) {
       this.filterChangeTimer += dt;
 
-      if (this.invincible) {
-        this.blink(75);
-      }
-
-      this.effectTimer -= dt;
-
-      if (this.effectTimer <= 0) {
-        this.resetProperties();
+      if (this.filterChangeTimer > 75) {
+        this.glowFilter.outerStrength = randomFloat(0.8, 1.8);
+        this.filterChangeTimer -= 75;
       }
     }
   }
