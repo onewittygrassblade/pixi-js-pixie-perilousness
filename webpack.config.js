@@ -9,22 +9,16 @@ module.exports = {
   },
   devServer: {
     inline: true,
-    contentBase: './public'
+    contentBase: path.resolve(__dirname, 'public')
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015']
-        }
-      },
-      {
-        test: /\.json$/,
-        include: path.join(__dirname, 'node_modules', 'pixi.js'),
-        loader: 'json'
+        use: [
+          { loader: 'babel-loader' }
+        ]
       }
     ]
   }
