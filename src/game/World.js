@@ -321,7 +321,7 @@ export default class World {
   }
 
   uselessPickUp() {
-    this.sounds.powerup.play();
+    this.sounds.pickup.play();
   }
 
   // Update methods
