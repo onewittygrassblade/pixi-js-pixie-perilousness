@@ -19,12 +19,8 @@ import { BACKGROUND_SCROLL_SPEED,
          FOREGROUND_SCROLL_SPEED,
          PLAYER_START_X,
          PLAYER_START_Y,
-         BLOCK_WIDTH,
-         BLOCK_HEIGHT,
          PILLAR_START_X,
-         PILLAR_SPACING,
-         NUM_PILLARS,
-         FINISH_X_OFFSET,
+         FINISH_X,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
          MAX_NUMBER_OF_LIVES,
@@ -86,7 +82,7 @@ export default class World {
 
   createFinish() {
     this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
-    this.finish.x = NUM_PILLARS * PILLAR_SPACING + FINISH_X_OFFSET;
+    this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
     this.foreground.addChild(this.finish);
   }
