@@ -2,6 +2,7 @@ import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.
 
 import Sky from './Sky.js';
 import Pillars from './Pillars.js';
+import PickUps from './PickUps.js';
 import Pixie from './Pixie.js';
 import PointEmitter from '../particle/PointEmitter.js';
 import Night from './Night.js';
@@ -20,11 +21,9 @@ import { BACKGROUND_SCROLL_SPEED,
          PLAYER_START_Y,
          BLOCK_WIDTH,
          BLOCK_HEIGHT,
-         PICKUP_WIDTH,
          PILLAR_START_X,
          PILLAR_SPACING,
          NUM_PILLARS,
-         GAP_REDUCTION_FREQUENCY,
          FINISH_X_OFFSET,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
@@ -66,7 +65,7 @@ export default class World {
     this.container.addChild(this.foreground);
 
     this.createPillars(this.textures['greenBlock.png']);
-    this.createPickUps();
+    this.createPickUps(this.textures['gift.png']);
     this.createFinish();
   }
 
@@ -78,23 +77,11 @@ export default class World {
     this.pillars.randomizeYSpeeds();
   }
 
-  createPickUps() {
-    this.pickUps = new Container();
+  createPickUps(texture) {
+    this.pickUps = new PickUps(texture);
+    this.pickUps.x = PILLAR_START_X;
     this.foreground.addChild(this.pickUps);
-
-    for (let i = 0; i < NUM_PILLARS; i++) {
-      let pickUp = new Sprite(this.textures['gift.png']);
-      pickUp.x = i * PILLAR_SPACING + PILLAR_START_X + BLOCK_WIDTH + (PILLAR_SPACING - BLOCK_WIDTH) / 2 - PICKUP_WIDTH / 2;
-      this.pickUps.addChild(pickUp);
-    }
-
-    this.randomizePickUpYPositions();
-  }
-
-  randomizePickUpYPositions() {
-    for (let pickUp of this.pickUps.children) {
-      pickUp.y = randomInt(50, RENDERER_HEIGHT - 50);
-    }
+    this.pickUps.randomizeYPositions();
   }
 
   createFinish() {
@@ -180,7 +167,7 @@ export default class World {
   resetScene() {
     this.foreground.x = 0;
     this.pillars.reset();
-    this.resetPickUps();
+    this.pickUps.reset();
 
     if (this.levelData.night) {
       this.night.visible = true;
@@ -194,13 +181,6 @@ export default class World {
     } else {
       this.sky.summerize();
     }
-  }
-
-  resetPickUps() {
-    for (let pickUp of this.pickUps.children) {
-      pickUp.visible = true;
-    }
-    this.randomizePickUpYPositions();
   }
 
   resetPixie() {
