@@ -1,18 +1,16 @@
 import { Texture, Sprite } from '../const/aliases.js';
 
 export default class Light {
-  constructor(center, size) {
+  constructor(sizeX, sizeY) {
     this.canvas = document.createElement('canvas');
-    this.canvas.width = size.x;
-    this.canvas.height = size.y;
+    this.canvas.width = sizeX;
+    this.canvas.height = sizeY;
     this.ctx = this.canvas.getContext('2d');
-
-    this.renderGradient(center);
   }
 
-  renderGradient(center) {
+  renderGradient(centerX, centerY) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    let gradient = this.ctx.createRadialGradient(center.x, center.y, 230, center.x, center.y, 30);
+    let gradient = this.ctx.createRadialGradient(centerX, centerY, 230, centerX, centerY, 30);
     gradient.addColorStop(0, 'white');
     gradient.addColorStop(1, 'black');
     this.ctx.fillStyle = gradient;

@@ -6,7 +6,6 @@ import PickUps from './PickUps.js';
 import Pixie from './Pixie.js';
 import PointEmitter from '../particle/PointEmitter.js';
 import Night from './Night.js';
-import Light from './Light.js';
 import KeyBinder from '../helpers/KeyBinder.js';
 import { randomInt } from '../helpers/RandomNumbers.js';
 import contain from '../helpers/contain.js';
@@ -117,10 +116,8 @@ export default class World {
   }
 
   createNight() {
-    this.night = new Night({ x: RENDERER_WIDTH, y: RENDERER_HEIGHT });
+    this.night = new Night(RENDERER_WIDTH, RENDERER_HEIGHT,this.pixie.x, this.pixie.y);
     this.container.addChild(this.night);
-    this.light = new Light({ x: this.pixie.x, y: this.pixie.y }, { x: RENDERER_WIDTH, y: RENDERER_HEIGHT });
-    this.night.mask = this.light.sprite;
 
     if (!this.levelData.night) {
       this.night.visible = false;
@@ -154,10 +151,17 @@ export default class World {
   }
 
   resetWorld() {
-    this.resetScene();
     this.resetPixie();
+    this.resetScene();
     this.resetEmitter();
     this.resetPickUpActions();
+  }
+
+  resetPixie() {
+    this.pixieStopFlapping();
+    this.pixie.vy = 0;
+    this.pixie.y = PLAYER_START_Y;
+    this.pixie.resetProperties();
   }
 
   resetScene() {
@@ -167,7 +171,7 @@ export default class World {
 
     if (this.levelData.night) {
       this.night.visible = true;
-      this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
+      this.night.renderGradient(this.pixie.x, this.pixie.y);
     } else {
       this.night.visible = false;
     }
@@ -177,13 +181,6 @@ export default class World {
     } else {
       this.sky.summerize();
     }
-  }
-
-  resetPixie() {
-    this.pixieStopFlapping();
-    this.pixie.vy = 0;
-    this.pixie.y = PLAYER_START_Y;
-    this.pixie.resetProperties();
   }
 
   resetEmitter() {
@@ -340,7 +337,7 @@ export default class World {
     this.pixieEmitter.update(dt);
     this.pixieEffectTimer.update(dt);
     if (this.levelData.night && this.pixie.visible) {
-      this.light.renderGradient({ x: this.pixie.x, y: this.pixie.y });
+      this.night.renderGradient(this.pixie.x, this.pixie.y);
     }
 
     this.containPixie();
