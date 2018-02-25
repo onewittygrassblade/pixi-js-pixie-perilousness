@@ -1,6 +1,7 @@
 import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.js';
 
 import Sky from './Sky.js';
+import Pillars from './Pillars.js';
 import Pixie from './Pixie.js';
 import PointEmitter from '../particle/PointEmitter.js';
 import Night from './Night.js';
@@ -23,10 +24,7 @@ import { BACKGROUND_SCROLL_SPEED,
          PILLAR_START_X,
          PILLAR_SPACING,
          NUM_PILLARS,
-         PILLAR_HEIGHT,
-         MAX_GAP_SIZE,
          GAP_REDUCTION_FREQUENCY,
-         PILLAR_SLIDING_SPEED,
          FINISH_X_OFFSET,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
@@ -38,11 +36,11 @@ export default class World {
     this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
+    this.levelData = levelData;
 
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
-    this.levelData = levelData;
     this.pixieEffectTimer = new EffectTimer();
 
     this.createSky();
@@ -67,55 +65,17 @@ export default class World {
     this.foreground = new Container();
     this.container.addChild(this.foreground);
 
-    this.createPillars();
+    this.createPillars(this.textures['greenBlock.png']);
     this.createPickUps();
     this.createFinish();
   }
 
-  createPillars() {
-    this.pillars = new Container();
+  createPillars(texture) {
+    this.pillars = new Pillars(texture);
+    this.pillars.x = PILLAR_START_X;
     this.foreground.addChild(this.pillars);
-
-    let gapSize = MAX_GAP_SIZE;
-
-    for (let i = 0; i < NUM_PILLARS; i++) {
-      let pillar = new Container();
-      this.pillars.addChild(pillar);
-      pillar.x = i * PILLAR_SPACING + PILLAR_START_X;
-      pillar.gapSize = gapSize;
-
-      // All pillars are made taller than the screen to allow sliding
-      for (let j = 0; j < PILLAR_HEIGHT - gapSize; j++) {
-        let upperBlock = new Sprite(this.textures['greenBlock.png']);
-        upperBlock.y = j * BLOCK_HEIGHT;
-        pillar.addChild(upperBlock);
-
-        let lowerBlock = new Sprite(this.textures['greenBlock.png']);
-        lowerBlock.y = (j + PILLAR_HEIGHT) * BLOCK_HEIGHT;
-        pillar.addChild(lowerBlock);
-      }
-
-      if (i > 0 && i % GAP_REDUCTION_FREQUENCY === 0) {
-        gapSize--;
-      }
-    }
-
-    this.randomizePillarYPositions();
-    this.randomizePillarYSpeed();
-  }
-
-  randomizePillarYPositions() {
-    for (let pillar of this.pillars.children) {
-      pillar.y = randomInt(0, PILLAR_HEIGHT - pillar.gapSize) * BLOCK_HEIGHT * -1;
-    }
-  }
-
-  randomizePillarYSpeed() {
-    for (let pillar of this.pillars.children) {
-      pillar.vy = this.levelData.sliding ?
-        PILLAR_SLIDING_SPEED * (Math.random() < 0.5 ? -1 : 1) :
-        0;
-    }
+    this.pillars.randomizeYPositions();
+    this.pillars.randomizeYSpeeds();
   }
 
   createPickUps() {
@@ -219,7 +179,7 @@ export default class World {
 
   resetScene() {
     this.foreground.x = 0;
-    this.resetPillars();
+    this.pillars.reset();
     this.resetPickUps();
 
     if (this.levelData.night) {
@@ -234,16 +194,6 @@ export default class World {
     } else {
       this.sky.summerize();
     }
-  }
-
-  resetPillars() {
-    for (let pillar of this.pillars.children) {
-      for (let block of pillar.children) {
-        block.visible = true;
-      }
-    }
-    this.randomizePillarYPositions();
-    this.randomizePillarYSpeed();
   }
 
   resetPickUps() {
@@ -407,7 +357,7 @@ export default class World {
     this.scroll(dt);
 
     if (this.levelData.sliding) {
-      this.slidePillars(dt);
+      this.pillars.slide(dt);
     }
 
     this.pixie.updateCurrent(dt);
@@ -429,16 +379,6 @@ export default class World {
 
     if (this.finish.getGlobalPosition().x > 220) {
       this.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
-    }
-  }
-
-  slidePillars(dt) {
-    for (let pillar of this.pillars.children) {
-      pillar.y += pillar.vy * dt;
-
-      if (pillar.y > 0 || pillar.y < (PILLAR_HEIGHT - pillar.gapSize) * BLOCK_HEIGHT * -1) {
-        pillar.vy *= -1;
-      }
     }
   }
 
