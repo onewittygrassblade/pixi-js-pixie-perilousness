@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.5.0</string>
+        <string>4.6.2</string>
         <key>fileName</key>
-        <string>/Users/jguyonnet/Documents/tests/javascript/pixi-js-pixie-perilousness/public/images/pixie-perilousness.tps</string>
+        <string>/Users/jguyonnet/Code/onewittygrassblade/pixi-js-pixie-perilousness/public/images/pixie-perilousness.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -268,6 +268,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ice-shard.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9Paddings</key>
+                <rect>12,12,24,24</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">pixie-0.png</key>
             <key type="filename">pixie-1.png</key>
             <key type="filename">pixie-2.png</key>
@@ -298,6 +311,7 @@
             <filename>balloon.png</filename>
             <filename>weight.png</filename>
             <filename>gift.png</filename>
+            <filename>ice-shard.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

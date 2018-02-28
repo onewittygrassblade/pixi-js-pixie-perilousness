@@ -10,7 +10,7 @@ export default class Sky {
     this.container.addChild(this.sprite);
 
     this.colorMatrix = new filters.ColorMatrixFilter();
-    this.colorMatrix.desaturate();
+    this.colorMatrix.saturate(-0.5, false);
 
     const whiteCircle = new Graphics();
     whiteCircle.beginFill(0xFFFFFF);

@@ -20,7 +20,7 @@
 },
 "gift.png":
 {
-	"frame": {"x":199,"y":0,"w":32,"h":35},
+	"frame": {"x":165,"y":0,"w":32,"h":35},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":35},
@@ -29,7 +29,7 @@
 },
 "green.png":
 {
-	"frame": {"x":165,"y":0,"w":32,"h":32},
+	"frame": {"x":199,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -38,16 +38,25 @@
 },
 "greenBlock.png":
 {
-	"frame": {"x":383,"y":0,"w":64,"h":64},
+	"frame": {"x":425,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"ice-shard.png":
+{
+	"frame": {"x":233,"y":0,"w":40,"h":40},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
+	"sourceSize": {"w":40,"h":40},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "pink.png":
 {
-	"frame": {"x":97,"y":0,"w":32,"h":32},
+	"frame": {"x":131,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -56,7 +65,7 @@
 },
 "pixie-0.png":
 {
-	"frame": {"x":333,"y":0,"w":48,"h":32},
+	"frame": {"x":375,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
@@ -65,7 +74,7 @@
 },
 "pixie-1.png":
 {
-	"frame": {"x":283,"y":0,"w":48,"h":32},
+	"frame": {"x":325,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
@@ -74,7 +83,7 @@
 },
 "pixie-2.png":
 {
-	"frame": {"x":233,"y":0,"w":48,"h":32},
+	"frame": {"x":275,"y":0,"w":48,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":32},
@@ -101,7 +110,7 @@
 },
 "yellow.png":
 {
-	"frame": {"x":131,"y":0,"w":32,"h":32},
+	"frame": {"x":97,"y":0,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -109,12 +118,12 @@
 	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
-	"app": "http://www.codeandweb.com/texturepacker",
+	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "pixie-perilousness.png",
 	"format": "RGBA8888",
 	"size": {"w":512,"h":578},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:462509849bb712c29b768078cc9c61a2:7fd46f03ca5339b4b595bb13170125d6:662821b8805fa4a84e1b0cce0a40ca88$"
+	"smartupdate": "$TexturePacker:SmartUpdate:99a935979e2beb03f1245145141f62fd:eeccbaaa33871e372e943a546ed9f6c3:662821b8805fa4a84e1b0cce0a40ca88$"
 }
 }

@@ -6,8 +6,9 @@ import PickUps from './PickUps.js';
 import Pixie from './Pixie.js';
 import PointEmitter from '../particle/PointEmitter.js';
 import Night from './Night.js';
+import IceShard from './IceShard.js';
 import KeyBinder from '../helpers/KeyBinder.js';
-import { randomInt } from '../helpers/RandomNumbers.js';
+import { randomInt, randomFloat } from '../helpers/RandomNumbers.js';
 import contain from '../helpers/contain.js';
 import hitTestRectangle from '../helpers/hitTestRectangle.js';
 import EffectTimer from '../helpers/EffectTimer.js';
@@ -23,7 +24,8 @@ import { BACKGROUND_SCROLL_SPEED,
          FINISH_Y,
          INITIAL_NUMBER_OF_LIVES,
          MAX_NUMBER_OF_LIVES,
-         GRAVITY } from '../const/worldData.js';
+         GRAVITY,
+         ICE_SHARD_FREQUENCY } from '../const/worldData.js';
 
 export default class World {
   constructor(gameContainer, textures, sounds, levelData) {
@@ -36,6 +38,8 @@ export default class World {
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
     this.pixieEffectTimer = new EffectTimer();
+    this.iceShardTimer = 0;
+    this.iceShards = [];
 
     this.createSky();
     this.createForeground();
@@ -175,6 +179,12 @@ export default class World {
     } else {
       this.night.visible = false;
     }
+
+    for (let iceShard of this.iceShards) {
+      this.container.removeChild(iceShard);
+      this.iceShards = [];
+    }
+    this.iceShardTimer = 0;
 
     if (this.levelData.winter) {
       this.sky.winterize();
@@ -333,6 +343,10 @@ export default class World {
       this.pillars.slide(dt);
     }
 
+    if (this.levelData.winter) {
+      this.rainShards(dt);
+    }
+
     this.pixie.updateCurrent(dt);
     this.pixieEmitter.update(dt);
     this.pixieEffectTimer.update(dt);
@@ -352,6 +366,24 @@ export default class World {
 
     if (this.finish.getGlobalPosition().x > 220) {
       this.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
+    }
+  }
+
+  rainShards(dt) {
+    this.iceShardTimer += dt;
+
+    for (let iceShard of this.iceShards) {
+      iceShard.updateCurrent(dt);
+    }
+
+    if (this.iceShardTimer > ICE_SHARD_FREQUENCY) {
+      let iceShard = new IceShard(
+        [this.textures['ice-shard.png']],
+        randomFloat(RENDERER_WIDTH / 2, 3 * RENDERER_WIDTH / 4),
+        0);
+      this.iceShards.push(iceShard);
+      this.container.addChild(iceShard);
+      this.iceShardTimer = 0;
     }
   }
 
@@ -387,6 +419,16 @@ export default class World {
             pixieCrashed = true;
             break pillars;
           }
+        }
+      }
+    }
+
+    for (let iceShard of this.iceShards) {
+      if (hitTestRectangle(this.pixie, iceShard, true)) {
+        if (this.pixie.invincible) {
+          iceShard.visible = false;
+        } else {
+          pixieCrashed = true;
         }
       }
     }
