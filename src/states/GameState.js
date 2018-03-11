@@ -63,6 +63,6 @@ export default class GameState extends State {
 
   gameOver(success) {
     this.popFromStack();
-    this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, success));
+    this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, success, this.world.numberOfStars));
   }
 }

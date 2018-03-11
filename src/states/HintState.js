@@ -21,7 +21,7 @@ export default class HintState extends State {
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    const hintText = new BitmapText('Press space to start', {font: '40px pixie-font'});
+    const hintText = new BitmapText('Press space to start', {font: '32px pixie-font'});
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);

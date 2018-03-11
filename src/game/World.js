@@ -145,7 +145,10 @@ export default class World {
     let starsContainer = new Container();
     this.container.addChild(starsContainer);
 
-    starsContainer.addChild(new Sprite(this.textures['star.png']));
+    let star = new Sprite(this.textures['star.png']);
+    star.width = 33;
+    star.height = 32;
+    starsContainer.addChild(star);
     this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), {font: '30px pixie-font'});
     this.numberOfStarsText.x = 46;
     this.numberOfStarsText.y = 6;

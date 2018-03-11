@@ -1,4 +1,4 @@
-import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
+import { Container, Sprite, TilingSprite, BitmapText } from '../const/aliases.js';
 
 import State from './State.js';
 import TitleState from './TitleState.js';
@@ -7,11 +7,11 @@ import KeyBinder from '../helpers/KeyBinder.js';
 import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
 
 export default class GameOverState extends State {
-  constructor(stage, stateStack, textures, sounds, success) {
+  constructor(stage, stateStack, textures, sounds, success, numberOfStars) {
     super(stage, stateStack, textures, sounds);
 
     this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
-    this.createTexts(success);
+    this.createTexts(success, numberOfStars);
 
     this.keyControllers.push(new KeyBinder(32, null, () => {
       this.popFromStack();
@@ -23,20 +23,35 @@ export default class GameOverState extends State {
     }
   }
 
-  createTexts(success) {
+  createTexts(success, numberOfStars) {
     const textContainer = new Container();
     this.container.addChild(textContainer);
 
-    let messageText = new BitmapText('Whoops!', {font: '64px pixie-font'});
+    let resultText = new BitmapText('Whoops!', {font: '64px pixie-font'});
     if (success) {
-      messageText.text = 'Yay!';
+      resultText.text = 'Congratulations!';
     }
-    messageText.anchor.x = 0.5;
-    textContainer.addChild(messageText);
+    resultText.anchor.x = 0.5;
+    textContainer.addChild(resultText);
 
-    let hintText = new BitmapText('Press space to continue', {font: '48px pixie-font'});
+    let yPos = resultText.height + 40;;
+
+    if (success) {
+      let starResultContainer =  new Container();
+      starResultContainer.addChild(new Sprite(this.textures['star.png']));
+      let messageText = new BitmapText(`x ${numberOfStars}`, {font: '48px pixie-font'});
+      messageText.x = 60;
+      messageText.y = 7;
+      starResultContainer.addChild(messageText);
+      starResultContainer.x -= starResultContainer.width / 2;
+      starResultContainer.y = yPos;
+      yPos += messageText.height + 40;
+      textContainer.addChild(starResultContainer);
+    }
+
+    let hintText = new BitmapText('Press space to continue', {font: '32px pixie-font'});
     hintText.anchor.x = 0.5;
-    hintText.y = messageText.y + messageText.height + 40;
+    hintText.y = yPos;
     textContainer.addChild(hintText);
 
     textContainer.x = RENDERER_WIDTH / 2;

@@ -21,7 +21,7 @@ export default class PauseState extends State {
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    let hintText = new BitmapText('Press ESC to resume', {font: '40px pixie-font'});
+    let hintText = new BitmapText('Press ESC to resume', {font: '32px pixie-font'});
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);
