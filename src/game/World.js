@@ -38,6 +38,8 @@ export default class World {
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
     this.pixieEffectTimer = new EffectTimer();
+    this.numberOfStars = 0;
+    this.numberOfStarsForLevel = 0;
     this.iceShardTimer = 0;
     this.iceShards = [];
 
@@ -45,7 +47,7 @@ export default class World {
     this.createForeground();
     this.createPixie();
     this.createNight();
-    this.createLivesDisplay();
+    this.createInfoDisplay();
     this.createPickUpActions();
   }
 
@@ -128,7 +130,7 @@ export default class World {
     }
   }
 
-  createLivesDisplay() {
+  createInfoDisplay() {
     this.livesContainer = new Container();
     this.container.addChild(this.livesContainer);
 
@@ -139,6 +141,18 @@ export default class World {
     }
 
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
+
+    let starsContainer = new Container();
+    this.container.addChild(starsContainer);
+
+    starsContainer.addChild(new Sprite(this.textures['star.png']));
+    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), {font: '30px pixie-font'});
+    this.numberOfStarsText.x = 46;
+    this.numberOfStarsText.y = 6;
+    starsContainer.addChild(this.numberOfStarsText);
+
+    starsContainer.x = 822;
+    starsContainer.y = 40;
   }
 
   // Reset methods
@@ -172,6 +186,7 @@ export default class World {
     this.foreground.x = 0;
     this.pillars.reset();
     this.pickUps.reset();
+    this.numberOfStarsText.text = this.numberOfStars.toString();
 
     if (this.levelData.night) {
       this.night.visible = true;
@@ -232,7 +247,7 @@ export default class World {
       this.gainInvincibility.bind(this),
       this.gainWeight.bind(this),
       this.gainBalloon.bind(this),
-      this.uselessPickUp.bind(this)
+      this.gainStar.bind(this)
     ];
 
     const weights = [1, 1, 1, 1, 8];
@@ -263,7 +278,7 @@ export default class World {
     this.sounds.powerup.play();
 
     if (this.numberOfLives == MAX_NUMBER_OF_LIVES) {
-      this.pickUpActions[0] = this.uselessPickUp.bind(this);
+      this.pickUpActions[0] = this.gainStar.bind(this);
     }
   }
 
@@ -282,7 +297,7 @@ export default class World {
 
   gainInvincibility() {
     this.pixie.gainInvincibility();
-    this.pickUpActions[1] = this.uselessPickUp.bind(this);
+    this.pickUpActions[1] = this.gainStar.bind(this);
 
     this.pixieEffectTimer.setTimeout(() => {
       this.pixie.resetInvincibility();
@@ -300,8 +315,8 @@ export default class World {
 
     this.sounds.metal.play();
 
-    this.pickUpActions[2] = this.uselessPickUp.bind(this);
-    this.pickUpActions[3] = this.uselessPickUp.bind(this);
+    this.pickUpActions[2] = this.gainStar.bind(this);
+    this.pickUpActions[3] = this.gainStar.bind(this);
 
     this.pixieEffectTimer.setTimeout(() => {
       this.pixie.resetWeight();
@@ -320,8 +335,8 @@ export default class World {
 
     this.sounds.whoosh.play();
 
-    this.pickUpActions[2] = this.uselessPickUp.bind(this);
-    this.pickUpActions[3] = this.uselessPickUp.bind(this);
+    this.pickUpActions[2] = this.gainStar.bind(this);
+    this.pickUpActions[3] = this.gainStar.bind(this);
 
     this.pixieEffectTimer.setTimeout(() => {
       this.pixie.resetWeight();
@@ -330,7 +345,9 @@ export default class World {
     }, 8000);
   }
 
-  uselessPickUp() {
+  gainStar() {
+    this.numberOfStarsForLevel++;
+    this.numberOfStarsText.text = (this.numberOfStars + this.numberOfStarsForLevel).toString();
     this.sounds.pickup.play();
   }
 
@@ -435,6 +452,7 @@ export default class World {
 
     if (pixieCrashed) {
       this.pixieExplosion();
+      this.numberOfStarsForLevel = 0;
     }
 
     // pickUps
@@ -449,6 +467,8 @@ export default class World {
     if (hitTestRectangle(this.pixie, this.finish, true)) {
       this.resetPixie();
       this.pixieHasReachedEnd = true;
+      this.numberOfStars += this.numberOfStarsForLevel;
+      this.numberOfStarsForLevel = 0;
     }
   }
 

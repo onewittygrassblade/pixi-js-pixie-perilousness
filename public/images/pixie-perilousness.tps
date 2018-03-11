@@ -240,6 +240,7 @@
             </struct>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
+            <key type="filename">star.png</key>
             <key type="filename">violet.png</key>
             <key type="filename">weight.png</key>
             <key type="filename">yellow.png</key>
@@ -312,6 +313,7 @@
             <filename>weight.png</filename>
             <filename>gift.png</filename>
             <filename>ice-shard.png</filename>
+            <filename>star.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
