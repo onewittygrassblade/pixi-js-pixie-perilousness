@@ -10,7 +10,7 @@ export default class Night extends Graphics {
     this.drawRect(0, 0, sizeX, sizeY);
     this.endFill();
 
-    this.light = new Light(sizeX, sizeY, centerX, centerY);
+    this.light = new Light(sizeX, sizeY);
     this.renderGradient(centerX, centerY);
     this.mask = this.light.sprite;
   }
