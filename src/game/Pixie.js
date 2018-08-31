@@ -1,3 +1,4 @@
+import { Sprite, BitmapText } from '../const/aliases.js';
 import { GlowFilter } from '@pixi/filter-glow';
 
 import Entity from './Entity.js';
@@ -22,6 +23,15 @@ export default class Pixie extends Entity {
     this.filterChangeTimer = 0;
   }
 
+  setNodeChildren(weight, balloon) {
+    this.weightSprite = weight;
+    this.weightSprite.anchor.set(0.5, 0.5);
+    this.weightSprite.visible = false;
+    this.balloonSprite = balloon;
+    this.balloonSprite.anchor.set(0.5, 0.5);
+    this.balloonSprite.visible = false;
+  }
+
   gainInvincibility() {
     this.invincible = true;
     this.filters = [ this.glowFilter ];
@@ -33,16 +43,31 @@ export default class Pixie extends Entity {
     this.filterChangeTimer = 0;
   }
 
+  gainWeight() {
+    this.weightSprite.visible = true;
+    this.addedWeight = 0.00025;
+  }
+
   resetWeight() {
+    this.weightSprite.visible = false;
     this.addedWeight = 0;
-    for (let child of this.children) {
-      this.removeChild(child);
-    }
+  }
+
+  gainBalloon() {
+    this.balloonSprite.visible = true;
+    this.addedWeight = -0.00015;
+  }
+
+  resetBalloon() {
+    this.balloonSprite.visible = false;
+    this.addedWeight = 0;
   }
 
   resetProperties() {
     this.resetInvincibility();
-    this.resetWeight();
+    this.addedWeight = 0;
+    this.weightSprite.visible = false;
+    this.balloonSprite.visible = false;
   }
 
   updateCurrent(dt) {

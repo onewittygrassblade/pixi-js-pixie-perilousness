@@ -32,6 +32,14 @@ export default class Entity extends AnimatedSprite {
     this.rotation = rotation;
     this.rotationVelocity = rotationVelocity;
     this.rotationAcceleration = rotationAcceleration;
+
+    this.nodeChildren = []; // workaround to have children without filters being applied to them
+  }
+
+  addNodeChild(nodeChild, offsetX, offsetY) {
+    this.nodeChildren.push(nodeChild);
+    nodeChild.offsetX = offsetX;
+    nodeChild.offsetY = offsetY;
   }
 
   updatePosition(dt) {
@@ -40,6 +48,11 @@ export default class Entity extends AnimatedSprite {
 
     this.vy += this.ay * dt;
     this.y += this.vy * dt;
+
+    for (let nodeChild of this.nodeChildren) {
+      nodeChild.x = this.x + nodeChild.offsetX;
+      nodeChild.y = this.y + nodeChild.offsetY;
+    }
   }
 
   updateRotation(dt) {

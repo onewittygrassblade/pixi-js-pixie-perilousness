@@ -37,11 +37,19 @@ export default class World {
     this.pixieHasCrashed = false;
     this.pixieHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
-    this.pixieEffectTimer = new EffectTimer();
+    this.effectTimer = new EffectTimer();
     this.numberOfStars = 0;
     this.numberOfStarsForLevel = 0;
     this.iceShardTimer = 0;
     this.iceShards = [];
+
+    this.layers = {
+      background: null,
+      foreground: new Container(),
+      player: new Container(),
+      weatherEffect: new Container(),
+      infoDisplay: new Container()
+    }
 
     this.createSky();
     this.createForeground();
@@ -49,22 +57,23 @@ export default class World {
     this.createNight();
     this.createInfoDisplay();
     this.createPickUpActions();
+
+    for (let layer in this.layers) {
+      this.container.addChild(this.layers[layer]);
+    }
   }
 
   // Create methods
 
   createSky() {
     this.sky = new Sky(this.textures, RENDERER_WIDTH, RENDERER_HEIGHT);
-    this.container.addChild(this.sky.container);
+    this.layers.background = this.sky.container;
     if (this.levelData.winter) {
       this.sky.winterize();
     }
   }
 
   createForeground() {
-    this.foreground = new Container();
-    this.container.addChild(this.foreground);
-
     this.createPillars(this.textures['greenBlock.png']);
     this.createPickUps(this.textures['gift.png']);
     this.createFinish();
@@ -73,7 +82,7 @@ export default class World {
   createPillars(texture) {
     this.pillars = new Pillars(texture);
     this.pillars.x = PILLAR_START_X;
-    this.foreground.addChild(this.pillars);
+    this.layers.foreground.addChild(this.pillars);
     this.pillars.randomizeYPositions();
     this.pillars.randomizeYSpeeds();
   }
@@ -81,7 +90,7 @@ export default class World {
   createPickUps(texture) {
     this.pickUps = new PickUps(texture);
     this.pickUps.x = PILLAR_START_X;
-    this.foreground.addChild(this.pickUps);
+    this.layers.foreground.addChild(this.pickUps);
     this.pickUps.randomizeYPositions();
   }
 
@@ -89,7 +98,7 @@ export default class World {
     this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
     this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
-    this.foreground.addChild(this.finish);
+    this.layers.foreground.addChild(this.finish);
   }
 
   createPixie() {
@@ -117,13 +126,23 @@ export default class World {
       3                   // numberOfParticlesPerEmit
     );
 
-    this.container.addChild(this.pixieEmitter.particleSystem.container);
-    this.container.addChild(this.pixie);
+    const weight = new Sprite(this.textures['weight.png']);
+    const balloon = new Sprite(this.textures['balloon.png']);
+
+    this.pixie.addNodeChild(weight, 0, 35);
+    this.pixie.addNodeChild(balloon, 0, -35);
+
+    this.pixie.setNodeChildren(weight, balloon);
+
+    this.layers.player.addChild(this.pixieEmitter.particleSystem.container);
+    this.layers.player.addChild(weight);
+    this.layers.player.addChild(balloon);
+    this.layers.player.addChild(this.pixie);
   }
 
   createNight() {
     this.night = new Night(RENDERER_WIDTH, RENDERER_HEIGHT,this.pixie.x, this.pixie.y);
-    this.container.addChild(this.night);
+    this.layers.weatherEffect.addChild(this.night);
 
     if (!this.levelData.night) {
       this.night.visible = false;
@@ -132,7 +151,7 @@ export default class World {
 
   createInfoDisplay() {
     this.livesContainer = new Container();
-    this.container.addChild(this.livesContainer);
+    this.layers.infoDisplay.addChild(this.livesContainer);
 
     for (let i = 0; i < this.numberOfLives; i++) {
       let life = new Sprite(this.textures['pixie-0.png']);
@@ -143,7 +162,7 @@ export default class World {
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
     let starsContainer = new Container();
-    this.container.addChild(starsContainer);
+    this.layers.infoDisplay.addChild(starsContainer);
 
     let star = new Sprite(this.textures['star.png']);
     star.width = 33;
@@ -186,7 +205,7 @@ export default class World {
   }
 
   resetScene() {
-    this.foreground.x = 0;
+    this.layers.foreground.x = 0;
     this.pillars.reset();
     this.pickUps.reset();
     this.numberOfStarsText.text = this.numberOfStars.toString();
@@ -199,7 +218,7 @@ export default class World {
     }
 
     for (let iceShard of this.iceShards) {
-      this.container.removeChild(iceShard);
+      this.layers.weatherEffect.removeChild(iceShard);
       this.iceShards = [];
     }
     this.iceShardTimer = 0;
@@ -246,20 +265,33 @@ export default class World {
 
   createPickUpActions() {
     const pickUpActions = [
-      this.gainLife.bind(this),
-      this.gainInvincibility.bind(this),
-      this.gainWeight.bind(this),
-      this.gainBalloon.bind(this),
-      this.gainStar.bind(this)
+      {
+        action: this.gainLife.bind(this),
+        weight: 1
+      },
+      {
+        action: this.gainInvincibility.bind(this),
+        weight: 1
+      },
+      {
+        action: this.gainWeight.bind(this),
+        weight: 1
+      },
+      {
+        action: this.gainBalloon.bind(this),
+        weight: 1
+      },
+      {
+        action: this.gainStar.bind(this),
+        weight: 8
+      }
     ];
-
-    const weights = [1, 1, 1, 1, 8];
 
     this.pickUpActions = [];
 
-    for (let i = 0; i < weights.length; i++) {
-      for (let j = 0; j < weights[i]; j++) {
-        this.pickUpActions.push(pickUpActions[i]);
+    for (let i = 0; i < pickUpActions.length; i++) {
+      for (let j = 0; j < pickUpActions[i].weight; j++) {
+        this.pickUpActions.push(pickUpActions[i].action);
       }
     }
   }
@@ -302,26 +334,20 @@ export default class World {
     this.pixie.gainInvincibility();
     this.pickUpActions[1] = this.gainStar.bind(this);
 
-    this.pixieEffectTimer.setTimeout(() => {
+    this.effectTimer.setTimeout(() => {
       this.pixie.resetInvincibility();
       this.pickUpActions[1] = this.gainInvincibility.bind(this);
     }, 8000);
   }
 
   gainWeight() {
-    const weight = new Sprite(this.textures['weight.png']);
-    weight.anchor.set(0.5);
-    weight.y = 35;
-    this.pixie.addChild(weight);
-
-    this.pixie.addedWeight = 0.00025;
-
+    this.pixie.gainWeight();
     this.sounds.metal.play();
 
     this.pickUpActions[2] = this.gainStar.bind(this);
     this.pickUpActions[3] = this.gainStar.bind(this);
 
-    this.pixieEffectTimer.setTimeout(() => {
+    this.effectTimer.setTimeout(() => {
       this.pixie.resetWeight();
       this.pickUpActions[2] = this.gainWeight.bind(this);
       this.pickUpActions[3] = this.gainBalloon.bind(this);
@@ -329,20 +355,14 @@ export default class World {
   }
 
   gainBalloon() {
-    const balloon = new Sprite(this.textures['balloon.png']);
-    balloon.anchor.set(0.5);
-    balloon.y = -35;
-    this.pixie.addChild(balloon);
-
-    this.pixie.addedWeight = -0.00015;
-
+    this.pixie.gainBalloon();
     this.sounds.whoosh.play();
 
     this.pickUpActions[2] = this.gainStar.bind(this);
     this.pickUpActions[3] = this.gainStar.bind(this);
 
-    this.pixieEffectTimer.setTimeout(() => {
-      this.pixie.resetWeight();
+    this.effectTimer.setTimeout(() => {
+      this.pixie.resetBalloon();
       this.pickUpActions[2] = this.gainWeight.bind(this);
       this.pickUpActions[3] = this.gainBalloon.bind(this);
     }, 8000);
@@ -369,7 +389,7 @@ export default class World {
 
     this.pixie.updateCurrent(dt);
     this.pixieEmitter.update(dt);
-    this.pixieEffectTimer.update(dt);
+    this.effectTimer.update(dt);
     if (this.levelData.night && this.pixie.visible) {
       this.night.renderGradient(this.pixie.x, this.pixie.y);
     }
@@ -385,7 +405,7 @@ export default class World {
     this.sky.updateCurrent(BACKGROUND_SCROLL_SPEED, dt);
 
     if (this.finish.getGlobalPosition().x > 220) {
-      this.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
+      this.layers.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
     }
   }
 
@@ -402,7 +422,7 @@ export default class World {
         randomFloat(RENDERER_WIDTH / 2, 3 * RENDERER_WIDTH / 4),
         0);
       this.iceShards.push(iceShard);
-      this.container.addChild(iceShard);
+      this.layers.weatherEffect.addChild(iceShard);
       this.iceShardTimer = 0;
     }
   }
