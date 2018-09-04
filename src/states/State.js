@@ -1,4 +1,4 @@
-import { Container } from '../const/aliases.js';
+import { Container } from '../const/aliases';
 
 export default class State {
   constructor(stage, stateStack, textures = null, sounds = null) {
@@ -26,15 +26,15 @@ export default class State {
   }
 
   addEventListeners() {
-    for (let controller of this.keyControllers) {
+    this.keyControllers.forEach((controller) => {
       controller.addEventListeners();
-    }
+    });
   }
 
   removeEventListeners() {
-    for (let controller of this.keyControllers) {
+    this.keyControllers.forEach((controller) => {
       controller.removeEventListeners();
-    }
+    });
   }
 
   shouldRemoveEventListenersWhenPushedUnder() {
@@ -47,7 +47,7 @@ export default class State {
     this.stateStack.pop();
   }
 
-  update(dt) {
+  update() {
     return false;
   }
 }

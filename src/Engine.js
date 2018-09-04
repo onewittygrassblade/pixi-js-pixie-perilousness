@@ -1,8 +1,8 @@
-import {  autoDetectRenderer } from './const/aliases.js';
+import { autoDetectRenderer } from './const/aliases';
 
-import centerCanvas from './helpers/centerCanvas.js';
+import centerCanvas from './helpers/centerCanvas';
 
-import {  RENDERER_WIDTH, RENDERER_HEIGHT } from './const/appConstants.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from './const/appConstants';
 
 export default class Engine {
   constructor() {
@@ -10,7 +10,7 @@ export default class Engine {
     document.getElementById('root').appendChild(this.renderer.view);
 
     centerCanvas(this.renderer.view);
-    window.addEventListener('resize', event => {
+    window.addEventListener('resize', () => {
       centerCanvas(this.renderer.view);
     });
   }

@@ -1,7 +1,7 @@
-import Particle from './Particle.js';
-import ParticleSystem from './ParticleSystem.js';
+import Particle from './Particle';
+import ParticleSystem from './ParticleSystem';
 
-import { randomInt, randomFloat } from '../helpers/RandomNumbers.js';
+import { randomInt, randomFloat } from '../helpers/RandomNumbers';
 
 export default class Emitter {
   constructor(
@@ -23,8 +23,8 @@ export default class Emitter {
     randomSpacing = true,
     emitting = false,
     emissionRate = 30,
-    numberOfParticlesPerEmit = 1) {
-
+    numberOfParticlesPerEmit = 1
+  ) {
     this.textureFrames = textureFrames;
     this.minSize = minSize;
     this.maxSize = maxSize;
@@ -60,7 +60,7 @@ export default class Emitter {
 
   burst(numberOfParticles, x, y) {
     let directionAngle;
-    const directionAngleSpacing = (this.maxDirectionAngle - this.minDirectionAngle) / (numberOfParticles - 1);
+    const directionAngleSpacing = (this.maxDirectionAngle - this.minDirectionAngle) / (numberOfParticles - 1); // eslint-disable-line max-len
 
     if (!this.randomSpacing) {
       directionAngle = this.minDirectionAngle;
@@ -71,7 +71,7 @@ export default class Emitter {
         directionAngle = randomFloat(this.minDirectionAngle, this.maxDirectionAngle);
       }
 
-      let speed = randomFloat(this.minInitialSpeed, this.maxInitialSpeed);
+      const speed = randomFloat(this.minInitialSpeed, this.maxInitialSpeed);
 
       this.particleSystem.addParticle(new Particle(
         this.textureFrames,

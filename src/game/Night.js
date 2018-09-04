@@ -1,6 +1,6 @@
-import { Graphics } from '../const/aliases.js';
+import { Graphics } from '../const/aliases';
 
-import Light from './Light.js';
+import Light from './Light';
 
 export default class Night extends Graphics {
   constructor(sizeX, sizeY, centerX, centerY) {
@@ -16,6 +16,6 @@ export default class Night extends Graphics {
   }
 
   renderGradient(centerX, centerY) {
-    this.light.renderGradient(centerX, centerY)
+    this.light.renderGradient(centerX, centerY);
   }
 }

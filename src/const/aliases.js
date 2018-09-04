@@ -1,14 +1,14 @@
-import Pixi from 'pixi.js';
+import * as PIXI from 'pixi.js';
 
-export const autoDetectRenderer = PIXI.autoDetectRenderer;
-export const Graphics = PIXI.Graphics;
-export const Texture = PIXI.Texture;
-export const Container = PIXI.Container;
-export const ParticleContainer = PIXI.particles.ParticleContainer;
-export const loader = PIXI.loader;
-export const resources = PIXI.loader.resources;
-export const Sprite = PIXI.Sprite;
-export const TilingSprite = PIXI.extras.TilingSprite;
-export const AnimatedSprite = PIXI.extras.AnimatedSprite;
-export const BitmapText = PIXI.extras.BitmapText;
-export const filters = PIXI.filters;
+export const { autoDetectRenderer } = PIXI;
+export const { Graphics } = PIXI;
+export const { Texture } = PIXI;
+export const { Container } = PIXI;
+export const { ParticleContainer } = PIXI.particles;
+export const { loader } = PIXI;
+export const { resources } = PIXI.loader;
+export const { Sprite } = PIXI;
+export const { TilingSprite } = PIXI.extras;
+export const { AnimatedSprite } = PIXI.extras;
+export const { BitmapText } = PIXI.extras;
+export const { filters } = PIXI;

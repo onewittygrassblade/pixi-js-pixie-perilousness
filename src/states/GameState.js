@@ -1,15 +1,15 @@
-import State from './State.js';
-import HintState from './HintState.js';
-import PauseState from './PauseState.js';
-import GameOverState from './GameOverState.js';
-import World from '../game/World.js';
-import KeyBinder from '../helpers/KeyBinder.js';
+import State from './State';
+import HintState from './HintState';
+import PauseState from './PauseState';
+import GameOverState from './GameOverState';
+import World from '../game/World';
+import KeyBinder from '../helpers/KeyBinder';
 
-import { LEVELS_DATA } from '../const/levelsData.js';
+import LEVELS_DATA from '../const/levelsData';
 
 export default class GameState extends State {
   constructor(stage, stateStack, textures, sounds) {
-    super(stage, stateStack, textures, sounds)
+    super(stage, stateStack, textures, sounds);
 
     this.currentLevel = 0;
 
@@ -36,7 +36,9 @@ export default class GameState extends State {
     if (this.world.pixieHasCrashed) {
       if (this.world.hasLives()) {
         this.world.resetAfterCrash();
-        this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
+        this.stateStack.push(
+          new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint)
+        );
       } else {
         this.gameOver(false);
       }
@@ -52,7 +54,9 @@ export default class GameState extends State {
         if (this.currentLevel === LEVELS_DATA.length - 1) {
           this.world.setFinishTextForFinalLevel();
         }
-        this.stateStack.push(new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint));
+        this.stateStack.push(
+          new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint)
+        );
       } else {
         this.gameOver(true);
       }
@@ -63,6 +67,15 @@ export default class GameState extends State {
 
   gameOver(success) {
     this.popFromStack();
-    this.stateStack.push(new GameOverState(this.stage, this.stateStack, this.textures, this.sounds, success, this.world.numberOfStars));
+    this.stateStack.push(
+      new GameOverState(
+        this.stage,
+        this.stateStack,
+        this.textures,
+        this.sounds,
+        success,
+        this.world.numberOfStars
+      )
+    );
   }
 }

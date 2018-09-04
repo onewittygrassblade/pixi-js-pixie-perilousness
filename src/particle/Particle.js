@@ -1,7 +1,5 @@
-import Entity from '../game/Entity.js';
-import { randomInt } from '../helpers/RandomNumbers.js';
-
-import { ParticleContainer } from '../const/aliases.js';
+import Entity from '../game/Entity';
+import { randomInt } from '../helpers/RandomNumbers';
 
 export default class Particle extends Entity {
   constructor(
@@ -12,8 +10,8 @@ export default class Particle extends Entity {
     vx = 0, vy = 0,
     gravity = 0,
     rotationVelocity = 0,
-    shrinkVelocity = 0) {
-
+    shrinkVelocity = 0
+  ) {
     super(textureFrames, x, y, vx, vy, 0, gravity, 0, rotationVelocity);
 
     if (size) {

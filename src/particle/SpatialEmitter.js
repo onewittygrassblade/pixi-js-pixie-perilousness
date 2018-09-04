@@ -1,6 +1,6 @@
-import Emitter from './Emitter.js';
+import Emitter from './Emitter';
 
-import { randomInt } from '../helpers/RandomNumbers.js';
+import { randomInt } from '../helpers/RandomNumbers';
 
 export default class SpatialEmitter extends Emitter {
   constructor(

@@ -1,11 +1,10 @@
-import { loader, resources, Container } from './const/aliases.js';
+import { loader, resources, Container } from './const/aliases';
 
-import Engine from './Engine.js';
-import StateStack from './StateStack.js';
-import TitleState from './states/TitleState.js';
-import centerCanvas from './helpers/centerCanvas.js';
+import Engine from './Engine';
+import StateStack from './StateStack';
+import TitleState from './states/TitleState';
 
-import {  SOUND_NAMES, RENDERER_WIDTH, RENDERER_HEIGHT, TIME_PER_FRAME  } from './const/appConstants.js';
+import { SOUND_NAMES, TIME_PER_FRAME } from './const/appConstants';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
@@ -19,20 +18,20 @@ export default class App {
 
   static loadAssets() {
     return new Promise((resolve, reject) => {
-      for (let soundName of SOUND_NAMES) {
-        loader.add(soundName, 'sounds/' + soundName + '.mp3');
-      }
+      SOUND_NAMES.forEach((soundName) => {
+        loader.add(soundName, `sounds/${soundName}.mp3`);
+      });
 
       loader
-      .add('images/pixie-perilousness.json')
-      .add('fonts/pixie-font.fnt')
-      .on('error', reject)
-      .load(resolve);
+        .add('images/pixie-perilousness.json')
+        .add('fonts/pixie-font.fnt')
+        .on('error', reject)
+        .load(resolve);
     });
   }
 
   setup() {
-    const textures = resources['images/pixie-perilousness.json'].textures;
+    const { textures } = resources['images/pixie-perilousness.json'];
 
     const sounds = SOUND_NAMES.reduce((acc, item) => {
       acc[item] = resources[item].data;

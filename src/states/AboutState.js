@@ -1,9 +1,9 @@
-import { Container, TilingSprite, BitmapText } from '../const/aliases.js';
+import { Container, TilingSprite, BitmapText } from '../const/aliases';
 
-import State from './State.js';
-import MenuItem from '../gui/MenuItem.js';
+import State from './State';
+import MenuItem from '../gui/MenuItem';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
 
 export default class AboutState extends State {
   constructor(stage, stateStack, textures) {
@@ -23,21 +23,21 @@ export default class AboutState extends State {
       'github.com/kittykatattack/learnPixiJS.',
       'Please see',
       'github.com/onewittygrassblade/pixi-js-pixie-perilousness',
-      'for full credits and source code.'
+      'for full credits and source code.',
     ];
 
     let yPos = 0;
 
     for (let i = 0; i < texts.length; i++) {
-      let bitmapText = new BitmapText(texts[i], {font: '30px pixie-font'});
+      const bitmapText = new BitmapText(texts[i], { font: '30px pixie-font' });
       bitmapText.anchor.x = 0.5;
       bitmapText.y = yPos;
       yPos += bitmapText.height + 30;
       textContainer.addChild(bitmapText);
     }
 
-    const backToTitle = new MenuItem('Back', {font: '48px pixie-font'});
-    backToTitle.on('click', e => {
+    const backToTitle = new MenuItem('Back', { font: '48px pixie-font' });
+    backToTitle.on('click', () => {
       this.popFromStack();
     });
     backToTitle.anchor.x = 0.5;

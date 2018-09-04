@@ -1,31 +1,33 @@
-import { Container, Sprite, AnimatedSprite, BitmapText } from '../const/aliases.js';
+import { Container, Sprite, BitmapText } from '../const/aliases';
 
-import Sky from './Sky.js';
-import Pillars from './Pillars.js';
-import PickUps from './PickUps.js';
-import Pixie from './Pixie.js';
-import PointEmitter from '../particle/PointEmitter.js';
-import Night from './Night.js';
-import IceShard from './IceShard.js';
-import KeyBinder from '../helpers/KeyBinder.js';
-import { randomInt, randomFloat } from '../helpers/RandomNumbers.js';
-import contain from '../helpers/contain.js';
-import hitTestRectangle from '../helpers/hitTestRectangle.js';
-import EffectTimer from '../helpers/EffectTimer.js';
+import Sky from './Sky';
+import Pillars from './Pillars';
+import PickUps from './PickUps';
+import Pixie from './Pixie';
+import PointEmitter from '../particle/PointEmitter';
+import Night from './Night';
+import IceShard from './IceShard';
+import KeyBinder from '../helpers/KeyBinder';
+import { randomInt, randomFloat } from '../helpers/RandomNumbers';
+import contain from '../helpers/contain';
+import hitTestRectangle from '../helpers/hitTestRectangle';
+import EffectTimer from '../helpers/EffectTimer';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
 
-import { BACKGROUND_SCROLL_SPEED,
-         FOREGROUND_SCROLL_SPEED,
-         PLAYER_START_X,
-         PLAYER_START_Y,
-         PILLAR_START_X,
-         FINISH_X,
-         FINISH_Y,
-         INITIAL_NUMBER_OF_LIVES,
-         MAX_NUMBER_OF_LIVES,
-         GRAVITY,
-         ICE_SHARD_FREQUENCY } from '../const/worldData.js';
+import {
+  BACKGROUND_SCROLL_SPEED,
+  FOREGROUND_SCROLL_SPEED,
+  PLAYER_START_X,
+  PLAYER_START_Y,
+  PILLAR_START_X,
+  FINISH_X,
+  FINISH_Y,
+  INITIAL_NUMBER_OF_LIVES,
+  MAX_NUMBER_OF_LIVES,
+  GRAVITY,
+  ICE_SHARD_FREQUENCY
+} from '../const/worldData';
 
 export default class World {
   constructor(gameContainer, textures, sounds, levelData) {
@@ -48,8 +50,8 @@ export default class World {
       foreground: new Container(),
       player: new Container(),
       weatherEffect: new Container(),
-      infoDisplay: new Container()
-    }
+      infoDisplay: new Container(),
+    };
 
     this.createSky();
     this.createForeground();
@@ -58,9 +60,9 @@ export default class World {
     this.createInfoDisplay();
     this.createPickUpActions();
 
-    for (let layer in this.layers) {
-      this.container.addChild(this.layers[layer]);
-    }
+    Object.keys(this.layers).forEach((layerName) => {
+      this.container.addChild(this.layers[layerName]);
+    });
   }
 
   // Create methods
@@ -95,7 +97,7 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new BitmapText('To next level!', {font: '96px pixie-font'});
+    this.finish = new BitmapText('To next level!', { font: '96px pixie-font' });
     this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
     this.layers.foreground.addChild(this.finish);
@@ -112,8 +114,9 @@ export default class World {
       this.textures['star.png'],
     );
 
+    /* eslint-disable no-multi-spaces */
     this.pixieEmitter = new PointEmitter(
-      [ this.textures["pink.png"], this.textures["yellow.png"], this.textures["green.png"], this.textures["violet.png"] ],
+      [this.textures['pink.png'], this.textures['yellow.png'], this.textures['green.png'], this.textures['violet.png']],
       18, 24,             // minSize, maxSize
       this.pixie,         // parent
       0, 16,              // offsetX, offsetY
@@ -126,8 +129,9 @@ export default class World {
       true,               // randomSpacing
       false,              // emitting
       10,                 // emissionRate
-      3                   // numberOfParticlesPerEmit
+      3,                  // numberOfParticlesPerEmit
     );
+    /* eslint-enable no-multi-spaces */
 
     this.layers.player.addChild(this.pixieEmitter.particleSystem.container);
     this.layers.player.addChild(this.pixie.weight);
@@ -137,7 +141,7 @@ export default class World {
   }
 
   createNight() {
-    this.night = new Night(RENDERER_WIDTH, RENDERER_HEIGHT,this.pixie.x, this.pixie.y);
+    this.night = new Night(RENDERER_WIDTH, RENDERER_HEIGHT, this.pixie.x, this.pixie.y);
     this.layers.weatherEffect.addChild(this.night);
 
     if (!this.levelData.night) {
@@ -164,7 +168,7 @@ export default class World {
     star.width = 33;
     star.height = 32;
     starsContainer.addChild(star);
-    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), {font: '30px pixie-font'});
+    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), { font: '30px pixie-font' });
     this.numberOfStarsText.x = 46;
     this.numberOfStarsText.y = 6;
     starsContainer.addChild(this.numberOfStarsText);
@@ -213,10 +217,10 @@ export default class World {
       this.night.visible = false;
     }
 
-    for (let iceShard of this.iceShards) {
+    this.iceShards.forEach((iceShard) => {
       this.layers.weatherEffect.removeChild(iceShard);
-      this.iceShards = [];
-    }
+    });
+    this.iceShards = [];
     this.iceShardTimer = 0;
 
     if (this.levelData.winter) {
@@ -263,24 +267,24 @@ export default class World {
     const pickUpActions = [
       {
         action: this.gainLife.bind(this),
-        weight: 1
+        weight: 1,
       },
       {
         action: this.gainInvincibility.bind(this),
-        weight: 1
+        weight: 1,
       },
       {
         action: this.gainWeight.bind(this),
-        weight: 1
+        weight: 1,
       },
       {
         action: this.gainBalloon.bind(this),
-        weight: 1
+        weight: 1,
       },
       {
         action: this.gainStar.bind(this),
-        weight: 8
-      }
+        weight: 8,
+      },
     ];
 
     this.pickUpActions = [];
@@ -308,7 +312,7 @@ export default class World {
 
     this.sounds.powerup.play();
 
-    if (this.numberOfLives == MAX_NUMBER_OF_LIVES) {
+    if (this.numberOfLives === MAX_NUMBER_OF_LIVES) {
       this.pickUpActions[0] = this.gainStar.bind(this);
     }
   }
@@ -410,15 +414,16 @@ export default class World {
   rainShards(dt) {
     this.iceShardTimer += dt;
 
-    for (let iceShard of this.iceShards) {
+    this.iceShards.forEach((iceShard) => {
       iceShard.updateCurrent(dt);
-    }
+    });
 
     if (this.iceShardTimer > ICE_SHARD_FREQUENCY) {
       const iceShard = new IceShard(
         [this.textures['ice-shard.png']],
         randomFloat(RENDERER_WIDTH / 2, 3 * RENDERER_WIDTH / 4),
-        0);
+        0
+      );
       this.iceShards.push(iceShard);
       this.layers.weatherEffect.addChild(iceShard);
       this.iceShardTimer = 0;
@@ -432,7 +437,7 @@ export default class World {
         x: 0,
         y: 0,
         width: RENDERER_WIDTH,
-        height: RENDERER_HEIGHT
+        height: RENDERER_HEIGHT,
       }
     );
 
@@ -444,11 +449,12 @@ export default class World {
   }
 
   checkCollisions() {
-    // blocks
     let pixieCrashed = false;
 
-    pillars: for (let pillar of this.pillars.children) {
-      blocks: for (let block of pillar.children) {
+    // blocks
+    /* eslint-disable no-restricted-syntax, no-labels */
+    pillars: for (const pillar of this.pillars.children) {
+      for (const block of pillar.children) {
         if (block.visible && hitTestRectangle(this.pixie, block, true)) {
           if (this.pixie.invincible) {
             block.visible = false;
@@ -460,8 +466,10 @@ export default class World {
         }
       }
     }
+    /* eslint-enable no-restricted-syntax, no-labels */
 
-    for (let iceShard of this.iceShards) {
+    // ice shards
+    this.iceShards.forEach((iceShard) => {
       if (hitTestRectangle(this.pixie, iceShard, true)) {
         if (this.pixie.invincible) {
           iceShard.visible = false;
@@ -469,7 +477,7 @@ export default class World {
           pixieCrashed = true;
         }
       }
-    }
+    });
 
     if (pixieCrashed) {
       this.pixieExplosion();
@@ -477,12 +485,12 @@ export default class World {
     }
 
     // pickUps
-    for (let pickUp of this.pickUps.children) {
+    this.pickUps.children.forEach((pickUp) => {
       if (pickUp.visible && hitTestRectangle(this.pixie, pickUp, true)) {
         pickUp.visible = false;
         this.pickUpActions[randomInt(0, 11)]();
       }
-    }
+    });
 
     // finish
     if (hitTestRectangle(this.pixie, this.finish, true)) {

@@ -1,4 +1,4 @@
-import { AnimatedSprite } from '../const/aliases.js';
+import { AnimatedSprite } from '../const/aliases';
 
 export default class Entity extends AnimatedSprite {
   constructor(
@@ -11,8 +11,8 @@ export default class Entity extends AnimatedSprite {
     ay = 0,
     rotation = 0,
     rotationVelocity = 0,
-    rotationAcceleration = 0) {
-
+    rotationAcceleration = 0
+  ) {
     super(textureFrames);
 
     this.x = x;
@@ -49,10 +49,10 @@ export default class Entity extends AnimatedSprite {
     this.vy += this.ay * dt;
     this.y += this.vy * dt;
 
-    for (let nodeChild of this.nodeChildren) {
+    this.nodeChildren.forEach((nodeChild) => {
       nodeChild.x = this.x + nodeChild.offsetX;
       nodeChild.y = this.y + nodeChild.offsetY;
-    }
+    });
   }
 
   updateRotation(dt) {

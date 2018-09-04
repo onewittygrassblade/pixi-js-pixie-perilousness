@@ -1,0 +1,19 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+      "browser": true
+    },
+    "rules": {
+      "no-plusplus": "off",
+      "no-param-reassign": "off",
+      "class-methods-use-this": "off",
+      "import/no-cycle": "off",
+      "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "never",
+        "exports": "never",
+        "functions": "ignore"
+    }]
+    }
+}

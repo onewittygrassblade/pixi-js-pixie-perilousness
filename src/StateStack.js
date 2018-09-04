@@ -7,25 +7,27 @@ export default class StateStack {
     this.stack.push(state);
     state.addEventListeners();
 
-    for (let previousState of this.stack.slice(0, this.stack.length - 1)) {
+    const previousStates = this.stack.slice(0, this.stack.length - 1);
+    previousStates.forEach((previousState) => {
       if (previousState.shouldBeHiddenWhenPushedUnder()) {
         previousState.hide();
       }
       if (previousState.shouldRemoveEventListenersWhenPushedUnder()) {
         previousState.removeEventListeners();
       }
-    }
+    });
   }
 
   pop() {
-    for (let previousState of this.stack.slice(0, this.stack.length - 1)) {
+    const previousStates = this.stack.slice(0, this.stack.length - 1);
+    previousStates.forEach((previousState) => {
       if (previousState.shouldBeHiddenWhenPushedUnder()) {
         previousState.show();
       }
       if (previousState.shouldRemoveEventListenersWhenPushedUnder()) {
         previousState.addEventListeners();
       }
-    }
+    });
 
     return this.stack.pop();
   }

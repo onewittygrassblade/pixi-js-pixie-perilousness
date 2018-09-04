@@ -1,10 +1,15 @@
-import { Container, Sprite, TilingSprite, BitmapText } from '../const/aliases.js';
+import {
+  Container,
+  Sprite,
+  TilingSprite,
+  BitmapText
+} from '../const/aliases';
 
-import State from './State.js';
-import TitleState from './TitleState.js';
-import KeyBinder from '../helpers/KeyBinder.js';
+import State from './State';
+import TitleState from './TitleState';
+import KeyBinder from '../helpers/KeyBinder';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
 
 export default class GameOverState extends State {
   constructor(stage, stateStack, textures, sounds, success, numberOfStars) {
@@ -27,19 +32,19 @@ export default class GameOverState extends State {
     const textContainer = new Container();
     this.container.addChild(textContainer);
 
-    let resultText = new BitmapText('Whoops!', {font: '64px pixie-font'});
+    const resultText = new BitmapText('Whoops!', { font: '64px pixie-font' });
     if (success) {
       resultText.text = 'Congratulations!';
     }
     resultText.anchor.x = 0.5;
     textContainer.addChild(resultText);
 
-    let yPos = resultText.height + 40;;
+    let yPos = resultText.height + 40;
 
     if (success) {
-      let starResultContainer =  new Container();
+      const starResultContainer = new Container();
       starResultContainer.addChild(new Sprite(this.textures['star.png']));
-      let messageText = new BitmapText(`x ${numberOfStars}`, {font: '48px pixie-font'});
+      const messageText = new BitmapText(`x ${numberOfStars}`, { font: '48px pixie-font' });
       messageText.x = 60;
       messageText.y = 7;
       starResultContainer.addChild(messageText);
@@ -49,7 +54,7 @@ export default class GameOverState extends State {
       textContainer.addChild(starResultContainer);
     }
 
-    let hintText = new BitmapText('Press space to continue', {font: '32px pixie-font'});
+    const hintText = new BitmapText('Press space to continue', { font: '32px pixie-font' });
     hintText.anchor.x = 0.5;
     hintText.y = yPos;
     textContainer.addChild(hintText);

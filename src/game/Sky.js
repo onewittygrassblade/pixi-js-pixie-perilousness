@@ -1,6 +1,11 @@
-import { Container, TilingSprite, filters, Graphics } from '../const/aliases.js';
+import {
+  Container,
+  TilingSprite,
+  filters,
+  Graphics
+} from '../const/aliases';
 
-import SpatialEmitter from '../particle/SpatialEmitter.js';
+import SpatialEmitter from '../particle/SpatialEmitter';
 
 export default class Sky {
   constructor(textures, width, height) {
@@ -17,8 +22,9 @@ export default class Sky {
     whiteCircle.drawCircle(0, 0, 18);
     whiteCircle.endFill();
 
+    /* eslint-disable no-multi-spaces */
     this.emitter = new SpatialEmitter(
-      [ whiteCircle.generateCanvasTexture() ],
+      [whiteCircle.generateCanvasTexture()],
       4,            // minSize
       10,           // maxSize
       0, width,     // minX, maxX
@@ -38,13 +44,14 @@ export default class Sky {
       false,        // randomSpacing
       false,        // emitting
       9,            // emissionRate
-      1             // numberOfParticlesPerEmit
+      1,            // numberOfParticlesPerEmit
     );
+    /* eslint-enable no-multi-spaces */
     this.container.addChild(this.emitter.particleSystem.container);
   }
 
   winterize() {
-    this.sprite.filters = [ this.colorMatrix ];
+    this.sprite.filters = [this.colorMatrix];
     this.emitter.emit();
   }
 

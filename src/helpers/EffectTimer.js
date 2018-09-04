@@ -6,19 +6,19 @@ export default class EffectTimer {
   setTimeout(callback, finalTime) {
     this.timers.push({
       time: 0,
-      finalTime: finalTime,
-      callback: callback
+      finalTime,
+      callback,
     });
   }
 
   update(dt) {
-    for (let timer of this.timers) {
+    this.timers.forEach((timer) => {
       if (timer.time < timer.finalTime) {
         timer.time += dt;
       } else {
         timer.callback();
         this.timers.splice(this.timers.indexOf(timer), 1);
       }
-    }
+    });
   }
 }

@@ -15,8 +15,7 @@ export default function hitTestRectangle(r1, r2, global = false) {
     r1.centerY = r1.getGlobalPosition().y + r1.halfHeight - r1.anchorOffsetY;
     r2.centerX = r2.getGlobalPosition().x + r2.halfWidth - r2.anchorOffsetX;
     r2.centerY = r2.getGlobalPosition().y + r2.halfHeight - r2.anchorOffsetY;
-  }
-  else {
+  } else {
     r1.centerX = r1.x + r1.halfWidth - r1.anchorOffsetX;
     r1.centerY = r1.y + r1.halfHeight - r1.anchorOffsetY;
     r2.centerX = r2.x + r2.halfWidth - r2.anchorOffsetX;

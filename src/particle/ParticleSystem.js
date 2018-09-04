@@ -1,11 +1,16 @@
-import { ParticleContainer } from '../const/aliases.js';
+import { ParticleContainer } from '../const/aliases';
 
 export default class ParticleSystem {
   constructor() {
     this.particles = [];
     this.container = new ParticleContainer(
       15000,
-      {alpha: true, scale: true, rotation: true, uvs: true}
+      {
+        alpha: true,
+        scale: true,
+        rotation: true,
+        uvs: true,
+      }
     );
   }
 
@@ -20,13 +25,13 @@ export default class ParticleSystem {
   }
 
   update(dt) {
-    while (this.particles.length > 0 && this.particles[0].currentLifetime >= this.particles[0].lifetime) {
+    while (this.particles.length > 0 && this.particles[0].currentLifetime >= this.particles[0].lifetime) { // eslint-disable-line max-len
       this.container.removeChild(this.particles[0]);
       this.particles.shift();
     }
 
-    for (let particle of this.particles) {
+    this.particles.forEach((particle) => {
       particle.updateCurrent(dt);
-    }
+    });
   }
 }

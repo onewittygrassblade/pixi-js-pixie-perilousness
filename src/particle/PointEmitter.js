@@ -1,4 +1,4 @@
-import Emitter from './Emitter.js';
+import Emitter from './Emitter';
 
 export default class PointEmitter extends Emitter {
   constructor(

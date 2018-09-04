@@ -1,9 +1,9 @@
-import { BitmapText } from '../const/aliases.js';
+import { BitmapText } from '../const/aliases';
 
-import State from './State.js';
-import KeyBinder from '../helpers/KeyBinder.js';
+import State from './State';
+import KeyBinder from '../helpers/KeyBinder';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants.js';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
 
 export default class HintState extends State {
   constructor(stage, stateStack, message) {
@@ -17,11 +17,11 @@ export default class HintState extends State {
   }
 
   createTexts(message) {
-    const messageText = new BitmapText(message, {font: '64px pixie-font'});
+    const messageText = new BitmapText(message, { font: '64px pixie-font' });
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    const hintText = new BitmapText('Press space to start', {font: '32px pixie-font'});
+    const hintText = new BitmapText('Press space to start', { font: '32px pixie-font' });
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);
