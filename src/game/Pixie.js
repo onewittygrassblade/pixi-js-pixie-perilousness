@@ -2,16 +2,35 @@ import { Sprite, BitmapText } from '../const/aliases.js';
 import { GlowFilter } from '@pixi/filter-glow';
 
 import Entity from './Entity.js';
+import Particle from '../particle/Particle.js';
 import { randomFloat } from '../helpers/RandomNumbers.js';
 
 export default class Pixie extends Entity {
-  constructor(textureFrames, x, y, ay) {
+  constructor(textureFrames, x, y, ay, weightTexture, balloonTexture, starTexture) {
     super(textureFrames, x, y, 0, 0, 0, ay);
 
     this.animationSpeed = 0.4;
     this.wingPower = -0.001;
     this.addedWeight = 0;
     this.invincible = false;
+
+    this.weight = new Sprite(weightTexture);
+    this.weight.anchor.set(0.5, 0.5);
+    this.weight.visible = false;
+    this.addNodeChild(this.weight, 0, 35);
+
+    this.balloon = new Sprite(balloonTexture);;
+    this.balloon.anchor.set(0.5, 0.5);
+    this.balloon.visible = false;
+    this.addNodeChild(this.balloon, 0, -35);
+
+    this.star = new Particle(
+      [starTexture],
+      1000,
+    );
+    this.star.shrinkVelocity = -0.0007;
+    this.star.visible = false;
+    this.addNodeChild(this.star, 0, -45);
 
     this.glowFilter = new GlowFilter(
       10,         // distance
@@ -21,15 +40,6 @@ export default class Pixie extends Entity {
       0.5         // quality
     );
     this.filterChangeTimer = 0;
-  }
-
-  setNodeChildren(weight, balloon) {
-    this.weightSprite = weight;
-    this.weightSprite.anchor.set(0.5, 0.5);
-    this.weightSprite.visible = false;
-    this.balloonSprite = balloon;
-    this.balloonSprite.anchor.set(0.5, 0.5);
-    this.balloonSprite.visible = false;
   }
 
   gainInvincibility() {
@@ -44,34 +54,48 @@ export default class Pixie extends Entity {
   }
 
   gainWeight() {
-    this.weightSprite.visible = true;
+    this.weight.visible = true;
     this.addedWeight = 0.00025;
   }
 
   resetWeight() {
-    this.weightSprite.visible = false;
+    this.weight.visible = false;
     this.addedWeight = 0;
   }
 
   gainBalloon() {
-    this.balloonSprite.visible = true;
+    this.balloon.visible = true;
     this.addedWeight = -0.00015;
   }
 
   resetBalloon() {
-    this.balloonSprite.visible = false;
+    this.balloon.visible = false;
     this.addedWeight = 0;
   }
 
   resetProperties() {
     this.resetInvincibility();
     this.addedWeight = 0;
-    this.weightSprite.visible = false;
-    this.balloonSprite.visible = false;
+    this.weight.visible = false;
+    this.balloon.visible = false;
+  }
+
+  showStar() {
+    this.star.width = 20;
+    this.star.height = 20;
+    this.star.visible = true;
   }
 
   updateCurrent(dt) {
     this.updatePosition(dt);
+
+    if (this.star.visible) {
+      this.star.updateCurrent(dt);
+      if (this.star.currentLifetime >+ this.star.lifetime) {
+        this.star.currentLifetime = 0;
+        this.star.visible = false;
+      }
+    }
 
     if (this.invincible) {
       this.filterChangeTimer += dt;

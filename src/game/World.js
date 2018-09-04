@@ -106,7 +106,10 @@ export default class World {
       [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
       PLAYER_START_X,
       PLAYER_START_Y,
-      GRAVITY
+      GRAVITY,
+      this.textures['weight.png'],
+      this.textures['balloon.png'],
+      this.textures['star.png'],
     );
 
     this.pixieEmitter = new PointEmitter(
@@ -126,17 +129,10 @@ export default class World {
       3                   // numberOfParticlesPerEmit
     );
 
-    const weight = new Sprite(this.textures['weight.png']);
-    const balloon = new Sprite(this.textures['balloon.png']);
-
-    this.pixie.addNodeChild(weight, 0, 35);
-    this.pixie.addNodeChild(balloon, 0, -35);
-
-    this.pixie.setNodeChildren(weight, balloon);
-
     this.layers.player.addChild(this.pixieEmitter.particleSystem.container);
-    this.layers.player.addChild(weight);
-    this.layers.player.addChild(balloon);
+    this.layers.player.addChild(this.pixie.weight);
+    this.layers.player.addChild(this.pixie.balloon);
+    this.layers.player.addChild(this.pixie.star);
     this.layers.player.addChild(this.pixie);
   }
 
@@ -154,17 +150,17 @@ export default class World {
     this.layers.infoDisplay.addChild(this.livesContainer);
 
     for (let i = 0; i < this.numberOfLives; i++) {
-      let life = new Sprite(this.textures['pixie-0.png']);
+      const life = new Sprite(this.textures['pixie-0.png']);
       life.x = i * (life.width + 10);
       this.livesContainer.addChild(life);
     }
 
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
-    let starsContainer = new Container();
+    const starsContainer = new Container();
     this.layers.infoDisplay.addChild(starsContainer);
 
-    let star = new Sprite(this.textures['star.png']);
+    const star = new Sprite(this.textures['star.png']);
     star.width = 33;
     star.height = 32;
     starsContainer.addChild(star);
@@ -241,7 +237,7 @@ export default class World {
   // Event listeners
 
   addEventListeners() {
-    let pixieFlapWings = () => {
+    const pixieFlapWings = () => {
       this.pixie.play();
       this.pixie.ay = GRAVITY + this.pixie.addedWeight + this.pixie.wingPower;
       this.pixieEmitter.emit();
@@ -303,7 +299,7 @@ export default class World {
   }
 
   gainLife() {
-    let life = new Sprite(this.textures['pixie-0.png']);
+    const life = new Sprite(this.textures['pixie-0.png']);
     life.x = this.numberOfLives * (life.width + 10);
     this.livesContainer.addChild(life);
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
@@ -369,9 +365,11 @@ export default class World {
   }
 
   gainStar() {
+    this.pixie.showStar();
+    this.sounds.pickup.play();
+
     this.numberOfStarsForLevel++;
     this.numberOfStarsText.text = (this.numberOfStars + this.numberOfStarsForLevel).toString();
-    this.sounds.pickup.play();
   }
 
   // Update methods
@@ -417,7 +415,7 @@ export default class World {
     }
 
     if (this.iceShardTimer > ICE_SHARD_FREQUENCY) {
-      let iceShard = new IceShard(
+      const iceShard = new IceShard(
         [this.textures['ice-shard.png']],
         randomFloat(RENDERER_WIDTH / 2, 3 * RENDERER_WIDTH / 4),
         0);
