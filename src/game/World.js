@@ -452,21 +452,20 @@ export default class World {
     let pixieCrashed = false;
 
     // blocks
-    /* eslint-disable no-restricted-syntax, no-labels */
-    pillars: for (const pillar of this.pillars.children) {
-      for (const block of pillar.children) {
-        if (block.visible && hitTestRectangle(this.pixie, block, true)) {
-          if (this.pixie.invincible) {
-            block.visible = false;
-            this.sounds.bang.play();
-          } else {
-            pixieCrashed = true;
-            break pillars;
-          }
-        }
+    /* eslint-disable arrow-body-style */
+    const hitBlock = this.pillars.getAllBlocks().find((block) => {
+      return block.visible && hitTestRectangle(this.pixie, block, true);
+    });
+
+    if (hitBlock) {
+      if (this.pixie.invincible) {
+        hitBlock.visible = false;
+        this.sounds.bang.play();
+      } else {
+        pixieCrashed = true;
       }
     }
-    /* eslint-enable no-restricted-syntax, no-labels */
+    /* eslint-enable arrow-body-style */
 
     // ice shards
     this.iceShards.forEach((iceShard) => {

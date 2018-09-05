@@ -44,6 +44,14 @@ export default class Pillars extends Container {
     }
   }
 
+  getAllBlocks() {
+    const allBlocks = [];
+    this.children.forEach((pillar) => {
+      allBlocks.push(...pillar.children);
+    });
+    return allBlocks;
+  }
+
   randomizeYPositions() {
     this.children.forEach((pillar) => {
       pillar.y = randomInt(0, PILLAR_HEIGHT - pillar.gapSize) * BLOCK_HEIGHT * -1;
