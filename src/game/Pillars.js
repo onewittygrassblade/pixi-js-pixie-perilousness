@@ -8,8 +8,8 @@ import {
   PILLAR_HEIGHT,
   MAX_GAP_SIZE,
   GAP_REDUCTION_FREQUENCY,
-  PILLAR_SLIDING_SPEED
-} from '../const/worldData';
+  PILLAR_SLIDING_SPEED,
+} from '../const/world';
 
 export default class Pillars extends Container {
   constructor(texture) {
@@ -39,7 +39,7 @@ export default class Pillars extends Container {
       }
 
       if (i > 0 && i % GAP_REDUCTION_FREQUENCY === 0) {
-        gapSize--;
+        gapSize -= 1;
       }
     }
   }

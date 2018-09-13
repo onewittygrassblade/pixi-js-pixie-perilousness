@@ -1,25 +1,21 @@
-import { Container, TilingSprite, BitmapText } from '../const/aliases';
+import { Container, BitmapText } from '../const/aliases';
 
 import State from './State';
 import MenuItem from '../gui/MenuItem';
-import GameState from './GameState';
-import HintState from './HintState';
-import HowToState from './HowToState';
-import AboutState from './AboutState';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 
 export default class TitleState extends State {
-  constructor(stage, stateStack, textures, sounds) {
-    super(stage, stateStack, textures, sounds);
+  constructor(stateStack, context) {
+    super(stateStack, context);
 
-    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
+    this.createSkyBackground();
     this.createTitle();
     this.createMenu();
   }
 
   createTitle() {
-    const title = new BitmapText('Pixie Perilousness!', { font: '72px pixie-font' });
+    const title = new BitmapText('Pixie Perilousness!', { font: FONTS.large });
     title.x = RENDERER_WIDTH / 2 - title.width / 2;
     title.y = 120;
     this.container.addChild(title);
@@ -36,19 +32,16 @@ export default class TitleState extends State {
       callback: this.startGame.bind(this),
     }, {
       title: 'How to play',
-      callback: this.showHowToPlay.bind(this),
+      callback: () => this.stateStack.pushState('HowToState'),
     }, {
       title: 'About',
-      callback: this.showAbout.bind(this),
+      callback: () => this.stateStack.pushState('AboutState'),
     }];
 
     let yPos = 0;
 
     menuItemData.forEach((data) => {
-      const menuItem = new MenuItem(data.title, { font: '48px pixie-font' });
-      menuItem.on('click', () => {
-        data.callback();
-      });
+      const menuItem = new MenuItem(data.title, { font: FONTS.small }, data.callback);
       menuItem.y = yPos;
       yPos += menuItem.height + 20;
       menuContainer.addChild(menuItem);
@@ -56,22 +49,8 @@ export default class TitleState extends State {
   }
 
   startGame() {
-    this.popFromStack();
-
-    const gameState = new GameState(this.stage, this.stateStack, this.textures, this.sounds);
-    this.stateStack.push(gameState);
-    this.stateStack.push(new HintState(this.stage, this.stateStack, 'Hello Pixie!'));
-  }
-
-  showHowToPlay() {
-    this.stateStack.push(new HowToState(this.stage, this.stateStack, this.textures));
-  }
-
-  showAbout() {
-    this.stateStack.push(new AboutState(this.stage, this.stateStack, this.textures));
-  }
-
-  shouldBeHiddenWhenPushedUnder() {
-    return true;
+    this.stateStack.popState();
+    this.stateStack.pushState('GameState');
+    this.stateStack.pushState('HintState');
   }
 }

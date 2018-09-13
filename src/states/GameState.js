@@ -1,81 +1,62 @@
 import State from './State';
-import HintState from './HintState';
-import PauseState from './PauseState';
-import GameOverState from './GameOverState';
 import World from '../game/World';
-import KeyBinder from '../helpers/KeyBinder';
 
-import LEVELS_DATA from '../const/levelsData';
+import LEVELS_DATA from '../const/levels';
 
 export default class GameState extends State {
-  constructor(stage, stateStack, textures, sounds) {
-    super(stage, stateStack, textures, sounds);
-
-    this.currentLevel = 0;
-
-    this.keyControllers.push(new KeyBinder(27, null, () => {
-      this.stateStack.push(new PauseState(this.stage, this.stateStack, this.textures));
-    }));
-
-    this.world = new World(this.container, textures, sounds, LEVELS_DATA[0].world);
+  constructor(stateStack, context) {
+    super(stateStack, context);
+    this.world = new World(this.container, context.textures, context.sounds, LEVELS_DATA[0].world);
   }
 
-  addEventListeners() {
-    super.addEventListeners();
-    this.world.addEventListeners();
-  }
+  handleEvent(e) {
+    super.handleEvent(e);
+    this.world.handleEvent(e);
+    if (e.type === 'keyup' && e.keyCode === 27) {
+      this.world.pixie.stopFlapping();
+      this.world.pixieEmitter.stop();
+      this.stateStack.pushState('PauseState');
+    }
 
-  removeEventListeners() {
-    super.removeEventListeners();
-    this.world.removeEventListeners();
+    return false;
   }
 
   update(dt) {
     this.world.update(dt);
 
-    if (this.world.pixieHasCrashed) {
+    if (!this.world.hasAlivePlayer) {
       if (this.world.hasLives()) {
         this.world.resetAfterCrash();
-        this.stateStack.push(
-          new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint)
-        );
+        this.stateStack.pushState('HintState');
       } else {
-        this.gameOver(false);
+        this.context.gameStatus = 'failure';
+        this.gameOver();
       }
     }
 
-    if (this.world.pixieHasReachedEnd) {
-      this.currentLevel++;
-      this.sounds.tada.play();
+    if (this.world.playerHasReachedEnd) {
+      this.context.level += 1;
+      this.context.sounds.tada.play();
 
-      if (this.currentLevel < LEVELS_DATA.length) {
-        this.world.levelData = LEVELS_DATA[this.currentLevel].world;
+      if (this.context.level < LEVELS_DATA.length) {
+        this.world.levelData = LEVELS_DATA[this.context.level].world;
         this.world.resetForNextLevel();
-        if (this.currentLevel === LEVELS_DATA.length - 1) {
+        if (this.context.level === LEVELS_DATA.length - 1) {
           this.world.setFinishTextForFinalLevel();
         }
-        this.stateStack.push(
-          new HintState(this.stage, this.stateStack, LEVELS_DATA[this.currentLevel].hint)
-        );
+        this.stateStack.pushState('HintState');
       } else {
-        this.gameOver(true);
+        this.context.gameStatus = 'success';
+        this.context.score = this.world.numberOfStars;
+        this.gameOver();
       }
     }
 
     return false;
   }
 
-  gameOver(success) {
-    this.popFromStack();
-    this.stateStack.push(
-      new GameOverState(
-        this.stage,
-        this.stateStack,
-        this.textures,
-        this.sounds,
-        success,
-        this.world.numberOfStars
-      )
-    );
+  gameOver() {
+    this.stateStack.popState();
+    this.stateStack.pushState('GameOverState');
   }
 }

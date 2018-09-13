@@ -1,15 +1,15 @@
-import { Container, TilingSprite, BitmapText } from '../const/aliases';
+import { Container, BitmapText } from '../const/aliases';
 
 import State from './State';
 import MenuItem from '../gui/MenuItem';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 
 export default class AboutState extends State {
-  constructor(stage, stateStack, textures) {
-    super(stage, stateStack, textures);
+  constructor(stateStack, context) {
+    super(stateStack, context);
 
-    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
+    this.createSkyBackground();
     this.createTexts();
   }
 
@@ -29,17 +29,14 @@ export default class AboutState extends State {
     let yPos = 0;
 
     for (let i = 0; i < texts.length; i++) {
-      const bitmapText = new BitmapText(texts[i], { font: '30px pixie-font' });
+      const bitmapText = new BitmapText(texts[i], { font: FONTS.xsmall });
       bitmapText.anchor.x = 0.5;
       bitmapText.y = yPos;
       yPos += bitmapText.height + 30;
       textContainer.addChild(bitmapText);
     }
 
-    const backToTitle = new MenuItem('Back', { font: '48px pixie-font' });
-    backToTitle.on('click', () => {
-      this.popFromStack();
-    });
+    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
     backToTitle.anchor.x = 0.5;
     backToTitle.y = yPos + 40;
     textContainer.addChild(backToTitle);

@@ -2,5 +2,7 @@ import App from './App';
 
 App.loadAssets()
   .then(() => {
-    new App().setup();
+    const app = new App();
+    app.setup();
+    app.run();
   });

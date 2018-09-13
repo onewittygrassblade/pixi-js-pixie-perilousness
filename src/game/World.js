@@ -7,13 +7,12 @@ import Pixie from './Pixie';
 import PointEmitter from '../particle/PointEmitter';
 import Night from './Night';
 import IceShard from './IceShard';
-import KeyBinder from '../helpers/KeyBinder';
 import { randomInt, randomFloat } from '../helpers/RandomNumbers';
 import contain from '../helpers/contain';
 import hitTestRectangle from '../helpers/hitTestRectangle';
-import EffectTimer from '../helpers/EffectTimer';
+import TimeManager from '../helpers/TimeManager';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 
 import {
   BACKGROUND_SCROLL_SPEED,
@@ -25,9 +24,8 @@ import {
   FINISH_Y,
   INITIAL_NUMBER_OF_LIVES,
   MAX_NUMBER_OF_LIVES,
-  GRAVITY,
-  ICE_SHARD_FREQUENCY
-} from '../const/worldData';
+  ICE_SHARD_FREQUENCY,
+} from '../const/world';
 
 export default class World {
   constructor(gameContainer, textures, sounds, levelData) {
@@ -37,9 +35,10 @@ export default class World {
     this.levelData = levelData;
 
     this.pixieHasCrashed = false;
-    this.pixieHasReachedEnd = false;
+    this.hasAlivePlayer = true;
+    this.playerHasReachedEnd = false;
     this.numberOfLives = INITIAL_NUMBER_OF_LIVES;
-    this.effectTimer = new EffectTimer();
+    this.timeManager = new TimeManager();
     this.numberOfStars = 0;
     this.numberOfStarsForLevel = 0;
     this.iceShardTimer = 0;
@@ -97,7 +96,7 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new BitmapText('To next level!', { font: '96px pixie-font' });
+    this.finish = new BitmapText('To next level!', { font: FONTS.xlarge });
     this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
     this.layers.foreground.addChild(this.finish);
@@ -108,7 +107,6 @@ export default class World {
       [this.textures['pixie-0.png'], this.textures['pixie-1.png'], this.textures['pixie-2.png']],
       PLAYER_START_X,
       PLAYER_START_Y,
-      GRAVITY,
       this.textures['weight.png'],
       this.textures['balloon.png'],
       this.textures['star.png'],
@@ -168,7 +166,7 @@ export default class World {
     star.width = 33;
     star.height = 32;
     starsContainer.addChild(star);
-    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), { font: '30px pixie-font' });
+    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), { font: FONTS.xsmall });
     this.numberOfStarsText.x = 46;
     this.numberOfStarsText.y = 6;
     starsContainer.addChild(this.numberOfStarsText);
@@ -183,11 +181,12 @@ export default class World {
     this.resetWorld();
     this.pixie.visible = true;
     this.pixieHasCrashed = false;
+    this.hasAlivePlayer = true;
   }
 
   resetForNextLevel() {
     this.resetWorld();
-    this.pixieHasReachedEnd = false;
+    this.playerHasReachedEnd = false;
   }
 
   resetWorld() {
@@ -195,10 +194,11 @@ export default class World {
     this.resetScene();
     this.resetEmitter();
     this.resetPickUpActions();
+    this.timeManager.clear();
   }
 
   resetPixie() {
-    this.pixieStopFlapping();
+    this.pixie.stopFlapping();
     this.pixie.vy = 0;
     this.pixie.y = PLAYER_START_Y;
     this.pixie.resetProperties();
@@ -231,34 +231,12 @@ export default class World {
   }
 
   resetEmitter() {
+    this.pixieEmitter.stop();
     this.pixieEmitter.particleSystem.clear();
     this.pixieEmitter.minInitialSpeed = 0;
     this.pixieEmitter.maxInitialSpeed = 0.1;
     this.pixieEmitter.minDirectionAngle = 2.4;
     this.pixieEmitter.maxDirectionAngle = 3.6;
-  }
-
-  // Event listeners
-
-  addEventListeners() {
-    const pixieFlapWings = () => {
-      this.pixie.play();
-      this.pixie.ay = GRAVITY + this.pixie.addedWeight + this.pixie.wingPower;
-      this.pixieEmitter.emit();
-    };
-
-    this.pixieController = new KeyBinder(32, pixieFlapWings, this.pixieStopFlapping.bind(this));
-    this.pixieController.addEventListeners();
-  }
-
-  pixieStopFlapping() {
-    this.pixie.gotoAndStop(0);
-    this.pixie.ay = GRAVITY + this.pixie.addedWeight;
-    this.pixieEmitter.stop();
-  }
-
-  removeEventListeners() {
-    this.pixieController.removeEventListeners();
   }
 
   // Pick up actions
@@ -308,7 +286,7 @@ export default class World {
     this.livesContainer.addChild(life);
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
-    this.numberOfLives++;
+    this.numberOfLives += 1;
 
     this.sounds.powerup.play();
 
@@ -321,7 +299,7 @@ export default class World {
     this.livesContainer.removeChildAt(this.livesContainer.children.length - 1);
     this.livesContainer.x = RENDERER_WIDTH - this.livesContainer.width;
 
-    this.numberOfLives--;
+    this.numberOfLives -= 1;
 
     this.pickUpActions[0] = this.gainLife.bind(this);
   }
@@ -334,7 +312,7 @@ export default class World {
     this.pixie.gainInvincibility();
     this.pickUpActions[1] = this.gainStar.bind(this);
 
-    this.effectTimer.setTimeout(() => {
+    this.timeManager.setTimeout(() => {
       this.pixie.resetInvincibility();
       this.pickUpActions[1] = this.gainInvincibility.bind(this);
     }, 8000);
@@ -347,7 +325,7 @@ export default class World {
     this.pickUpActions[2] = this.gainStar.bind(this);
     this.pickUpActions[3] = this.gainStar.bind(this);
 
-    this.effectTimer.setTimeout(() => {
+    this.timeManager.setTimeout(() => {
       this.pixie.resetWeight();
       this.pickUpActions[2] = this.gainWeight.bind(this);
       this.pickUpActions[3] = this.gainBalloon.bind(this);
@@ -361,7 +339,7 @@ export default class World {
     this.pickUpActions[2] = this.gainStar.bind(this);
     this.pickUpActions[3] = this.gainStar.bind(this);
 
-    this.effectTimer.setTimeout(() => {
+    this.timeManager.setTimeout(() => {
       this.pixie.resetBalloon();
       this.pickUpActions[2] = this.gainWeight.bind(this);
       this.pickUpActions[3] = this.gainBalloon.bind(this);
@@ -372,8 +350,24 @@ export default class World {
     this.pixie.showStar();
     this.sounds.pickup.play();
 
-    this.numberOfStarsForLevel++;
+    this.numberOfStarsForLevel += 1;
     this.numberOfStarsText.text = (this.numberOfStars + this.numberOfStarsForLevel).toString();
+  }
+
+  handleEvent(e) {
+    if (!this.pixieHasCrashed && e.keyCode === 32) {
+      switch (e.type) {
+        case 'keydown':
+          this.pixie.flapWings();
+          this.pixieEmitter.emit();
+          break;
+        case 'keyup':
+          this.pixie.stopFlapping();
+          this.pixieEmitter.stop();
+          break;
+        default:
+      }
+    }
   }
 
   // Update methods
@@ -391,7 +385,7 @@ export default class World {
 
     this.pixie.updateCurrent(dt);
     this.pixieEmitter.update(dt);
-    this.effectTimer.update(dt);
+    this.timeManager.update(dt);
     if (this.levelData.night && this.pixie.visible) {
       this.night.renderGradient(this.pixie.x, this.pixie.y);
     }
@@ -449,8 +443,6 @@ export default class World {
   }
 
   checkCollisions() {
-    let pixieCrashed = false;
-
     // blocks
     /* eslint-disable arrow-body-style */
     const hitBlock = this.pillars.getAllBlocks().find((block) => {
@@ -462,7 +454,7 @@ export default class World {
         hitBlock.visible = false;
         this.sounds.bang.play();
       } else {
-        pixieCrashed = true;
+        this.pixieHasCrashed = true;
       }
     }
     /* eslint-enable arrow-body-style */
@@ -473,12 +465,12 @@ export default class World {
         if (this.pixie.invincible) {
           iceShard.visible = false;
         } else {
-          pixieCrashed = true;
+          this.pixieHasCrashed = true;
         }
       }
     });
 
-    if (pixieCrashed) {
+    if (this.pixieHasCrashed) {
       this.pixieExplosion();
       this.numberOfStarsForLevel = 0;
     }
@@ -494,7 +486,7 @@ export default class World {
     // finish
     if (hitTestRectangle(this.pixie, this.finish, true)) {
       this.resetPixie();
-      this.pixieHasReachedEnd = true;
+      this.playerHasReachedEnd = true;
       this.numberOfStars += this.numberOfStarsForLevel;
       this.numberOfStarsForLevel = 0;
     }
@@ -508,9 +500,9 @@ export default class World {
 
     this.emitterExplosion();
 
-    setTimeout(() => {
+    this.timeManager.setTimeout(() => {
       this.loseLife();
-      this.pixieHasCrashed = true;
+      this.hasAlivePlayer = false;
     }, 1000);
   }
 

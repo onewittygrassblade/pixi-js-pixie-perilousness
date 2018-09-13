@@ -2,7 +2,7 @@ import { autoDetectRenderer } from './const/aliases';
 
 import centerCanvas from './helpers/centerCanvas';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from './const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from './const/app';
 
 export default class Engine {
   constructor() {

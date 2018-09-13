@@ -1,4 +1,4 @@
-export default class EffectTimer {
+export default class TimeManager {
   constructor() {
     this.timers = [];
   }
@@ -20,5 +20,9 @@ export default class EffectTimer {
         this.timers.splice(this.timers.indexOf(timer), 1);
       }
     });
+  }
+
+  clear() {
+    this.timers = [];
   }
 }

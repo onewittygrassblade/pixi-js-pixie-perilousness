@@ -1,35 +1,76 @@
+import AboutState from './states/AboutState';
+import GameOverState from './states/GameOverState';
+import GameState from './states/GameState';
+import HintState from './states/HintState';
+import HowToState from './states/HowToState';
+import PauseState from './states/PauseState';
+import TitleState from './states/TitleState';
+
+const stateClasses = {
+  AboutState,
+  GameOverState,
+  GameState,
+  HintState,
+  HowToState,
+  PauseState,
+  TitleState,
+};
+
 export default class StateStack {
-  constructor() {
+  constructor(context) {
+    this.context = context;
     this.stack = [];
+    this.pendingList = [];
+    this.stateFactories = new Map();
   }
 
-  push(state) {
-    this.stack.push(state);
-    state.addEventListeners();
-
-    const previousStates = this.stack.slice(0, this.stack.length - 1);
-    previousStates.forEach((previousState) => {
-      if (previousState.shouldBeHiddenWhenPushedUnder()) {
-        previousState.hide();
-      }
-      if (previousState.shouldRemoveEventListenersWhenPushedUnder()) {
-        previousState.removeEventListeners();
-      }
-    });
+  registerState(stateName) {
+    this.stateFactories.set(
+      stateName,
+      () => new stateClasses[stateName](this, this.context)
+    );
   }
 
-  pop() {
-    const previousStates = this.stack.slice(0, this.stack.length - 1);
-    previousStates.forEach((previousState) => {
-      if (previousState.shouldBeHiddenWhenPushedUnder()) {
-        previousState.show();
-      }
-      if (previousState.shouldRemoveEventListenersWhenPushedUnder()) {
-        previousState.addEventListeners();
+  createState(stateName) {
+    return this.stateFactories.get(stateName)();
+  }
+
+  pushState(stateName) {
+    this.pendingList.push({ action: 'push', stateName });
+  }
+
+  popState() {
+    this.pendingList.push({ action: 'pop' });
+  }
+
+  clearStates() {
+    this.pendingList.push({ action: 'CLEAR' });
+  }
+
+  applyPendingChanges() {
+    this.pendingList.forEach((change) => {
+      switch (change.action) {
+        case 'push':
+          this.stack.push(this.createState(change.stateName));
+          break;
+        case 'pop':
+          this.context.stage.removeChild(this.stack.pop().container);
+          break;
+        case 'CLEAR':
+          this.stack = [];
+          break;
+        default:
       }
     });
+    this.pendingList = [];
+  }
 
-    return this.stack.pop();
+  handleEvent(e) {
+    for (let i = this.stack.length - 1; i >= 0; i--) {
+      if (!this.stack[i].handleEvent(e)) {
+        break;
+      }
+    }
   }
 
   update(dt) {
@@ -38,5 +79,6 @@ export default class StateStack {
         break;
       }
     }
+    this.applyPendingChanges();
   }
 }

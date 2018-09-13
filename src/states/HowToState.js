@@ -1,20 +1,15 @@
-import {
-  Container,
-  TilingSprite,
-  Sprite,
-  BitmapText
-} from '../const/aliases';
+import { Container, Sprite, BitmapText } from '../const/aliases';
 
 import State from './State';
 import MenuItem from '../gui/MenuItem';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 
 export default class HowToState extends State {
-  constructor(stage, stateStack, textures) {
-    super(stage, stateStack, textures);
+  constructor(stateStack, context) {
+    super(stateStack, context);
 
-    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
+    this.createSkyBackground();
     this.createTexts();
   }
 
@@ -30,17 +25,17 @@ export default class HowToState extends State {
       },
       {
         text: 'Press space to make Pixie flap her wings',
-        sprite: new Sprite(this.textures['pixie-0.png']),
+        sprite: new Sprite(this.context.textures['pixie-0.png']),
         yOffset: 50,
       },
       {
         text: 'Avoid the green blocks',
-        sprite: new Sprite(this.textures['greenBlock.png']),
+        sprite: new Sprite(this.context.textures['greenBlock.png']),
         yOffset: 80,
       },
       {
         text: 'Pick up presents to get surprises',
-        sprite: new Sprite(this.textures['gift.png']),
+        sprite: new Sprite(this.context.textures['gift.png']),
         yOffset: 100,
       },
     ];
@@ -48,7 +43,7 @@ export default class HowToState extends State {
     let yPos = 0;
 
     for (let i = 0; i < data.length; i++) {
-      const bitmapText = new BitmapText(data[i].text, { font: '30px pixie-font' });
+      const bitmapText = new BitmapText(data[i].text, { font: FONTS.xsmall });
 
       if (data[i].sprite) {
         bitmapText.x = data[i].sprite.width + 20;
@@ -68,10 +63,7 @@ export default class HowToState extends State {
       yPos += bitmapText.height + data[i].yOffset;
     }
 
-    const backToTitle = new MenuItem('Back', { font: '48px pixie-font' });
-    backToTitle.on('click', () => {
-      this.popFromStack();
-    });
+    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
     backToTitle.x = RENDERER_WIDTH / 2;
     backToTitle.y = yPos;
     textContainer.addChild(backToTitle);

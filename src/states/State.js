@@ -1,53 +1,32 @@
-import { Container } from '../const/aliases';
+import { Container, TilingSprite } from '../const/aliases';
+
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
 
 export default class State {
-  constructor(stage, stateStack, textures = null, sounds = null) {
-    this.stage = stage;
+  constructor(stateStack, context) {
     this.stateStack = stateStack;
-    this.textures = textures;
-    this.sounds = sounds;
-
-    this.keyControllers = [];
-
+    this.context = context;
     this.container = new Container();
-    this.stage.addChild(this.container);
+    context.stage.addChild(this.container);
   }
 
-  show() {
-    this.container.visible = true;
+  createSkyBackground() {
+    this.container.addChild(
+      new TilingSprite(
+        this.context.textures['clouds.png'],
+        RENDERER_WIDTH,
+        RENDERER_HEIGHT
+      )
+    );
   }
 
-  hide() {
-    this.container.visible = false;
-  }
-
-  shouldBeHiddenWhenPushedUnder() {
-    return false;
-  }
-
-  addEventListeners() {
-    this.keyControllers.forEach((controller) => {
-      controller.addEventListeners();
-    });
-  }
-
-  removeEventListeners() {
-    this.keyControllers.forEach((controller) => {
-      controller.removeEventListeners();
-    });
-  }
-
-  shouldRemoveEventListenersWhenPushedUnder() {
-    return true;
-  }
-
-  popFromStack() {
-    this.removeEventListeners();
-    this.stage.removeChild(this.container);
-    this.stateStack.pop();
+  /* eslint-disable class-methods-use-this */
+  handleEvent(e) {
+    e.preventDefault();
   }
 
   update() {
     return false;
   }
+  /* eslint-enable class-methods-use-this */
 }

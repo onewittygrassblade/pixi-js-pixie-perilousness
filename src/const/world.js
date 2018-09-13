@@ -17,5 +17,4 @@ export const FINISH_X = NUM_PILLARS * PILLAR_SPACING + 512;
 export const FINISH_Y = 192;
 export const INITIAL_NUMBER_OF_LIVES = 3;
 export const MAX_NUMBER_OF_LIVES = 5;
-export const GRAVITY = 0.0003;
 export const ICE_SHARD_FREQUENCY = 3000;

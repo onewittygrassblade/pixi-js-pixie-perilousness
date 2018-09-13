@@ -2,7 +2,7 @@ import {
   Container,
   TilingSprite,
   filters,
-  Graphics
+  Graphics,
 } from '../const/aliases';
 
 import SpatialEmitter from '../particle/SpatialEmitter';

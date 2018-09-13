@@ -3,7 +3,7 @@ import { GlowFilter } from '@pixi/filter-glow';
 import { BitmapText } from '../const/aliases';
 
 export default class MenuItem extends BitmapText {
-  constructor(text, style) {
+  constructor(text, style, callback) {
     super(text, style);
 
     this.anchor.x = 0.5;
@@ -27,5 +27,7 @@ export default class MenuItem extends BitmapText {
     this.on('mouseout', () => {
       this.filters = [];
     });
+
+    this.on('click', callback);
   }
 }

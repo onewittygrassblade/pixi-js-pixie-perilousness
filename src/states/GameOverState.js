@@ -1,39 +1,37 @@
-import {
-  Container,
-  Sprite,
-  TilingSprite,
-  BitmapText
-} from '../const/aliases';
+import { Container, Sprite, BitmapText } from '../const/aliases';
 
 import State from './State';
-import TitleState from './TitleState';
-import KeyBinder from '../helpers/KeyBinder';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 
 export default class GameOverState extends State {
-  constructor(stage, stateStack, textures, sounds, success, numberOfStars) {
-    super(stage, stateStack, textures, sounds);
+  constructor(stateStack, context) {
+    super(stateStack, context);
 
-    this.container.addChild(new TilingSprite(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT));
-    this.createTexts(success, numberOfStars);
+    this.createSkyBackground();
+    this.createTexts(context.gameStatus, context.score);
 
-    this.keyControllers.push(new KeyBinder(32, null, () => {
-      this.popFromStack();
-      this.stateStack.push(new TitleState(this.stage, this.stateStack, this.textures, this.sounds));
-    }));
-
-    if (!success) {
-      this.sounds.fail.play();
+    if (context.gameStatus === 'failure') {
+      context.sounds.fail.play();
     }
   }
 
-  createTexts(success, numberOfStars) {
+  handleEvent(e) {
+    super.handleEvent(e);
+    if (e.type === 'keyup' && e.keyCode === 32) {
+      this.stateStack.clearStates();
+      this.stateStack.pushState('TitleState');
+    }
+
+    return false;
+  }
+
+  createTexts(gameStatus, score) {
     const textContainer = new Container();
     this.container.addChild(textContainer);
 
-    const resultText = new BitmapText('Whoops!', { font: '64px pixie-font' });
-    if (success) {
+    const resultText = new BitmapText('Whoops!', { font: FONTS.medium });
+    if (gameStatus === 'success') {
       resultText.text = 'Congratulations!';
     }
     resultText.anchor.x = 0.5;
@@ -41,10 +39,10 @@ export default class GameOverState extends State {
 
     let yPos = resultText.height + 40;
 
-    if (success) {
+    if (gameStatus === 'success') {
       const starResultContainer = new Container();
-      starResultContainer.addChild(new Sprite(this.textures['star.png']));
-      const messageText = new BitmapText(`x ${numberOfStars}`, { font: '48px pixie-font' });
+      starResultContainer.addChild(new Sprite(this.context.textures['star.png']));
+      const messageText = new BitmapText(`x ${score}`, { font: FONTS.small });
       messageText.x = 60;
       messageText.y = 7;
       starResultContainer.addChild(messageText);
@@ -54,7 +52,7 @@ export default class GameOverState extends State {
       textContainer.addChild(starResultContainer);
     }
 
-    const hintText = new BitmapText('Press space to continue', { font: '32px pixie-font' });
+    const hintText = new BitmapText('Press space to continue', { font: FONTS.xsmall });
     hintText.anchor.x = 0.5;
     hintText.y = yPos;
     textContainer.addChild(hintText);

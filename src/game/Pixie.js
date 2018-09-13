@@ -6,14 +6,20 @@ import Entity from './Entity';
 import Particle from '../particle/Particle';
 import { randomFloat } from '../helpers/RandomNumbers';
 
+import {
+  GRAVITY,
+  WING_POWER,
+  WEIGHT_ACC,
+  BALLOON_ACC,
+} from '../const/pixie';
+
 export default class Pixie extends Entity {
-  constructor(textureFrames, x, y, ay, weightTexture, balloonTexture, starTexture) {
-    super(textureFrames, x, y, 0, 0, 0, ay);
+  constructor(textureFrames, x, y, weightTexture, balloonTexture, starTexture) {
+    super(textureFrames, x, y, 0, 0, 0, GRAVITY);
 
     this.animationSpeed = 0.4;
-    this.wingPower = -0.001;
-    this.addedWeight = 0;
     this.invincible = false;
+    this.flapping = false;
 
     this.weight = new Sprite(weightTexture);
     this.weight.anchor.set(0.5, 0.5);
@@ -45,6 +51,22 @@ export default class Pixie extends Entity {
     this.filterChangeTimer = 0;
   }
 
+  flapWings() {
+    this.play();
+    if (!this.flapping) {
+      this.ay += WING_POWER;
+      this.flapping = true;
+    }
+  }
+
+  stopFlapping() {
+    this.gotoAndStop(0);
+    if (this.flapping) {
+      this.ay -= WING_POWER;
+      this.flapping = false;
+    }
+  }
+
   gainInvincibility() {
     this.invincible = true;
     this.filters = [this.glowFilter];
@@ -58,27 +80,28 @@ export default class Pixie extends Entity {
 
   gainWeight() {
     this.weight.visible = true;
-    this.addedWeight = 0.00025;
+    this.ay += WEIGHT_ACC;
   }
 
   resetWeight() {
     this.weight.visible = false;
-    this.addedWeight = 0;
+    this.ay -= WEIGHT_ACC;
   }
 
   gainBalloon() {
     this.balloon.visible = true;
-    this.addedWeight = -0.00015;
+    this.ay += BALLOON_ACC;
   }
 
   resetBalloon() {
     this.balloon.visible = false;
-    this.addedWeight = 0;
+    this.ay -= BALLOON_ACC;
   }
 
   resetProperties() {
     this.resetInvincibility();
-    this.addedWeight = 0;
+    this.flapping = false;
+    this.ay = GRAVITY;
     this.weight.visible = false;
     this.balloon.visible = false;
   }

@@ -1,27 +1,31 @@
 import { BitmapText } from '../const/aliases';
 
 import State from './State';
-import KeyBinder from '../helpers/KeyBinder';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/appConstants';
+import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import LEVELS_DATA from '../const/levels';
 
 export default class HintState extends State {
-  constructor(stage, stateStack, message) {
-    super(stage, stateStack);
+  constructor(stateStack, context) {
+    super(stateStack, context);
+    this.createTexts(LEVELS_DATA[context.level].hint);
+  }
 
-    this.createTexts(message);
+  handleEvent(e) {
+    super.handleEvent(e);
+    if (e.type === 'keyup' && e.keyCode === 32) {
+      this.stateStack.popState();
+    }
 
-    this.keyControllers.push(new KeyBinder(32, null, () => {
-      this.popFromStack();
-    }));
+    return false;
   }
 
   createTexts(message) {
-    const messageText = new BitmapText(message, { font: '64px pixie-font' });
+    const messageText = new BitmapText(message, { font: FONTS.medium });
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    const hintText = new BitmapText('Press space to start', { font: '32px pixie-font' });
+    const hintText = new BitmapText('Press space to start', { font: FONTS.xsmall });
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);

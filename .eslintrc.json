@@ -4,16 +4,18 @@
       "browser": true
     },
     "rules": {
-      "no-plusplus": "off",
-      "no-param-reassign": "off",
-      "class-methods-use-this": "off",
-      "import/no-cycle": "off",
+      "no-plusplus": ["error", {
+        "allowForLoopAfterthoughts": true
+        }],
+      "no-param-reassign": ["error", {
+        "props": false
+        }],
       "comma-dangle": ["error", {
         "arrays": "always-multiline",
         "objects": "always-multiline",
-        "imports": "never",
-        "exports": "never",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
         "functions": "ignore"
-    }]
+        }]
     }
 }
