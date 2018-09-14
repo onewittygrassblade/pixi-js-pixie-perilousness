@@ -1,4 +1,9 @@
-import { Container, Sprite, BitmapText } from '../const/aliases';
+import {
+  Container,
+  Sprite,
+  BitmapText,
+  filters,
+} from '../const/aliases';
 
 import State from './State';
 
@@ -13,6 +18,8 @@ export default class GameOverState extends State {
 
     if (context.gameStatus === 'failure') {
       context.sounds.fail.play();
+    } else {
+      context.sounds.tada.play();
     }
   }
 
@@ -36,23 +43,43 @@ export default class GameOverState extends State {
     }
     resultText.anchor.x = 0.5;
     textContainer.addChild(resultText);
-
     let yPos = resultText.height + 40;
 
     if (gameStatus === 'success') {
-      const starResultContainer = new Container();
-      starResultContainer.addChild(new Sprite(this.context.textures['star.png']));
-      const messageText = new BitmapText(`x ${score}`, { font: FONTS.small });
-      messageText.x = 60;
-      messageText.y = 7;
-      starResultContainer.addChild(messageText);
-      starResultContainer.x -= starResultContainer.width / 2;
-      starResultContainer.y = yPos;
+      const scoreContainer = new Container();
+      textContainer.addChild(scoreContainer);
+      const messageText = new BitmapText(`You got Pixie home and collected ${score} stars`, { font: FONTS.xsmall });
+      scoreContainer.addChild(messageText);
+      const pixie = new Sprite(this.context.textures['pixie-0.png']);
+      pixie.x = messageText.width + 10;
+      pixie.y = -4;
+      scoreContainer.addChild(pixie);
+      scoreContainer.x -= scoreContainer.width / 2;
+      scoreContainer.y = yPos;
       yPos += messageText.height + 40;
-      textContainer.addChild(starResultContainer);
+
+      const ratingContainer = new Container();
+      const desatFilter = new filters.ColorMatrixFilter();
+      desatFilter.desaturate(false);
+      const satFilter = new filters.ColorMatrixFilter();
+      satFilter.saturate(1, false);
+      for (let i = 0; i < 3; i++) {
+        const star = new Sprite(this.context.textures['star.png']);
+        star.x = i * (star.width + 10);
+        if (score < (i + 1) * 10) {
+          star.filters = [desatFilter];
+        } else {
+          star.filters = [satFilter];
+        }
+        ratingContainer.addChild(star);
+      }
+      ratingContainer.x -= ratingContainer.width / 2;
+      ratingContainer.y = yPos;
+      textContainer.addChild(ratingContainer);
+      yPos += ratingContainer.height + 40;
     }
 
-    const hintText = new BitmapText('Press space to continue', { font: FONTS.xsmall });
+    const hintText = new BitmapText('Press space to go back to menu', { font: FONTS.xsmall });
     hintText.anchor.x = 0.5;
     hintText.y = yPos;
     textContainer.addChild(hintText);
