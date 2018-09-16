@@ -100,7 +100,7 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new BitmapText('To next level!', { font: FONTS.xlarge });
+    this.finish = new BitmapText('To next level!', { font: FONTS.large });
     this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
     this.layers.foreground.addChild(this.finish);
@@ -375,19 +375,22 @@ export default class World {
   update(dt) {
     this.scroll(dt);
 
+    if (!this.pixieHasCrashed) {
+      this.pixie.updateCurrent(dt);
+      if (this.levelData.night) {
+        this.night.renderGradient(this.pixie.x, this.pixie.y);
+      }
+    }
+
+    this.pixieEmitter.update(dt);
+    this.timeManager.update(dt);
+
     if (this.levelData.sliding) {
       this.pillars.slide(dt);
     }
 
     if (this.levelData.winter) {
       this.iceShardsManager.update(dt);
-    }
-
-    this.pixie.updateCurrent(dt);
-    this.pixieEmitter.update(dt);
-    this.timeManager.update(dt);
-    if (this.levelData.night && this.pixie.visible) {
-      this.night.renderGradient(this.pixie.x, this.pixie.y);
     }
 
     this.containPixie();

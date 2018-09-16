@@ -52,7 +52,7 @@ export default class App {
       stage: this.stage,
       textures,
       sounds,
-      gameStatus: 'running',
+      gameStatus: '',
       level: 0,
       score: 0,
     });
