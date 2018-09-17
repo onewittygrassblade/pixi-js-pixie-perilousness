@@ -4,7 +4,8 @@
   "description": "Simple side-scrolling game based on the book Learn Pixi.js by Rex van der Spuy",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-serve --config ./webpack.config.dev.js",
+    "dev": "webpack-serve --config ./webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "lint": "eslint src"
   },
   "repository": {
@@ -28,9 +29,9 @@
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "json-loader": "^0.5.7",
     "webpack": "^4.19.0",
     "webpack-cli": "^3.1.0",
+    "webpack-merge": "^4.1.4",
     "webpack-serve": "^2.0.2"
   }
 }
