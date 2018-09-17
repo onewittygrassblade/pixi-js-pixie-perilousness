@@ -69,7 +69,7 @@ export default class GameOverState extends State {
       for (let i = 0; i < 3; i++) {
         const star = new Sprite(this.context.textures['star.png']);
         star.x = i * (star.width + 10);
-        if (score < (i + 1) * 10) {
+        if (score < (i + 1) * 10 + 10) {
           star.filters = [desatFilter];
         } else {
           star.filters = [satFilter];
