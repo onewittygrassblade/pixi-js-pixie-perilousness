@@ -21,6 +21,7 @@ export default class GameOverState extends State {
     } else {
       context.sounds.tada.play();
     }
+    this.context.musicPlayer.play('hyperfun');
   }
 
   handleEvent(e) {

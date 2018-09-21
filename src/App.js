@@ -2,8 +2,14 @@ import { loader, resources, Container } from './const/aliases';
 
 import Engine from './Engine';
 import StateStack from './StateStack';
+import MusicPlayer from './MusicPlayer';
 
-import { SOUND_NAMES, STATES, TIME_PER_FRAME } from './const/app';
+import {
+  SOUNDS,
+  MUSICS,
+  STATES,
+  TIME_PER_FRAME,
+} from './const/app';
 
 let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
@@ -17,8 +23,12 @@ export default class App {
 
   static loadAssets() {
     return new Promise((resolve, reject) => {
-      SOUND_NAMES.forEach((soundName) => {
+      SOUNDS.forEach((soundName) => {
         loader.add(soundName, `sounds/${soundName}.mp3`);
+      });
+
+      MUSICS.forEach((musicName) => {
+        loader.add(musicName, `music/${musicName}.mp3`);
       });
 
       loader
@@ -43,8 +53,13 @@ export default class App {
 
     const { textures } = resources['images/pixie-perilousness.json'];
 
-    const sounds = SOUND_NAMES.reduce((acc, item) => {
-      acc[item] = resources[item].data;
+    const sounds = SOUNDS.reduce((acc, item) => {
+      acc[item] = resources[item].sound;
+      return acc;
+    }, {});
+
+    const musics = MUSICS.reduce((acc, item) => {
+      acc[item] = resources[item].sound;
       return acc;
     }, {});
 
@@ -52,6 +67,7 @@ export default class App {
       stage: this.stage,
       textures,
       sounds,
+      musicPlayer: new MusicPlayer(musics),
       gameStatus: '',
       level: 0,
       score: 0,

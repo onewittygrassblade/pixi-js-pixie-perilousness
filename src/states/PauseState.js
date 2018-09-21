@@ -8,12 +8,14 @@ export default class PauseState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
     this.createTexts();
+    this.context.musicPlayer.togglePause(true);
   }
 
   handleEvent(e) {
     super.handleEvent(e);
     if (e.type === 'keyup' && e.keyCode === 27) {
       this.stateStack.popState();
+      this.context.musicPlayer.togglePause(false);
     }
 
     return false;

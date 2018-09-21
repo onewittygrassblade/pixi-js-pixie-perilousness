@@ -8,10 +8,10 @@ import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 export default class TitleState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
-
     this.createSkyBackground();
     this.createTitle();
     this.createMenu();
+    this.context.musicPlayer.play('hyperfun');
   }
 
   createTitle() {

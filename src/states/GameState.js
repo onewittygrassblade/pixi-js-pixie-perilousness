@@ -45,6 +45,7 @@ export default class GameState extends State {
         if (this.context.level === LEVELS_DATA.length - 1) {
           this.world.setFinishTextForFinalLevel();
         }
+        this.context.musicPlayer.play(LEVELS_DATA[this.context.level].music);
         this.stateStack.pushState('HintState');
       } else {
         this.context.gameStatus = 'success';

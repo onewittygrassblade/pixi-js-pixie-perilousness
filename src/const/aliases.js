@@ -1,5 +1,7 @@
-import * as PIXI from 'pixi.js';
+import 'pixi.js';
+import 'pixi-sound';
 
+/* eslint-disable no-undef */
 export const { autoDetectRenderer } = PIXI;
 export const { Graphics } = PIXI;
 export const { Texture } = PIXI;
@@ -12,3 +14,4 @@ export const { TilingSprite } = PIXI.extras;
 export const { AnimatedSprite } = PIXI.extras;
 export const { BitmapText } = PIXI.extras;
 export const { filters } = PIXI;
+/* eslint-enable no-undef */

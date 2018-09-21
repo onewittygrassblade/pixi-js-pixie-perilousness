@@ -9,7 +9,7 @@ export const FONTS = {
   xsmall: '32px pixie-font',
 };
 
-export const SOUND_NAMES = [
+export const SOUNDS = [
   'bang',
   'die',
   'fail',
@@ -18,6 +18,12 @@ export const SOUND_NAMES = [
   'powerup',
   'tada',
   'whoosh',
+];
+
+export const MUSICS = [
+  'hyperfun',
+  'dance_of_the_sugar_plum_fairy',
+  'frost_waltz',
 ];
 
 export const STATES = [
