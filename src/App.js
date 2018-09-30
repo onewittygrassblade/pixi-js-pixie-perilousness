@@ -1,4 +1,9 @@
-import { loader, resources, Container, Sprite } from './const/aliases';
+import {
+  loader,
+  resources,
+  Container,
+  Sprite,
+} from './const/aliases';
 
 import Engine from './Engine';
 import StateStack from './StateStack';
@@ -87,7 +92,7 @@ export default class App {
     const renderVolumeIcon = () => {
       const level = context.musicPlayer.isMuted() ? 'mute' : 'loud';
       volumeIcon.texture = context.textures[`volume-${level}.png`];
-    }
+    };
     Clickable.setup(volumeIcon, () => {
       context.musicPlayer.toggleMuted();
       renderVolumeIcon();
