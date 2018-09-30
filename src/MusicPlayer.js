@@ -1,7 +1,6 @@
 export default class MusicPlayer {
   constructor(musics) {
     this.musics = musics;
-    this.volume = 1;
   }
 
   play(theme) {
@@ -17,7 +16,6 @@ export default class MusicPlayer {
 
   startPlaying(theme) {
     this.playing = this.musics[theme];
-    this.playing.volume = this.volume;
     this.playing.play({ loop: true });
   }
 
@@ -29,11 +27,13 @@ export default class MusicPlayer {
     }
   }
 
-  setVolume(volume) {
-    this.volume = volume;
+  toggleMuted() {
+    if (this.playing.isPlaying) {
+      this.playing.muted = !this.playing.muted;
+    }
   }
 
-  mute() {
-    this.volume = 0;
+  isMuted() {
+    return this.playing.muted;
   }
 }

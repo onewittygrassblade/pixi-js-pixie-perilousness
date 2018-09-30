@@ -26,7 +26,7 @@ export default class AboutState extends State {
       'for full credits and source code.',
     ];
 
-    let yPos = 0;
+    let yPos = 35;
 
     for (let i = 0; i < texts.length; i++) {
       const bitmapText = new BitmapText(texts[i], { font: FONTS.xsmall });
@@ -38,7 +38,7 @@ export default class AboutState extends State {
 
     const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
     backToTitle.anchor.x = 0.5;
-    backToTitle.y = yPos + 40;
+    backToTitle.y = RENDERER_HEIGHT - 120;
     textContainer.addChild(backToTitle);
 
     textContainer.x = RENDERER_WIDTH / 2;

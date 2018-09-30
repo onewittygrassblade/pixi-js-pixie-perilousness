@@ -1,8 +1,10 @@
-import { loader, resources, Container } from './const/aliases';
+import { loader, resources, Container, Sprite } from './const/aliases';
 
 import Engine from './Engine';
 import StateStack from './StateStack';
 import MusicPlayer from './MusicPlayer';
+import Clickable from './gui/Clickable';
+import PubSub from './PubSub';
 
 import {
   SOUNDS,
@@ -15,12 +17,6 @@ let lastFrameTimestamp = 0;
 let timeSinceLastUpdate = 0;
 
 export default class App {
-  constructor() {
-    this.engine = new Engine();
-    this.stage = new Container();
-    this.events = [];
-  }
-
   static loadAssets() {
     return new Promise((resolve, reject) => {
       SOUNDS.forEach((soundName) => {
@@ -40,6 +36,8 @@ export default class App {
   }
 
   setup() {
+    // event management
+    this.events = [];
     window.addEventListener(
       'keydown',
       e => this.events.push(e),
@@ -51,6 +49,7 @@ export default class App {
       false
     );
 
+    // context
     const { textures } = resources['images/pixie-perilousness.json'];
 
     const sounds = SOUNDS.reduce((acc, item) => {
@@ -63,7 +62,10 @@ export default class App {
       return acc;
     }, {});
 
-    this.stateStack = new StateStack({
+    this.engine = new Engine();
+    this.stage = new Container();
+
+    const context = {
       stage: this.stage,
       textures,
       sounds,
@@ -71,12 +73,32 @@ export default class App {
       gameStatus: '',
       level: 0,
       score: 0,
-    });
+    };
+
+    // state stack
+    this.stateStack = new StateStack(context);
 
     STATES.forEach((state) => {
       this.stateStack.registerState(state);
     });
 
+    // music volume icon
+    const volumeIcon = new Sprite(context.textures['volume-loud.png']);
+    const renderVolumeIcon = () => {
+      const level = context.musicPlayer.isMuted() ? 'mute' : 'loud';
+      volumeIcon.texture = context.textures[`volume-${level}.png`];
+    }
+    Clickable.setup(volumeIcon, () => {
+      context.musicPlayer.toggleMuted();
+      renderVolumeIcon();
+    });
+    volumeIcon.position.set(10);
+
+    PubSub.subscribe('musicVolume', () => {
+      this.stage.addChild(volumeIcon); // move volume icon to top
+    });
+
+    // start on title state
     this.stateStack.pushState('TitleState');
   }
 

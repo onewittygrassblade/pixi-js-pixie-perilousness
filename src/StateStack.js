@@ -5,6 +5,7 @@ import HintState from './states/HintState';
 import HowToState from './states/HowToState';
 import PauseState from './states/PauseState';
 import TitleState from './states/TitleState';
+import PubSub from './PubSub';
 
 const stateClasses = {
   AboutState,
@@ -52,6 +53,7 @@ export default class StateStack {
       switch (change.action) {
         case 'push':
           this.stack.push(this.createState(change.stateName));
+          PubSub.publish('musicVolume');
           break;
         case 'pop':
           this.context.stage.removeChild(this.stack.pop().container);

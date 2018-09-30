@@ -40,7 +40,7 @@ export default class HowToState extends State {
       },
     ];
 
-    let yPos = 0;
+    let yPos = 35;
 
     for (let i = 0; i < data.length; i++) {
       const bitmapText = new BitmapText(data[i].text, { font: FONTS.xsmall });
@@ -65,7 +65,7 @@ export default class HowToState extends State {
 
     const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
     backToTitle.x = RENDERER_WIDTH / 2;
-    backToTitle.y = yPos;
+    backToTitle.y = RENDERER_HEIGHT - 120;
     textContainer.addChild(backToTitle);
 
     textContainer.y = RENDERER_HEIGHT / 2 - textContainer.height / 2;
