@@ -30,7 +30,7 @@ export default class HowToState extends State {
       },
       {
         text: 'Avoid the green blocks',
-        sprite: new Sprite(this.context.textures['greenBlock.png']),
+        sprite: new Sprite(this.context.textures['green-block.png']),
         yOffset: 80,
       },
       {

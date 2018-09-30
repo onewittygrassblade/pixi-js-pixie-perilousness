@@ -220,6 +220,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">green-block.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9Paddings</key>
+                <rect>16,16,32,32</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">green.png</key>
             <key type="filename">pink.png</key>
             <key type="filename">star.png</key>
@@ -235,19 +248,6 @@
                 <rect>8,8,16,16</rect>
                 <key>scale9Paddings</key>
                 <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">greenBlock.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>16,16,32,32</rect>
-                <key>scale9Paddings</key>
-                <rect>16,16,32,32</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -310,7 +310,6 @@
         <array>
             <filename>clouds.png</filename>
             <filename>green.png</filename>
-            <filename>greenBlock.png</filename>
             <filename>pink.png</filename>
             <filename>pixie-0.png</filename>
             <filename>pixie-1.png</filename>
@@ -324,6 +323,7 @@
             <filename>star.png</filename>
             <filename>volume-loud.png</filename>
             <filename>volume-mute.png</filename>
+            <filename>green-block.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

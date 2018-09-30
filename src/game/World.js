@@ -79,7 +79,7 @@ export default class World {
   }
 
   createForeground() {
-    this.createPillars(this.textures['greenBlock.png']);
+    this.createPillars(this.textures['green-block.png']);
     this.createPickUps(this.textures['gift.png']);
     this.createFinish();
   }
