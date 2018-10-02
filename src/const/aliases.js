@@ -3,6 +3,7 @@ import 'pixi-sound';
 
 /* eslint-disable no-undef */
 export const { autoDetectRenderer } = PIXI;
+export const { Application } = PIXI;
 export const { Graphics } = PIXI;
 export const { Texture } = PIXI;
 export const { Container } = PIXI;

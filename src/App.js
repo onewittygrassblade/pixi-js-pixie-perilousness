@@ -1,27 +1,25 @@
 import {
   loader,
   resources,
-  Container,
+  Application,
   Sprite,
 } from './const/aliases';
 
-import Engine from './Engine';
 import StateStack from './StateStack';
 import MusicPlayer from './MusicPlayer';
 import Clickable from './gui/Clickable';
 import PubSub from './PubSub';
+import centerCanvas from './helpers/centerCanvas';
 
 import {
   SOUNDS,
   MUSICS,
   STATES,
-  TIME_PER_FRAME,
+  RENDERER_WIDTH,
+  RENDERER_HEIGHT,
 } from './const/app';
 
-let lastFrameTimestamp = 0;
-let timeSinceLastUpdate = 0;
-
-export default class App {
+export default class App extends Application {
   static loadAssets() {
     return new Promise((resolve, reject) => {
       SOUNDS.forEach((soundName) => {
@@ -40,7 +38,19 @@ export default class App {
     });
   }
 
+  constructor() {
+    super({ width: RENDERER_WIDTH, height: RENDERER_HEIGHT });
+  }
+
   setup() {
+    // view
+    document.getElementById('root').appendChild(this.view);
+
+    centerCanvas(this.view);
+    window.addEventListener('resize', () => {
+      centerCanvas(this.view);
+    });
+
     // event management
     this.events = [];
     window.addEventListener(
@@ -66,9 +76,6 @@ export default class App {
       acc[item] = resources[item].sound;
       return acc;
     }, {});
-
-    this.engine = new Engine();
-    this.stage = new Container();
 
     const context = {
       stage: this.stage,
@@ -108,22 +115,11 @@ export default class App {
   }
 
   run() {
-    requestAnimationFrame(this.gameLoop.bind(this));
-  }
-
-  gameLoop(timestamp) {
-    timeSinceLastUpdate += timestamp - lastFrameTimestamp;
-    lastFrameTimestamp = timestamp;
-
-    while (timeSinceLastUpdate > TIME_PER_FRAME) {
-      timeSinceLastUpdate -= TIME_PER_FRAME;
+    // PIXI.Ticker uses a ratio that is 1 if FPS = 60, 2 if FPS = 2, etc.
+    this.ticker.add((fpsRatio) => {
       this.processInput();
-      this.stateStack.update(TIME_PER_FRAME);
-    }
-
-    this.engine.render(this.stage);
-
-    requestAnimationFrame(this.gameLoop.bind(this));
+      this.stateStack.update(fpsRatio * 1000 / 60); // time per frame = 1000 / 60 ms
+    });
   }
 
   processInput() {
