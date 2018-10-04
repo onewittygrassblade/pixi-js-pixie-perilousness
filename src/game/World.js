@@ -288,7 +288,7 @@ export default class World {
 
     this.numberOfLives += 1;
 
-    this.sounds.powerup.play();
+    this.sounds.extralife.play();
 
     if (this.numberOfLives === MAX_NUMBER_OF_LIVES) {
       this.pickUpActions[0] = this.gainStar.bind(this);
@@ -310,6 +310,7 @@ export default class World {
 
   gainInvincibility() {
     this.pixie.gainInvincibility();
+    this.sounds.invincibility.play();
     this.pickUpActions[1] = this.gainStar.bind(this);
 
     this.timeManager.setTimeout(() => {
@@ -436,7 +437,7 @@ export default class World {
     if (hitBlock) {
       if (this.pixie.invincible) {
         hitBlock.visible = false;
-        this.sounds.bang.play();
+        this.sounds.pop.play();
       } else {
         this.pixieHasCrashed = true;
       }
@@ -450,6 +451,7 @@ export default class World {
     if (hitShard) {
       if (this.pixie.invincible) {
         hitShard.visible = false;
+        this.sounds.pop.play();
       } else {
         this.pixieHasCrashed = true;
       }

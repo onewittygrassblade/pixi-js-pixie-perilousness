@@ -9,12 +9,13 @@ export const FONTS = {
 };
 
 export const SOUNDS = [
-  'bang',
+  'pop',
   'die',
   'fail',
   'metal',
   'pickup',
-  'powerup',
+  'extralife',
+  'invincibility',
   'tada',
   'whoosh',
 ];
