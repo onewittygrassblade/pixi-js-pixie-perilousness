@@ -1,60 +1,66 @@
 # pixi-js-pixie-perilousness
+
 This side scroller was inspired by the tutorial [Learn PixiJS](https://github.com/kittykatattack/learnPixiJS).
 
 ## Getting started
 
-This project uses NPM and Webpack.
+### Playing
 
-### Installing
+* Goal of the game: get Pixie home safe by guiding her through four levels full of obstacles!
+* Keep Space pressed to make Pixie flap her wings.
+* Avoid the green blocks! That is, unless you are temporarily invincible. If you are, enjoy the cute pop sound they make as they disappear into the ether.
+* Collect presents if you can! Some of them contain stars, others contain surprises which will apply a temporary random effect. You will get a rating based on the number of stars you collected when you finish the game.
+* I know, winter level sucks.
 
-Run the following commands in the directory where you wish to install the game:
+### Development
+
+This project uses NPM and Webpack. To clone this repository and run in development mode:
 
 ```
 git clone https://github.com/onewittygrassblade/pixi-js-pixie-perilousness.git
-npm install
-```
-
-### Running
-
-From the directory where you installed the game, run the following commands:
-
-```
 cd pixi-js-pixie-perilousness
-npm start
+npm run dev
 ```
 
-Note the port on which the server is running (8080 by default):
+You can also lint the source code with
+
 ```
-Project is running at http://localhost:8080/
+npm run lint
 ```
 
-Open a browser (Chrome recommended) and go to your local server (e.g. http://localhost:8080/).
+and build the production bundle with
+```
+npm run build
+```
 
-### Playing
+## Credits
 
-* Keep Space pressed to make Pixie flap her wings.
-* Avoid the green blocks!
-* Collect presents if you can. Some of them contain teddy bears, which give you points; others contain surprises which will apply a temporary random effect!
+### Sprites
 
-## Main concepts
-
-I have used this project to explore several patterns and concepts that are not part of the original tutorial.
-
-### Fixed time step game loop
-
-I recommend [this excellent step-by-step tutorial](http://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing) for details.
-
-### State stack
-
-The various states of the app (title, game, pause...) are managed in a stack structure. At each time step, the stack updates the top state in the stack; if the latter returns true, the state underneath gets updated and so on. This allows great flexibility for multistate conditions such as pausing the game.
+Most sprites are from [Learn PixiJS](https://github.com/kittykatattack/learnPixiJS). Others were made by me.
 
 ### Sound effects
 
-Sound effects are managed using [pixi-sound](https://github.com/pixijs/pixi-sound).
+All sound effects are from freesound:
+* Retro Bonus Pickup SFX by [suntemple](https://freesound.org/people/suntemple/)
+* Spacey 1up/Power up by [GameAudio](https://freesound.org/people/GameAudio/)
+* Game Powerup by [josepharaoh99](https://freesound.org/people/josepharaoh99/)
+* Pop 2 by [greenvwbeetle](https://freesound.org/people/greenvwbeetle/)
+* Lose_C_01 by [cabled_mess](https://freesound.org/people/cabled_mess/)
+* Metal_04.wav by [Q.K.](https://freesound.org/people/Q.K./)
+* whoosh.soft.wav by [junggle](https://freesound.org/people/junggle/)
+* Wah wah trumpet failed joke punch line.wav by [Doctor_Jekyll](https://freesound.org/people/Doctor_Jekyll/)
 
-### Additional in-game elements
+### Music
 
-* Pickup collection
-* Score
-* Levels
-* Success/failure game over
+*Hyperfun* Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/
+
+*Dance of the Sugar Plum Fairy* Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/
+
+*Frost Waltz* Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/
