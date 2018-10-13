@@ -45,7 +45,7 @@ export default class StateStack {
   }
 
   clearStates() {
-    this.pendingList.push({ action: 'CLEAR' });
+    this.pendingList.push({ action: 'clear' });
   }
 
   applyPendingChanges() {
@@ -58,8 +58,10 @@ export default class StateStack {
         case 'pop':
           this.context.stage.removeChild(this.stack.pop().container);
           break;
-        case 'CLEAR':
-          this.stack = [];
+        case 'clear':
+          while (this.stack.length) {
+            this.context.stage.removeChild(this.stack.pop().container);
+          }
           break;
         default:
       }

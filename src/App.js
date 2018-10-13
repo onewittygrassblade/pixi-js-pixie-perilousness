@@ -9,6 +9,7 @@ import StateStack from './StateStack';
 import MusicPlayer from './MusicPlayer';
 import Clickable from './gui/Clickable';
 import PubSub from './PubSub';
+import Sky from './game/Sky';
 import centerCanvas from './helpers/centerCanvas';
 
 import {
@@ -77,9 +78,13 @@ export default class App extends Application {
       return acc;
     }, {});
 
+    const background = new Sky(textures['clouds.png'], RENDERER_WIDTH, RENDERER_HEIGHT);
+    this.stage.addChild(background.container);
+
     const context = {
       stage: this.stage,
       textures,
+      background,
       sounds,
       musicPlayer: new MusicPlayer(musics),
       gameStatus: '',

@@ -8,8 +8,6 @@ import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 export default class AboutState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
-
-    this.createSkyBackground();
     this.createTexts();
   }
 
@@ -36,7 +34,10 @@ export default class AboutState extends State {
       textContainer.addChild(bitmapText);
     }
 
-    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
+    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => {
+      this.stateStack.popState();
+      this.stateStack.pushState('TitleState');
+    });
     backToTitle.anchor.x = 0.5;
     backToTitle.y = RENDERER_HEIGHT - 120;
     textContainer.addChild(backToTitle);

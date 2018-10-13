@@ -8,8 +8,6 @@ import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 export default class HowToState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
-
-    this.createSkyBackground();
     this.createTexts();
   }
 
@@ -63,7 +61,10 @@ export default class HowToState extends State {
       yPos += bitmapText.height + data[i].yOffset;
     }
 
-    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => this.stateStack.popState());
+    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => {
+      this.stateStack.popState();
+      this.stateStack.pushState('TitleState');
+    });
     backToTitle.x = RENDERER_WIDTH / 2;
     backToTitle.y = RENDERER_HEIGHT - 120;
     textContainer.addChild(backToTitle);

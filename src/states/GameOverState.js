@@ -12,8 +12,6 @@ import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
 export default class GameOverState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
-
-    this.createSkyBackground();
     this.createTexts(context.gameStatus, context.score);
 
     if (context.gameStatus === 'failure') {

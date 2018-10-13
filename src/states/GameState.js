@@ -7,7 +7,13 @@ export default class GameState extends State {
   constructor(stateStack, context) {
     super(stateStack, context);
     this.context.gameStatus = 'running';
-    this.world = new World(this.container, context.textures, context.sounds, LEVELS_DATA[0].world);
+    this.world = new World(
+      this.container,
+      context.background,
+      context.textures,
+      context.sounds,
+      LEVELS_DATA[0].world
+    );
   }
 
   handleEvent(e) {

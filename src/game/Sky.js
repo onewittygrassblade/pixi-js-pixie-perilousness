@@ -8,10 +8,10 @@ import {
 import SpatialEmitter from '../particle/SpatialEmitter';
 
 export default class Sky {
-  constructor(textures, width, height) {
+  constructor(texture, width, height) {
     this.container = new Container();
 
-    this.sprite = new TilingSprite(textures['clouds.png'], width, height);
+    this.sprite = new TilingSprite(texture, width, height);
     this.container.addChild(this.sprite);
 
     this.colorMatrix = new filters.ColorMatrixFilter();

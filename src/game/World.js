@@ -1,6 +1,5 @@
 import { Container, Sprite, BitmapText } from '../const/aliases';
 
-import Sky from './Sky';
 import Pillars from './Pillars';
 import PickUps from './PickUps';
 import Pixie from './Pixie';
@@ -28,7 +27,7 @@ import {
 } from '../const/world';
 
 export default class World {
-  constructor(gameContainer, textures, sounds, levelData) {
+  constructor(gameContainer, background, textures, sounds, levelData) {
     this.container = gameContainer;
     this.textures = textures;
     this.sounds = sounds;
@@ -43,20 +42,14 @@ export default class World {
     this.numberOfStarsForLevel = 0;
 
     this.layers = {
-      background: null,
       foreground: new Container(),
       player: new Container(),
       weatherEffect: new Container(),
       infoDisplay: new Container(),
     };
 
-    this.iceShardsManager = new IceShardsManager(
-      this.layers.weatherEffect,
-      [this.textures['ice-shard.png']],
-      ICE_SHARD_FREQUENCY
-    );
+    this.background = background;
 
-    this.createSky();
     this.createForeground();
     this.createPixie();
     this.createNight();
@@ -66,18 +59,15 @@ export default class World {
     Object.keys(this.layers).forEach((layerName) => {
       this.container.addChild(this.layers[layerName]);
     });
+
+    this.iceShardsManager = new IceShardsManager(
+      this.layers.weatherEffect,
+      [this.textures['ice-shard.png']],
+      ICE_SHARD_FREQUENCY
+    );
   }
 
   // Create methods
-
-  createSky() {
-    this.sky = new Sky(this.textures, RENDERER_WIDTH, RENDERER_HEIGHT);
-    this.layers.background = this.sky.container;
-    if (this.levelData.winter) {
-      this.sky.winterize();
-    }
-  }
-
   createForeground() {
     this.createPillars(this.textures['green-block.png']);
     this.createPickUps(this.textures['gift.png']);
@@ -224,9 +214,9 @@ export default class World {
     this.iceShardsManager.reset();
 
     if (this.levelData.winter) {
-      this.sky.winterize();
+      this.background.winterize();
     } else {
-      this.sky.summerize();
+      this.background.summerize();
     }
   }
 
@@ -402,7 +392,7 @@ export default class World {
   }
 
   scroll(dt) {
-    this.sky.updateCurrent(BACKGROUND_SCROLL_SPEED, dt);
+    this.background.updateCurrent(BACKGROUND_SCROLL_SPEED, dt);
 
     if (this.finish.getGlobalPosition().x > 220) {
       this.layers.foreground.x -= FOREGROUND_SCROLL_SPEED * dt;
