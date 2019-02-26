@@ -450,6 +450,12 @@ export default class World {
 
     if (this.pixieHasCrashed) {
       this.pixieExplosion();
+
+      this.timeManager.setTimeout(() => {
+        this.loseLife();
+        this.hasAlivePlayer = false;
+      }, 1000);
+
       this.numberOfStarsForLevel = 0;
     }
 
@@ -477,11 +483,6 @@ export default class World {
     this.pixie.visible = false;
 
     this.emitterExplosion();
-
-    this.timeManager.setTimeout(() => {
-      this.loseLife();
-      this.hasAlivePlayer = false;
-    }, 1000);
   }
 
   emitterExplosion() {
