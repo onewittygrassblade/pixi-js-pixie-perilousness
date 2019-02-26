@@ -1,21 +1,22 @@
 export default class MusicPlayer {
   constructor(musics) {
     this.musics = musics;
+    this.playing = null;
+    this.muted = false;
   }
 
   play(theme) {
-    if (this.playing) {
-      if (this.playing !== this.musics[theme]) {
-        this.playing.stop();
-        this.startPlaying(theme);
-      }
-    } else {
+    if (!this.playing) {
+      this.startPlaying(theme);
+    } else if (this.playing && this.playing !== this.musics[theme]) {
+      this.playing.stop();
       this.startPlaying(theme);
     }
   }
 
   startPlaying(theme) {
     this.playing = this.musics[theme];
+    this.playing.muted = this.muted;
     this.playing.play({ loop: true });
   }
 
@@ -28,9 +29,8 @@ export default class MusicPlayer {
   }
 
   toggleMuted() {
-    if (this.playing.isPlaying) {
-      this.playing.muted = !this.playing.muted;
-    }
+    this.muted = !this.muted;
+    this.playing.muted = this.muted;
   }
 
   isMuted() {
