@@ -64,6 +64,7 @@ export default class GameState extends State {
   }
 
   gameOver() {
+    this.context.background.summerize();
     this.stateStack.popState();
     this.stateStack.pushState('GameOverState');
   }
