@@ -53,7 +53,7 @@ export default class StateStack {
       switch (change.action) {
         case 'push':
           this.stack.push(this.createState(change.stateName));
-          PubSub.publish('musicVolume');
+          PubSub.publish('pushState');
           break;
         case 'pop':
           this.context.stage.removeChild(this.stack.pop().container);

@@ -111,7 +111,7 @@ export default class App extends Application {
     });
     volumeIcon.position.set(10);
 
-    PubSub.subscribe('musicVolume', () => {
+    PubSub.subscribe('pushState', () => {
       this.stage.addChild(volumeIcon); // move volume icon to top
     });
 
