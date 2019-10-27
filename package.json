@@ -10,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jillsophie/pixi-js-tutorial.git"
+    "url": "git+https://github.com/onewittygrassblade/pixi-js-pixie-perilousness.git"
   },
   "keywords": [
     "Pixi.js"
   ],
-  "author": "Jill Guyonnet",
-  "license": "ISC",
+  "author": "OneWittyGrassBlade",
+  "license": "MIT",
   "dependencies": {
     "@pixi/filter-glow": "^2.5.0",
     "pixi-sound": "^2.1.4",
@@ -29,9 +29,9 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6",
-    "webpack-merge": "^4.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-merge": "^4.2.2",
     "webpack-serve": "^2.0.3"
   }
 }
