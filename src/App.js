@@ -56,12 +56,12 @@ export default class App extends Application {
     this.events = [];
     window.addEventListener(
       'keydown',
-      e => this.events.push(e),
+      (e) => this.events.push(e),
       false
     );
     window.addEventListener(
       'keyup',
-      e => this.events.push(e),
+      (e) => this.events.push(e),
       false
     );
 
@@ -123,7 +123,7 @@ export default class App extends Application {
     // PIXI.Ticker uses a ratio that is 1 if FPS = 60, 2 if FPS = 2, etc.
     this.ticker.add((fpsRatio) => {
       this.processInput();
-      this.stateStack.update(fpsRatio * 1000 / 60); // time per frame = 1000 / 60 ms
+      this.stateStack.update((fpsRatio * 1000) / 60); // time per frame = 1000 / 60 ms
     });
   }
 

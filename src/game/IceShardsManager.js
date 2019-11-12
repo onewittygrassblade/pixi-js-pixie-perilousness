@@ -23,7 +23,7 @@ export default class IceShardsManager {
     if (this.timer > this.frequency) {
       const iceShard = new IceShard(
         this.textureFrames,
-        randomFloat(RENDERER_WIDTH / 2, 3 * RENDERER_WIDTH / 4),
+        randomFloat(RENDERER_WIDTH / 2, 3 * (RENDERER_WIDTH / 4)),
         0
       );
       this.iceShards.push(iceShard);
