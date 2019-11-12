@@ -18,9 +18,10 @@
   "author": "OneWittyGrassBlade",
   "license": "MIT",
   "dependencies": {
-    "@pixi/filter-glow": "^2.5.0",
-    "pixi-sound": "^2.1.4",
-    "pixi.js": "^4.8.8"
+    "@pixi/filter-glow": "^3.0.3",
+    "pixi-sound": "^3.0.4",
+    "pixi.js": "^5.2.0",
+    "pixi.js-legacy": "^5.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

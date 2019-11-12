@@ -17,7 +17,7 @@ export default class Light {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (!this.sprite) {
-      this.sprite = new Sprite(new Texture.fromCanvas(this.canvas)); // eslint-disable-line new-cap
+      this.sprite = new Sprite(new Texture.from(this.canvas)); // eslint-disable-line new-cap
     } else {
       this.sprite.texture.update();
     }

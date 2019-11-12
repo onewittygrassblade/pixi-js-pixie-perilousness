@@ -1,18 +1,18 @@
-import 'pixi.js';
+import * as PIXI from 'pixi.js'
+import * as PIXI_LEGACY from 'pixi.js-legacy';
 import 'pixi-sound';
 
 /* eslint-disable no-undef */
-export const { autoDetectRenderer } = PIXI;
 export const { Application } = PIXI;
 export const { Graphics } = PIXI;
 export const { Texture } = PIXI;
 export const { Container } = PIXI;
-export const { ParticleContainer } = PIXI.particles;
-export const { loader } = PIXI;
-export const { resources } = PIXI.loader;
+export const { ParticleContainer } = PIXI;
+export const loader = PIXI.Loader.shared;
+export const { resources } = loader;
 export const { Sprite } = PIXI;
-export const { TilingSprite } = PIXI.extras;
-export const { AnimatedSprite } = PIXI.extras;
-export const { BitmapText } = PIXI.extras;
+export const { TilingSprite } = PIXI;
+export const { AnimatedSprite } = PIXI;
+export const { BitmapText } = PIXI;
 export const { filters } = PIXI;
 /* eslint-enable no-undef */
