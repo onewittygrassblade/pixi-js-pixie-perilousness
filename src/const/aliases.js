@@ -1,5 +1,5 @@
-import * as PIXI from 'pixi.js'
-import * as PIXI_LEGACY from 'pixi.js-legacy';
+import * as PIXI from 'pixi.js';
+import 'pixi.js-legacy';
 import 'pixi-sound';
 
 /* eslint-disable no-undef */
