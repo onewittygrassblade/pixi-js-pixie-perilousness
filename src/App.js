@@ -43,8 +43,8 @@ export default class App extends Application {
     super({ width: RENDERER_WIDTH, height: RENDERER_HEIGHT });
   }
 
-  setup() {
-    // view
+  boot() {
+    // Set view
     document.getElementById('root').appendChild(this.view);
 
     centerCanvas(this.view);
@@ -52,7 +52,26 @@ export default class App extends Application {
       centerCanvas(this.view);
     });
 
-    // event management
+    // Load assets
+    SOUNDS.forEach((soundName) => {
+      loader.add(soundName, `sounds/${soundName}.mp3`);
+    });
+
+    MUSICS.forEach((musicName) => {
+      loader.add(musicName, `music/${musicName}.mp3`);
+    });
+
+    loader
+      .add('images/pixie-perilousness.json')
+      .add('fonts/pixie-font.fnt')
+      .on('error', () => {
+        console.err('Loading error'); // eslint-disable-line no-console
+      })
+      .load(this.handleLoadComplete.bind(this));
+  }
+
+  handleLoadComplete() {
+    // Create event collectors
     this.events = [];
     window.addEventListener(
       'keydown',
@@ -65,7 +84,7 @@ export default class App extends Application {
       false
     );
 
-    // context
+    // Create context
     const { textures } = resources['images/pixie-perilousness.json'];
 
     const sounds = SOUNDS.reduce((acc, item) => {
@@ -92,14 +111,14 @@ export default class App extends Application {
       score: 0,
     };
 
-    // state stack
+    // Create state stack
     this.stateStack = new StateStack(context);
 
     STATES.forEach((state) => {
       this.stateStack.registerState(state);
     });
 
-    // music volume icon
+    // Set up music volume icon
     const volumeIcon = new Sprite(context.textures['volume-loud.png']);
     const renderVolumeIcon = () => {
       const level = context.musicPlayer.isMuted() ? 'mute' : 'loud';
@@ -115,16 +134,15 @@ export default class App extends Application {
       this.stage.addChild(volumeIcon); // move volume icon to top
     });
 
-    // start on title state
-    this.stateStack.pushState('TitleState');
-  }
-
-  run() {
+    // Set game loop
     // PIXI.Ticker uses a ratio that is 1 if FPS = 60, 2 if FPS = 2, etc.
     this.ticker.add((fpsRatio) => {
       this.processInput();
       this.stateStack.update((fpsRatio * 1000) / 60); // time per frame = 1000 / 60 ms
     });
+
+    // Start on title state
+    this.stateStack.pushState('TitleState');
   }
 
   processInput() {
