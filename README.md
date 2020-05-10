@@ -6,6 +6,8 @@ This side scroller was inspired by the tutorial [Learn PixiJS](https://github.co
 
 ### Playing
 
+This game is designed to be played in a browser using a keyboard. It will not work on mobile devices.
+
 * Goal of the game: get Pixie home safe by guiding her through four levels full of obstacles!
 * Keep Space pressed to make Pixie flap her wings.
 * Avoid the green blocks! That is, unless you are temporarily invincible. If you are, enjoy the cute pop sound they make as they disappear into the ether.
