@@ -64,10 +64,11 @@ export default class App extends Application {
     loader
       .add('images/pixie-perilousness.json')
       .add('fonts/pixie-font.fnt')
-      .on('error', () => {
-        console.err('Loading error'); // eslint-disable-line no-console
-      })
       .load(this.handleLoadComplete.bind(this));
+
+    loader.onError.add(() => {
+      console.err('Loading error'); // eslint-disable-line no-console
+    }); // called once per errored file
   }
 
   handleLoadComplete() {
