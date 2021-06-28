@@ -3,7 +3,8 @@ import { Container, Sprite, BitmapText } from '../const/aliases';
 import State from './State';
 import MenuItem from '../gui/MenuItem';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_S, FONT_XS } from '../const/fonts';
 
 export default class HowToState extends State {
   constructor(stateStack, context) {
@@ -41,7 +42,7 @@ export default class HowToState extends State {
     let yPos = 35;
 
     for (let i = 0; i < data.length; i++) {
-      const bitmapText = new BitmapText(data[i].text, { font: FONTS.xsmall });
+      const bitmapText = new BitmapText(data[i].text, FONT_XS);
 
       if (data[i].sprite) {
         bitmapText.x = data[i].sprite.width + 20;
@@ -61,7 +62,7 @@ export default class HowToState extends State {
       yPos += bitmapText.height + data[i].yOffset;
     }
 
-    const backToTitle = new MenuItem('Back', { font: FONTS.small }, () => {
+    const backToTitle = new MenuItem('Back', FONT_S, () => {
       this.stateStack.popState();
       this.stateStack.pushState('TitleState');
     });

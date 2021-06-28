@@ -2,7 +2,8 @@ import { BitmapText } from '../const/aliases';
 
 import State from './State';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_M, FONT_XS } from '../const/fonts';
 import LEVELS_DATA from '../const/levels';
 
 export default class HintState extends State {
@@ -21,11 +22,11 @@ export default class HintState extends State {
   }
 
   createTexts(message) {
-    const messageText = new BitmapText(message, { font: FONTS.medium });
+    const messageText = new BitmapText(message, FONT_M);
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    const hintText = new BitmapText('Press space to start', { font: FONTS.xsmall });
+    const hintText = new BitmapText('Press space to start', FONT_XS);
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);

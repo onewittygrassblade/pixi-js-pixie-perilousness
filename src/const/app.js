@@ -1,13 +1,6 @@
 export const RENDERER_WIDTH = 910;
 export const RENDERER_HEIGHT = 512;
 
-export const FONTS = {
-  large: '72 pixie-font',
-  medium: '64px pixie-font',
-  small: '48px pixie-font',
-  xsmall: '32px pixie-font',
-};
-
 export const SOUNDS = [
   'pop',
   'die',
