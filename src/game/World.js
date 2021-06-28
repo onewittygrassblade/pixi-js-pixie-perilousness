@@ -11,7 +11,8 @@ import contain from '../helpers/contain';
 import hitTestRectangle from '../helpers/hitTestRectangle';
 import TimeManager from '../helpers/TimeManager';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_L, FONT_XS } from '../const/fonts';
 
 import {
   BACKGROUND_SCROLL_SPEED,
@@ -90,7 +91,7 @@ export default class World {
   }
 
   createFinish() {
-    this.finish = new BitmapText('To next level!', { font: FONTS.large });
+    this.finish = new BitmapText('To next level!', FONT_L);
     this.finish.x = FINISH_X;
     this.finish.y = FINISH_Y;
     this.layers.foreground.addChild(this.finish);
@@ -160,7 +161,7 @@ export default class World {
     star.width = 33;
     star.height = 32;
     starsContainer.addChild(star);
-    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), { font: FONTS.xsmall });
+    this.numberOfStarsText = new BitmapText(this.numberOfStars.toString(), FONT_XS);
     this.numberOfStarsText.x = 46;
     this.numberOfStarsText.y = 6;
     starsContainer.addChild(this.numberOfStarsText);

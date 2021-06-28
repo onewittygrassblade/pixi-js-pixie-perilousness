@@ -2,7 +2,8 @@ import { BitmapText } from '../const/aliases';
 
 import State from './State';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_M, FONT_XS } from '../const/fonts';
 
 export default class PauseState extends State {
   constructor(stateStack, context) {
@@ -22,11 +23,11 @@ export default class PauseState extends State {
   }
 
   createTexts() {
-    const messageText = new BitmapText('Game paused', { font: FONTS.medium });
+    const messageText = new BitmapText('Game paused', FONT_M);
     messageText.anchor.x = 0.5;
     this.container.addChild(messageText);
 
-    const hintText = new BitmapText('Press ESC to resume', { font: FONTS.xsmall });
+    const hintText = new BitmapText('Press ESC to resume', FONT_XS);
     hintText.anchor.x = 0.5;
     hintText.y = messageText.y + messageText.height + 40;
     this.container.addChild(hintText);

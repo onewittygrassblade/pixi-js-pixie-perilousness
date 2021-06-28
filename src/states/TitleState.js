@@ -3,7 +3,8 @@ import { Container, BitmapText } from '../const/aliases';
 import State from './State';
 import MenuItem from '../gui/MenuItem';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_L, FONT_S } from '../const/fonts';
 
 export default class TitleState extends State {
   constructor(stateStack, context) {
@@ -14,7 +15,7 @@ export default class TitleState extends State {
   }
 
   createTitle() {
-    const title = new BitmapText('Pixie Perilousness!', { font: FONTS.large });
+    const title = new BitmapText('Pixie Perilousness!', FONT_L);
     title.x = RENDERER_WIDTH / 2 - title.width / 2;
     title.y = 120;
     this.container.addChild(title);
@@ -46,7 +47,7 @@ export default class TitleState extends State {
     let yPos = 0;
 
     menuItemData.forEach((data) => {
-      const menuItem = new MenuItem(data.title, { font: FONTS.small }, data.callback);
+      const menuItem = new MenuItem(data.title, FONT_S, data.callback);
       menuItem.y = yPos;
       yPos += menuItem.height + 20;
       menuContainer.addChild(menuItem);

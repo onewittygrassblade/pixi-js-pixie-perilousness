@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import 'pixi.js-legacy';
-import 'pixi-sound';
+import '@pixi/sound';
 
 /* eslint-disable no-undef */
 export const { Application } = PIXI;

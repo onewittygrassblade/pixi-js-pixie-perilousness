@@ -7,7 +7,8 @@ import {
 
 import State from './State';
 
-import { RENDERER_WIDTH, RENDERER_HEIGHT, FONTS } from '../const/app';
+import { RENDERER_WIDTH, RENDERER_HEIGHT } from '../const/app';
+import { FONT_M, FONT_XS } from '../const/fonts';
 
 export default class GameOverState extends State {
   constructor(stateStack, context) {
@@ -39,7 +40,7 @@ export default class GameOverState extends State {
     const textContainer = new Container();
     this.container.addChild(textContainer);
 
-    const resultText = new BitmapText('Whoops!', { font: FONTS.medium });
+    const resultText = new BitmapText('Whoops!', FONT_M);
     if (gameStatus === 'success') {
       resultText.text = 'Congratulations!';
     }
@@ -50,7 +51,7 @@ export default class GameOverState extends State {
     if (gameStatus === 'success') {
       const scoreContainer = new Container();
       textContainer.addChild(scoreContainer);
-      const messageText = new BitmapText(`You got Pixie home and collected ${score} stars`, { font: FONTS.xsmall });
+      const messageText = new BitmapText(`You got Pixie home and collected ${score} stars`, FONT_XS);
       scoreContainer.addChild(messageText);
       const pixie = new Sprite(this.context.textures['pixie-0.png']);
       pixie.x = messageText.width + 10;
@@ -81,7 +82,7 @@ export default class GameOverState extends State {
       yPos += ratingContainer.height + 40;
     }
 
-    const hintText = new BitmapText('Press space to go back to menu', { font: FONTS.xsmall });
+    const hintText = new BitmapText('Press space to go back to menu', FONT_XS);
     hintText.anchor.x = 0.5;
     hintText.y = yPos;
     textContainer.addChild(hintText);
